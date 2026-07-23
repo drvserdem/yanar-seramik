@@ -4,11 +4,21 @@
   const $ = (selector, scope = document) => scope.querySelector(selector);
   const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
 
+  const loader = $('#siteLoader');
   const header = $('#siteHeader');
   const menuToggle = $('.menu-toggle');
   const mainNav = $('#mainNav');
   const navLinks = $$('.main-nav a');
+  const progressBar = $('.page-progress span');
+
+  window.addEventListener('load', () => {
+    window.setTimeout(() => {
+      loader?.classList.add('hidden');
+      document.body.classList.add('loaded');
+    }, reduceMotion ? 0 : 520);
+  });
 
   function setMenu(open) {
     if (!menuToggle || !mainNav) return;
@@ -21,18 +31,20 @@
   menuToggle?.addEventListener('click', () => {
     setMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
   });
-
   navLinks.forEach((link) => link.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMenu(false);
   });
 
-  function updateHeader() {
-    header?.classList.toggle('scrolled', window.scrollY > 30);
+  function updateScrollUI() {
+    const scrollY = window.scrollY;
+    header?.classList.toggle('scrolled', scrollY > 34);
+    const height = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = height > 0 ? Math.min(scrollY / height, 1) : 0;
+    if (progressBar) progressBar.style.width = `${ratio * 100}%`;
   }
-
-  updateHeader();
-  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateScrollUI();
+  window.addEventListener('scroll', updateScrollUI, { passive: true });
 
   const revealItems = $$('.reveal');
   if (reduceMotion || !('IntersectionObserver' in window)) {
@@ -44,7 +56,7 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.14, rootMargin: '0px 0px -45px' });
+    }, { threshold: 0.14, rootMargin: '0px 0px -50px' });
 
     revealItems.forEach((item, index) => {
       item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
@@ -61,9 +73,58 @@
           link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
         });
       });
-    }, { threshold: 0.25, rootMargin: '-25% 0px -60%' });
+    }, { threshold: 0.22, rootMargin: '-25% 0px -58%' });
     sections.forEach((section) => sectionObserver.observe(section));
   }
+
+  const heroImage = $('.hero-picture img');
+  if (heroImage && !reduceMotion) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY < window.innerHeight * 1.2) {
+        heroImage.style.transform = `translate3d(0,${window.scrollY * 0.09}px,0) scale(1.06)`;
+      }
+    }, { passive: true });
+  }
+
+  const craftSticky = $('#craftSticky');
+  const craftSteps = $$('.craft-step');
+  const craftImages = $$('.craft-image');
+  const craftNumber = $('#craftVisualNumber');
+  const craftTitle = $('#craftVisualTitle');
+  let activeCraftIndex = 0;
+
+  function setCraftStage(index) {
+    if (!craftSteps.length) return;
+    const safeIndex = Math.max(0, Math.min(index, craftSteps.length - 1));
+    if (safeIndex === activeCraftIndex && craftSteps[safeIndex].classList.contains('active')) return;
+    activeCraftIndex = safeIndex;
+    craftSteps.forEach((step, i) => step.classList.toggle('active', i === safeIndex));
+    craftImages.forEach((image, i) => image.classList.toggle('active', i === safeIndex));
+    if (craftNumber) craftNumber.textContent = String(safeIndex + 1).padStart(2, '0');
+    if (craftTitle) craftTitle.textContent = craftSteps[safeIndex].dataset.title || '';
+  }
+
+  craftSteps.forEach((step, index) => {
+    step.addEventListener('mouseenter', () => setCraftStage(index));
+    step.addEventListener('click', () => setCraftStage(index));
+  });
+
+  if (craftSticky && craftSteps.length && !reduceMotion && window.innerWidth > 860) {
+    const craftObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const index = Number(entry.target.dataset.index || 0);
+        setCraftStage(index);
+      });
+    }, { threshold: 0.55, rootMargin: '-18% 0px -32%' });
+    craftSteps.forEach((step) => craftObserver.observe(step));
+  }
+
+  const comparison = $('#comparison');
+  const comparisonRange = $('#comparison input[type="range"]');
+  comparisonRange?.addEventListener('input', () => {
+    comparison?.style.setProperty('--position', `${comparisonRange.value}%`);
+  });
 
   const counters = $$('[data-counter]');
   function animateCounter(element) {
@@ -73,7 +134,7 @@
       element.textContent = String(target);
       return;
     }
-    const duration = 1250;
+    const duration = 1300;
     const start = performance.now();
     const tick = (now) => {
       const progress = Math.min((now - start) / duration, 1);
@@ -91,25 +152,11 @@
         animateCounter(entry.target);
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.6 });
+    }, { threshold: 0.65 });
     counters.forEach((counter) => counterObserver.observe(counter));
   } else {
     counters.forEach(animateCounter);
   }
-
-  const filterButtons = $$('.project-filters button');
-  const projectCards = $$('.project-card');
-  filterButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach((item) => item.classList.remove('active'));
-      button.classList.add('active');
-      const filter = button.dataset.filter || 'all';
-      projectCards.forEach((card) => {
-        const show = filter === 'all' || card.dataset.category === filter;
-        card.classList.toggle('hidden', !show);
-      });
-    });
-  });
 
   const testimonials = $$('.testimonial');
   const dotsWrap = $('.slider-dots');
@@ -157,20 +204,31 @@
   });
   restartAutoSlide();
 
-  $$('.accordion-item > button').forEach((button) => {
-    button.addEventListener('click', () => {
-      const item = button.closest('.accordion-item');
-      const willOpen = !item.classList.contains('active');
-      $$('.accordion-item').forEach((accordionItem) => {
-        accordionItem.classList.remove('active');
-        accordionItem.querySelector('button')?.setAttribute('aria-expanded', 'false');
+  if (!reduceMotion && finePointer) {
+    $$('.tilt-card').forEach((card) => {
+      card.addEventListener('mousemove', (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-7px)`;
       });
-      if (willOpen) {
-        item.classList.add('active');
-        button.setAttribute('aria-expanded', 'true');
-      }
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
     });
-  });
+
+    $$('.magnetic').forEach((element) => {
+      element.addEventListener('mousemove', (event) => {
+        const rect = element.getBoundingClientRect();
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+        element.style.transform = `translate(${x * 0.08}px, ${y * 0.12}px)`;
+      });
+      element.addEventListener('mouseleave', () => {
+        element.style.transform = '';
+      });
+    });
+  }
 
   const quoteForm = $('#quoteForm');
   const formStatus = $('#formStatus');
@@ -189,7 +247,7 @@
     const message = String(data.get('message') || '').trim();
 
     const text = [
-      'Merhaba Yanar Seramik, web sitenizden teklif almak istiyorum.',
+      'Merhaba Yanar Seramik, web sitenizden keşif / teklif talebi bırakıyorum.',
       '',
       `Ad Soyad: ${name}`,
       `Telefon: ${phone}`,
@@ -205,15 +263,6 @@
       if (formStatus) formStatus.textContent = 'Mesaj penceresi açıldı. WhatsApp üzerinden gönderebilirsiniz.';
     }, 450);
   });
-
-  const heroMedia = $('.hero-media img');
-  if (heroMedia && !reduceMotion && window.matchMedia('(pointer:fine)').matches) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY < window.innerHeight) {
-        heroMedia.style.transform = `translateY(${window.scrollY * 0.08}px) scale(1.03)`;
-      }
-    }, { passive: true });
-  }
 
   $('#currentYear').textContent = String(new Date().getFullYear());
 })();

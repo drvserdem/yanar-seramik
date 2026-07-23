@@ -2,19 +2,19 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yanar Seramik; banyo, mutfak, fayans, granit, şap ve anahtar teslim tadilat uygulamalarında titiz işçilik, uygun fiyat ve zamanında teslim sunar.">
-  <meta name="theme-color" content="#0b0b0c">
-  <meta property="og:title" content="Yanar Seramik | Profesyonel Seramik ve Tadilat">
-  <meta property="og:description" content="Hayalinizdeki mekânları profesyonel dokunuşlarla gerçeğe dönüştürüyoruz.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Yanar Seramik; ölçü, planlama, yüzey hazırlığı ve usta işçilik odaklı seramik, fayans, granit, şap ve anahtar teslim tadilat uygulamaları sunar.">
+  <meta name="theme-color" content="#eff7f6">
+  <meta property="og:title" content="Yanar Seramik | Planlı Uygulama, Usta İşçilik">
+  <meta property="og:description" content="Seramik uygulamasında estetik sonuç, doğru planlama ve sağlam altyapıyla başlar.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yanarseramik.com/">
-  <meta property="og:image" content="https://yanarseramik.com/images/hero-tile.jpg">
+  <meta property="og:image" content="https://yanarseramik.com/images/bathroom-luxury.jpg">
   <link rel="canonical" href="https://yanarseramik.com/">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="images/hero-tile.jpg" as="image">
+  <link rel="preload" href="images/bathroom-luxury.jpg" as="image">
   <link rel="stylesheet" href="css/style.css">
-  <title>Yanar Seramik | Seramik, Şap ve Anahtar Teslim Tadilat</title>
+  <title>Yanar Seramik | Planlama, Seramik İşçiliği ve Tadilat</title>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -22,15 +22,21 @@
     "name": "Yanar Seramik",
     "url": "https://yanarseramik.com/",
     "telephone": ["+905415807369", "+905438964440"],
-    "image": "https://yanarseramik.com/images/hero-tile.jpg",
-    "description": "Banyo, mutfak, fayans, granit, şap ve anahtar teslim tadilat hizmetleri.",
+    "image": "https://yanarseramik.com/images/bathroom-luxury.jpg",
+    "description": "Banyo, mutfak, fayans, granit, şap ve anahtar teslim tadilat uygulamaları.",
     "areaServed": "TR",
     "priceRange": "₺₺"
   }
   </script>
 </head>
 <body>
-  <a class="skip-link" href="#hizmetler">İçeriğe geç</a>
+  <a class="skip-link" href="#iscilik">İçeriğe geç</a>
+  <div class="page-progress" aria-hidden="true"><span></span></div>
+
+  <div class="site-loader" id="siteLoader" aria-hidden="true">
+    <div class="loader-tile"><i></i><i></i><i></i><i></i></div>
+    <strong>YANAR</strong><span>SERAMİK</span>
+  </div>
 
   <svg class="svg-sprite" aria-hidden="true">
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.74a16 16 0 0 0 6 6l1.28-1.28a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.9Z"/></symbol>
@@ -49,216 +55,199 @@
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5L12 2Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></symbol>
     <symbol id="i-location" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
     <symbol id="i-quote" viewBox="0 0 24 24"><path d="M9 11H4a6 6 0 0 1 6-6v4a2 2 0 0 0-2 2v8H3v-8m18 0h-5a6 6 0 0 1 6-6v4a2 2 0 0 0-2 2v8h-5v-8"/></symbol>
+    <symbol id="i-plan" viewBox="0 0 24 24"><path d="M4 3h12l4 4v14H4z"/><path d="M16 3v5h5M8 12h8M8 16h6"/></symbol>
   </svg>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <p><svg><use href="#i-shield"/></svg> Titiz işçilik · Şeffaf fiyatlandırma · Zamanında teslim</p>
-      <div class="topbar-links">
-        <a href="tel:+905415807369"><svg><use href="#i-phone"/></svg>0541 580 73 69</a>
-        <span></span>
-        <a href="tel:+905438964440">0543 896 44 40</a>
-      </div>
+  <div class="topline">
+    <div class="container topline-inner">
+      <p><svg><use href="#i-shield"/></svg> Ölçüye sadık işçilik · Temiz uygulama · Planlı teslim</p>
+      <div><a href="tel:+905415807369">0541 580 73 69</a><span></span><a href="tel:+905438964440">0543 896 44 40</a></div>
     </div>
   </div>
 
   <header class="site-header" id="siteHeader">
-    <div class="container navbar">
+    <div class="container nav-shell">
       <a class="brand" href="#anasayfa" aria-label="Yanar Seramik ana sayfa">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"/><path class="house" d="M16 29v28h42V29"/><rect x="23" y="35" width="11" height="10"/><rect x="39" y="35" width="11" height="10"/><rect x="23" y="48" width="11" height="9"/><rect x="39" y="48" width="11" height="9"/></svg>
-        </span>
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"/><path d="M16 29v28h42V29"/><rect x="23" y="35" width="11" height="10"/><rect x="39" y="35" width="11" height="10"/><rect x="23" y="48" width="11" height="9"/><rect x="39" y="48" width="11" height="9"/></svg></span>
         <span class="brand-copy"><strong>YANAR</strong><small>SERAMİK</small></span>
       </a>
-
       <button class="menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false" aria-controls="mainNav"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="mainNav" aria-label="Ana menü">
         <a href="#anasayfa" class="active">Ana Sayfa</a>
+        <a href="#iscilik">İşçilik</a>
         <a href="#hizmetler">Hizmetler</a>
-        <a href="#hakkimizda">Hakkımızda</a>
+        <a href="#surec">Planlama</a>
         <a href="#projeler">Projeler</a>
-        <a href="#surec">Çalışma Süreci</a>
         <a href="#iletisim">İletişim</a>
       </nav>
-      <a class="header-cta" href="#iletisim">Ücretsiz Teklif <svg><use href="#i-arrow"/></svg></a>
+      <a class="nav-cta magnetic" href="#iletisim">Keşif Talebi <svg><use href="#i-arrow"/></svg></a>
     </div>
   </header>
 
   <main>
     <section class="hero" id="anasayfa">
-      <div class="hero-media" aria-hidden="true"><img src="images/hero-tile.jpg" alt="" width="1800" height="1200"><div class="hero-overlay"></div></div>
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="container hero-inner">
-        <div class="hero-content reveal is-visible">
-          <div class="eyebrow"><span></span> SERAMİK · ŞAP · TADİLAT</div>
-          <h1>Hayalinizdeki mekânlar,<br><em>ustalıkla</em> gerçeğe dönüşür.</h1>
-          <p>Yüzey hazırlığından son derze kadar her aşamayı özenle planlıyor; banyo, mutfak ve yaşam alanlarını kaliteli işçilikle yeniliyoruz.</p>
+      <div class="hero-picture" aria-hidden="true"><img src="images/bathroom-luxury.jpg" alt=""><div class="hero-shade"></div></div>
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="container hero-layout">
+        <div class="hero-copy load-reveal">
+          <span class="kicker light"><i></i> SERAMİK İŞÇİLİĞİ · PLANLAMA · UYGULAMA</span>
+          <h1>Güzel görünen her yüzeyin altında <em>doğru işçilik</em> vardır.</h1>
+          <p>Ölçüden tesviyeye, yüzey hazırlığından son derze kadar her adımı planlıyor; banyo, mutfak ve yaşam alanlarında kusursuz hizayı, sağlam altyapıyı ve temiz teslimi birlikte sunuyoruz.</p>
           <div class="hero-actions">
-            <a class="button button-gold" href="#iletisim">Ücretsiz Teklif Al <svg><use href="#i-arrow"/></svg></a>
-            <a class="button button-ghost" href="tel:+905415807369"><svg><use href="#i-phone"/></svg> Hemen Ara</a>
+            <a class="button button-primary magnetic" href="#iscilik">İşçilik Sistemimizi Gör <svg><use href="#i-arrow"/></svg></a>
+            <a class="button button-glass" href="tel:+905415807369"><svg><use href="#i-phone"/></svg> Hemen Ara</a>
           </div>
-          <div class="hero-points">
-            <span><svg><use href="#i-check"/></svg> Ücretsiz ön değerlendirme</span>
-            <span><svg><use href="#i-check"/></svg> Net iş planı</span>
-            <span><svg><use href="#i-check"/></svg> Temiz teslim</span>
+          <div class="hero-proof">
+            <span><b>01</b> Hassas ölçü</span><span><b>02</b> Sağlam zemin</span><span><b>03</b> Eşit derz</span><span><b>04</b> Temiz teslim</span>
           </div>
         </div>
 
-        <aside class="hero-card reveal is-visible" aria-label="Yanar Seramik hizmet sözü">
-          <span class="hero-card-label">YANAR SERAMİK GÜVENCESİ</span>
-          <strong>Kaliteyi sözle değil, işçilikle gösteriyoruz.</strong>
-          <div class="hero-card-row"><svg><use href="#i-shield"/></svg><span><b>Kaliteli işçilik</b><small>Detay odaklı uygulama</small></span></div>
-          <div class="hero-card-row"><svg><use href="#i-clock"/></svg><span><b>Zamanında teslim</b><small>Planlı ve düzenli süreç</small></span></div>
-          <a href="https://wa.me/905415807369?text=Merhaba%20Yanar%20Seramik,%20projem%20i%C3%A7in%20teklif%20almak%20istiyorum." target="_blank" rel="noreferrer">WhatsApp’tan yazın <svg><use href="#i-arrow"/></svg></a>
+        <aside class="hero-plan-card load-reveal" aria-label="Yanar Seramik çalışma planı">
+          <div class="plan-card-head"><span>PROJE PLANI</span><b>01 — 04</b></div>
+          <h2>İş başlamadan önce her detay netleşir.</h2>
+          <ol>
+            <li><span>01</span><div><b>Keşif & ölçü</b><small>Alan, yüzey ve uygulama koşulları incelenir.</small></div></li>
+            <li><span>02</span><div><b>Malzeme & desen</b><small>Seramik ölçüsü, döşeme yönü ve derz planı belirlenir.</small></div></li>
+            <li><span>03</span><div><b>Uygulama planı</b><small>Şap, yalıtım, kot ve teslim sırası netleştirilir.</small></div></li>
+          </ol>
+          <a href="https://wa.me/905415807369?text=Merhaba%20Yanar%20Seramik,%20projem%20i%C3%A7in%20ke%C5%9Fif%20talep%20ediyorum." target="_blank" rel="noreferrer">Proje fotoğraflarını gönderin <svg><use href="#i-message"/></svg></a>
         </aside>
       </div>
-      <a class="scroll-hint" href="#hizmetler"><span>Hizmetleri keşfet</span><i></i></a>
+      <a class="hero-scroll" href="#iscilik"><span>İşçiliği keşfet</span><i></i></a>
     </section>
 
-    <section class="trust-band" aria-label="Yanar Seramik çalışma ilkeleri">
-      <div class="container trust-band-grid">
-        <div class="trust-band-item reveal"><svg><use href="#i-ruler"/></svg><span><strong>Hassas Ölçüm</strong><small>Uygulama öncesi doğru planlama</small></span></div>
-        <div class="trust-band-item reveal"><svg><use href="#i-shield"/></svg><span><strong>Güvenilir İşçilik</strong><small>Dayanıklı ve temiz uygulama</small></span></div>
-        <div class="trust-band-item reveal"><svg><use href="#i-clock"/></svg><span><strong>Zamanında Teslim</strong><small>Söz verilen plana sadakat</small></span></div>
-        <div class="trust-band-item reveal"><svg><use href="#i-message"/></svg><span><strong>Şeffaf İletişim</strong><small>Süreç boyunca açık bilgilendirme</small></span></div>
+    <section class="craft-story" id="iscilik">
+      <div class="container craft-intro reveal">
+        <span class="kicker"><i></i> USTA İŞÇİLİĞİN DÖRT AŞAMASI</span>
+        <h2>Sonuç, son seramik döşendiğinde değil; <em>ilk ölçü alındığında</em> belirlenir.</h2>
+        <p>Yanar Seramik’te işçilik yalnızca kaplama değildir. Zeminin hazırlanması, kotların hesaplanması, desenin planlanması ve her yüzeyin son kontrolden geçirilmesi tek bir bütün olarak yönetilir.</p>
       </div>
-    </section>
 
-    <section class="section services" id="hizmetler">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div><span class="section-kicker">HİZMETLERİMİZ</span><h2>Her yüzeyde doğru çözüm,<br>her detayda <em>usta dokunuşu.</em></h2></div>
-          <p>Malzeme seçimi, zemin hazırlığı ve uygulama detaylarını tek bir profesyonel süreçte birleştiriyoruz.</p>
+      <div class="craft-sticky" id="craftSticky">
+        <div class="craft-visual" aria-hidden="true">
+          <img class="craft-image active" src="images/planning.jpg" alt="">
+          <img class="craft-image" src="images/cement-tile.jpg" alt="">
+          <img class="craft-image" src="images/hero-tile.jpg" alt="">
+          <img class="craft-image" src="images/tile-close.jpg" alt="">
+          <div class="craft-visual-shade"></div>
+          <div class="craft-visual-label"><span id="craftVisualNumber">01</span><b id="craftVisualTitle">Keşif & Ölçü</b></div>
         </div>
-
-        <div class="service-grid">
-          <article class="service-card service-featured reveal">
-            <div class="service-image"><img src="images/bathroom-luxury.jpg" alt="Modern banyo seramik ve tadilat uygulaması" loading="lazy"><span>01</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-bath"/></svg></div><h3>Banyo Yenileme</h3><p>Su yalıtımı, seramik kaplama, vitrifiye yerleşimi ve ince işçilikle komple banyo dönüşümü.</p><a href="#iletisim">Banyo için teklif al <svg><use href="#i-arrow"/></svg></a></div>
+        <div class="craft-steps">
+          <article class="craft-step active" data-index="0" data-title="Keşif & Ölçü">
+            <span>01</span><div><h3>Keşif & hassas ölçü</h3><p>Duvar, zemin, köşe ve eğimler kontrol edilir. Kesim noktaları, başlangıç aksı ve uygulama yönü daha iş başlamadan belirlenir.</p><ul><li>Alan ve yüzey kontrolü</li><li>Kot, eğim ve aks tespiti</li><li>Metraj ve iş planı</li></ul></div>
           </article>
-
-          <article class="service-card reveal">
-            <div class="service-image"><img src="images/kitchen-luxury.jpg" alt="Modern mutfak fayans ve granit uygulaması" loading="lazy"><span>02</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-kitchen"/></svg></div><h3>Mutfak Uygulamaları</h3><p>Tezgâh arası seramik, zemin kaplama, granit detaylar ve bütüncül mutfak yenileme.</p><a href="#iletisim">Mutfak için teklif al <svg><use href="#i-arrow"/></svg></a></div>
+          <article class="craft-step" data-index="1" data-title="Yüzey Hazırlığı">
+            <span>02</span><div><h3>Sağlam yüzey hazırlığı</h3><p>Seramiğin ömrünü belirleyen altyapıdır. Gereken yerde şap, tesviye, su yalıtımı ve uygun yapıştırıcı sistemi uygulanır.</p><ul><li>Şap ve tesviye</li><li>Su yalıtımı</li><li>Yüzeye uygun astar</li></ul></div>
           </article>
-
-          <article class="service-card reveal">
-            <div class="service-image"><img src="images/tile-close.jpg" alt="Profesyonel fayans döşeme ve tesviye uygulaması" loading="lazy"><span>03</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-grid"/></svg></div><h3>Fayans & Seramik</h3><p>Düzgün derz aralıkları, doğru kot ve temiz kesimlerle duvar ve zemin seramik uygulaması.</p><a href="#iletisim">Seramik için teklif al <svg><use href="#i-arrow"/></svg></a></div>
+          <article class="craft-step" data-index="2" data-title="Uygulama">
+            <span>03</span><div><h3>Ölçülü ve temiz uygulama</h3><p>Seramikler plana uygun ilerler; derzler eşit, kesimler temiz, köşe ve bitiş detayları kontrollü uygulanır.</p><ul><li>Eşit derz aralığı</li><li>Hassas kesim</li><li>Desen ve damar takibi</li></ul></div>
           </article>
-
-          <article class="service-card reveal">
-            <div class="service-image"><img src="images/marble-kitchen.jpg" alt="Granit ve doğal taş yüzey uygulaması" loading="lazy"><span>04</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-layers"/></svg></div><h3>Granit Uygulama</h3><p>Dayanıklı, şık ve uzun ömürlü granit yüzeyler için ölçülü kesim ve hassas montaj.</p><a href="#iletisim">Granit için teklif al <svg><use href="#i-arrow"/></svg></a></div>
-          </article>
-
-          <article class="service-card reveal">
-            <div class="service-image"><img src="images/cement-tile.jpg" alt="Seramik öncesi şap ve yüzey hazırlığı" loading="lazy"><span>05</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-trowel"/></svg></div><h3>Şap & Zemin Hazırlığı</h3><p>Kaplama öncesinde sağlam, düzgün ve doğru eğime sahip yüzey hazırlığı ve şap uygulaması.</p><a href="#iletisim">Şap için teklif al <svg><use href="#i-arrow"/></svg></a></div>
-          </article>
-
-          <article class="service-card service-turnkey reveal">
-            <div class="service-image"><img src="images/renovation-room.jpg" alt="Anahtar teslim iç mekân tadilat uygulaması" loading="lazy"><span>06</span></div>
-            <div class="service-content"><div class="service-icon"><svg><use href="#i-home"/></svg></div><h3>Anahtar Teslim Tadilat</h3><p>Yıkımdan son temizliğe kadar koordineli, kontrollü ve tek elden komple tadilat hizmeti.</p><a href="#iletisim">Projenizi anlatın <svg><use href="#i-arrow"/></svg></a></div>
+          <article class="craft-step" data-index="3" data-title="Kontrol & Teslim">
+            <span>04</span><div><h3>Son kontrol & temiz teslim</h3><p>Derz, yüzey, eğim ve birleşim noktaları tek tek kontrol edilir. Alan temizlenir ve iş, müşterimizle birlikte son kez incelenir.</p><ul><li>Detay kontrolü</li><li>Temizlik</li><li>Şeffaf teslim</li></ul></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section about" id="hakkimizda">
-      <div class="container about-grid">
-        <div class="about-visual reveal">
-          <div class="about-main"><img src="images/planning.jpg" alt="Yanar Seramik proje planlama süreci" loading="lazy"></div>
-          <div class="about-detail"><img src="images/tile-close.jpg" alt="Hassas seramik uygulama detayı" loading="lazy"></div>
-          <div class="about-badge"><strong>Y</strong><span>Titizlikle çalışır,<br>güvenle teslim ederiz.</span></div>
+    <section class="services-scene" id="hizmetler">
+      <div class="services-backdrop" aria-hidden="true"></div>
+      <div class="container services-inner">
+        <div class="section-head light reveal">
+          <span class="kicker light"><i></i> HİZMETLERİMİZ</span>
+          <h2>Her mekân için aynı reçete değil, <em>doğru teknik çözüm.</em></h2>
+          <p>Hizmet kartlarının her biri, ilgili uygulama alanını temsil eden gerçekçi proje görselleri ve iş kapsamıyla hazırlandı.</p>
         </div>
-        <div class="about-content reveal">
-          <span class="section-kicker">HAKKIMIZDA</span>
-          <h2>İyi bir tadilat, doğru plan ve <em>temiz işçilikle</em> başlar.</h2>
-          <p>Yanar Seramik olarak her projeyi yalnızca bir uygulama işi olarak görmüyoruz. Mekânın kullanımını, yüzeyin durumunu ve müşterimizin beklentisini birlikte değerlendirerek uzun ömürlü çözümler üretiyoruz.</p>
-          <p>Amacımız; işin sonunda yalnızca güzel görünen değil, yıllarca sorunsuz kullanılan yaşam alanları teslim etmek.</p>
-          <div class="about-list">
-            <div><svg><use href="#i-check"/></svg><span><b>Doğru malzeme yönlendirmesi</b><small>Mekâna ve bütçeye uygun seçim</small></span></div>
-            <div><svg><use href="#i-check"/></svg><span><b>Düzenli çalışma alanı</b><small>Koruma, temizlik ve kontrollü uygulama</small></span></div>
-            <div><svg><use href="#i-check"/></svg><span><b>İş bitiminde net kontrol</b><small>Detayları birlikte gözden geçirme</small></span></div>
+        <div class="service-cards">
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/bathroom-green.jpg" alt="Yeşil tonlarda lüks banyo seramik uygulaması"><span>01</span></div><div class="service-body"><svg><use href="#i-bath"/></svg><h3>Banyo Yenileme</h3><p>Su yalıtımı, duvar ve zemin seramiği, niş, köşe ve eğim detaylarıyla komple banyo dönüşümü.</p><a href="#iletisim">Banyo keşfi iste <svg><use href="#i-arrow"/></svg></a></div></article>
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/kitchen-luxury.jpg" alt="Lüks mutfak seramik ve granit uygulaması"><span>02</span></div><div class="service-body"><svg><use href="#i-kitchen"/></svg><h3>Mutfak Uygulamaları</h3><p>Tezgâh arası kaplama, zemin seramiği, granit detay ve mutfak yenileme uygulamaları.</p><a href="#iletisim">Mutfak keşfi iste <svg><use href="#i-arrow"/></svg></a></div></article>
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/tile-close.jpg" alt="Hassas seramik döşeme ve derz uygulaması"><span>03</span></div><div class="service-body"><svg><use href="#i-grid"/></svg><h3>Fayans & Seramik</h3><p>Doğru başlangıç aksı, eşit derz, temiz kesim ve güçlü yapışma ile duvar ve zemin kaplama.</p><a href="#iletisim">Seramik teklifi al <svg><use href="#i-arrow"/></svg></a></div></article>
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/marble-kitchen.jpg" alt="Mermer ve granit yüzeyli modern mutfak"><span>04</span></div><div class="service-body"><svg><use href="#i-layers"/></svg><h3>Granit & Taş Yüzey</h3><p>Ölçülü kesim, damar uyumu, kenar bitişleri ve hassas montajla uzun ömürlü taş yüzeyler.</p><a href="#iletisim">Taş uygulaması sor <svg><use href="#i-arrow"/></svg></a></div></article>
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/cement-tile.jpg" alt="Seramik öncesi şap ve zemin hazırlığı"><span>05</span></div><div class="service-body"><svg><use href="#i-trowel"/></svg><h3>Şap & Zemin Hazırlığı</h3><p>Kaplama öncesi doğru kot, eğim ve yüzey dayanımı için tesviye ve şap uygulaması.</p><a href="#iletisim">Zemin keşfi iste <svg><use href="#i-arrow"/></svg></a></div></article>
+          <article class="service-card reveal tilt-card"><div class="service-media"><img src="images/renovation-room.jpg" alt="Anahtar teslim iç mekân tadilat uygulaması"><span>06</span></div><div class="service-body"><svg><use href="#i-home"/></svg><h3>Anahtar Teslim Tadilat</h3><p>Yıkım, altyapı, kaplama, ince işçilik ve son temizliğe kadar tek elden proje yönetimi.</p><a href="#iletisim">Projeyi anlat <svg><use href="#i-arrow"/></svg></a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="planning-section" id="surec">
+      <div class="planning-bg" aria-hidden="true"><img src="images/planning.jpg" alt=""></div>
+      <div class="container planning-layout">
+        <div class="planning-copy reveal">
+          <span class="kicker light"><i></i> PLANLAMA SİSTEMİ</span>
+          <h2>Uygulama sahada başlar; <em>başarı plan masasında.</em></h2>
+          <p>Her proje için alanı, malzemeyi ve uygulama sırasını ayrı ayrı değerlendiriyoruz. Böylece iş sırasında sürprizleri azaltıyor, süreyi ve kaliteyi kontrol altında tutuyoruz.</p>
+          <a class="button button-primary magnetic" href="#iletisim">Projenizi Planlayalım <svg><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="planning-board reveal">
+          <div class="board-head"><span>YANAR / UYGULAMA PLANI</span><b>DETAY 01</b></div>
+          <div class="board-grid">
+            <article><svg><use href="#i-ruler"/></svg><span>01</span><h3>Ölçü & Metraj</h3><p>Alan, seramik ölçüsü, kesim ve fire oranı hesaplanır.</p></article>
+            <article><svg><use href="#i-grid"/></svg><span>02</span><h3>Döşeme Planı</h3><p>Başlangıç aksı, desen yönü ve derz çizgileri belirlenir.</p></article>
+            <article><svg><use href="#i-layers"/></svg><span>03</span><h3>Altyapı Planı</h3><p>Şap, yalıtım, tesisat ve kot sıralaması netleştirilir.</p></article>
+            <article><svg><use href="#i-clock"/></svg><span>04</span><h3>İş Programı</h3><p>Uygulama adımları ve teslim takvimi paylaşılır.</p></article>
           </div>
-          <a class="text-link" href="#surec">Çalışma sistemimizi inceleyin <svg><use href="#i-arrow"/></svg></a>
         </div>
       </div>
     </section>
 
-    <section class="metrics">
-      <div class="container metrics-grid">
-        <div class="metric reveal"><strong data-counter="100">0</strong><span>%</span><small>İşçilik odağı</small></div>
-        <div class="metric reveal"><strong data-counter="6">0</strong><span>+</span><small>Uzman hizmet alanı</small></div>
-        <div class="metric reveal"><strong data-counter="2">0</strong><span></span><small>Doğrudan iletişim hattı</small></div>
-        <div class="metric reveal"><strong data-counter="1">0</strong><span></span><small>Tek elden proje yönetimi</small></div>
-      </div>
-    </section>
-
-    <section class="section process" id="surec">
+    <section class="transformation-section">
       <div class="container">
-        <div class="section-heading process-heading reveal">
-          <div><span class="section-kicker">ÇALIŞMA SÜRECİ</span><h2>Fikirden teslimata<br><em>dört net adım.</em></h2></div>
-          <p>Belirsizliği azaltan, kontrollü ve anlaşılır bir süreçle ilerliyoruz.</p>
+        <div class="section-head reveal">
+          <span class="kicker"><i></i> ALTYAPIDAN SONUCA</span>
+          <h2>Aynı alan. <em>Doğru planlama ile bambaşka bir sonuç.</em></h2>
+          <p>Sürgüyü hareket ettirerek hazırlık aşamasından tamamlanmış mekâna geçişi inceleyin.</p>
         </div>
-        <div class="process-grid">
-          <article class="process-card reveal"><span>01</span><div class="process-icon"><svg><use href="#i-message"/></svg></div><h3>İhtiyacı Dinliyoruz</h3><p>Mekânı, beklentinizi, uygulama alanını ve önceliklerinizi konuşuyoruz.</p></article>
-          <article class="process-card reveal"><span>02</span><div class="process-icon"><svg><use href="#i-ruler"/></svg></div><h3>Ölçü & Planlama</h3><p>Yüzeyi değerlendiriyor, iş kalemlerini ve uygulama sırasını netleştiriyoruz.</p></article>
-          <article class="process-card reveal"><span>03</span><div class="process-icon"><svg><use href="#i-trowel"/></svg></div><h3>Uygulama</h3><p>Zemin hazırlığından kaplamaya kadar tüm aşamaları titizlikle tamamlıyoruz.</p></article>
-          <article class="process-card reveal"><span>04</span><div class="process-icon"><svg><use href="#i-shield"/></svg></div><h3>Kontrol & Teslim</h3><p>Detay kontrolü, temizlik ve son değerlendirme sonrası alanı teslim ediyoruz.</p></article>
+        <div class="comparison reveal" id="comparison" style="--position:52%">
+          <div class="comparison-layer comparison-after"><img src="images/bathroom-green.jpg" alt="Tamamlanmış modern banyo seramik uygulaması"><span>SONUÇ</span></div>
+          <div class="comparison-layer comparison-before"><img src="images/cement-tile.jpg" alt="Seramik öncesi zemin hazırlığı"><span>HAZIRLIK</span></div>
+          <div class="comparison-handle"><i></i></div>
+          <input aria-label="Hazırlık ve sonuç karşılaştırması" type="range" min="0" max="100" value="52">
         </div>
       </div>
     </section>
 
-    <section class="section projects" id="projeler">
+    <section class="projects-section" id="projeler">
+      <div class="projects-texture" aria-hidden="true"></div>
       <div class="container">
-        <div class="section-heading reveal">
-          <div><span class="section-kicker">PROJE VİTRİNİ</span><h2>İyi işçilik, kendini<br><em>detaylarda gösterir.</em></h2></div>
-          <p>Aşağıdaki görseller hizmet kalitemizi temsil eden örnek proje sunumlarıdır.</p>
+        <div class="section-head split reveal">
+          <div><span class="kicker"><i></i> PROJE VİTRİNİ</span><h2>İşçilik kalitesi, <em>yakından bakıldığında</em> anlaşılır.</h2></div>
+          <p>Her görsel, kartın anlattığı uygulama başlığıyla doğrudan ilişkilidir; banyo, mutfak, yüzey hazırlığı ve seramik detayları ayrı ayrı sunulur.</p>
         </div>
-        <div class="project-filters reveal" role="group" aria-label="Proje filtreleri">
-          <button class="active" type="button" data-filter="all">Tümü</button>
-          <button type="button" data-filter="banyo">Banyo</button>
-          <button type="button" data-filter="mutfak">Mutfak</button>
-          <button type="button" data-filter="uygulama">Uygulama</button>
-        </div>
-        <div class="project-grid">
-          <article class="project-card project-wide reveal" data-category="banyo"><img src="images/bathroom-luxury.jpg" alt="Modern bej seramikli banyo projesi" loading="lazy"><div><span>BANYO</span><h3>Modern ve Dengeli Banyo</h3><p>Seramik kaplama · İnce işçilik</p></div></article>
-          <article class="project-card reveal" data-category="mutfak"><img src="images/kitchen-luxury.jpg" alt="Ahşap ve koyu tonlu modern mutfak projesi" loading="lazy"><div><span>MUTFAK</span><h3>Taş Detaylı Mutfak</h3><p>Zemin · Tezgâh arası · Granit</p></div></article>
-          <article class="project-card reveal" data-category="uygulama"><img src="images/tile-close.jpg" alt="Fayans tesviye ve derz hizalama detayı" loading="lazy"><div><span>UYGULAMA</span><h3>Hassas Fayans Döşeme</h3><p>Doğru kot · Eşit derz</p></div></article>
-          <article class="project-card reveal" data-category="banyo"><img src="images/bathroom-green.jpg" alt="Bitkilerle dekore edilmiş modern banyo projesi" loading="lazy"><div><span>BANYO</span><h3>Doğal Tonlarda Banyo</h3><p>Duvar ve zemin kaplama</p></div></article>
-          <article class="project-card reveal" data-category="uygulama"><img src="images/hero-tile.jpg" alt="Seramik döşeyen profesyonel usta" loading="lazy"><div><span>UYGULAMA</span><h3>Profesyonel Zemin Kaplama</h3><p>Hazırlık · Döşeme · Kontrol</p></div></article>
-          <article class="project-card project-wide reveal" data-category="mutfak"><img src="images/marble-kitchen.jpg" alt="Mermer görünümlü modern mutfak projesi" loading="lazy"><div><span>MUTFAK</span><h3>Premium Taş Yüzeyler</h3><p>Granit · Seramik · İnce detay</p></div></article>
+        <div class="project-mosaic">
+          <article class="project-card project-large reveal"><img src="images/bathroom-luxury.jpg" alt="Lüks bej banyo seramik projesi"><div><span>BANYO / 01</span><h3>Doğru aks, dengeli kaplama</h3><p>Büyük ebat seramik · Niş · Köşe detayları</p></div></article>
+          <article class="project-card reveal"><img src="images/kitchen-luxury.jpg" alt="Modern mutfak seramik ve granit projesi"><div><span>MUTFAK / 02</span><h3>Yüzey bütünlüğü</h3><p>Tezgâh arası · Zemin · Taş detay</p></div></article>
+          <article class="project-card reveal"><img src="images/tile-close.jpg" alt="Profesyonel fayans kesim ve derz detayı"><div><span>DETAY / 03</span><h3>Eşit derz, temiz kesim</h3><p>Hassas uygulama · Kot kontrolü</p></div></article>
+          <article class="project-card project-wide reveal"><img src="images/marble-kitchen.jpg" alt="Mermer görünümlü premium mutfak uygulaması"><div><span>TAŞ YÜZEY / 04</span><h3>Damar ve desen uyumu</h3><p>Granit · Mermer görünümü · İnce montaj</p></div></article>
+          <article class="project-card reveal"><img src="images/hero-tile.jpg" alt="Zemin seramiği uygulayan profesyonel usta"><div><span>UYGULAMA / 05</span><h3>Sahada kontrollü ilerleyiş</h3><p>Yapıştırma · Tesviye · Kontrol</p></div></article>
+          <article class="project-card reveal"><img src="images/renovation-room.jpg" alt="Anahtar teslim tadilat uygulaması"><div><span>TADİLAT / 06</span><h3>Tek elden proje yönetimi</h3><p>Yıkım · Altyapı · İnce işçilik</p></div></article>
         </div>
       </div>
     </section>
 
-    <section class="quality-callout">
-      <div class="container quality-grid">
+    <section class="quality-section">
+      <div class="quality-bg" aria-hidden="true"><img src="images/tile-close.jpg" alt=""></div>
+      <div class="container quality-content">
         <div class="quality-copy reveal">
-          <span class="section-kicker">YANAR SERAMİK STANDARDI</span>
-          <h2>Görünenden fazlası:<br><em>sağlam altyapı.</em></h2>
-          <p>Seramik uygulamasının kalitesi yalnızca üst yüzeyde değil; doğru eğimde, sağlam şapta, uygun yapıştırıcıda ve temiz detay çözümünde saklıdır.</p>
-          <ul><li><svg><use href="#i-check"/></svg>Yüzeye uygun hazırlık</li><li><svg><use href="#i-check"/></svg>Hassas terazi ve kot kontrolü</li><li><svg><use href="#i-check"/></svg>Temiz kesim ve köşe detayları</li><li><svg><use href="#i-check"/></svg>Düzenli çalışma ve son temizlik</li></ul>
-          <a class="button button-gold" href="tel:+905415807369">Ustaya Danışın <svg><use href="#i-phone"/></svg></a>
+          <span class="kicker light"><i></i> YANAR SERAMİK STANDARDI</span>
+          <h2>Görünenden fazlası: <em>milimetrik kontrol.</em></h2>
+          <p>Köşe bitişleri, derz çizgileri, yüzey kotları ve eğimler; sonuç güzel görünmeden önce teknik olarak doğru olmalıdır.</p>
         </div>
-        <div class="quality-image reveal"><img src="images/inspector.jpg" alt="Tadilat alanını kontrol eden profesyonel usta" loading="lazy"><div class="quality-stamp"><svg><use href="#i-spark"/></svg><strong>Profesyonel<br>Dokunuş</strong><small>Yanar Seramik</small></div></div>
+        <div class="quality-metrics">
+          <article class="reveal"><strong data-counter="100">0</strong><span>%</span><small>İşçilik odağı</small></article>
+          <article class="reveal"><strong data-counter="4">0</strong><span></span><small>Kontrollü uygulama aşaması</small></article>
+          <article class="reveal"><strong data-counter="1">0</strong><span></span><small>Tek elden proje takibi</small></article>
+        </div>
       </div>
     </section>
 
-    <section class="section testimonials" id="yorumlar">
+    <section class="testimonial-section" id="yorumlar">
       <div class="container">
-        <div class="section-heading reveal">
-          <div><span class="section-kicker">MÜŞTERİ DENEYİMİ</span><h2>Memnuniyetiniz,<br><em>en güçlü referansımızdır.</em></h2></div>
-          <p>Bu alan gerçek müşteri yorumları geldikçe kolayca güncellenebilecek şekilde hazırlanmıştır.</p>
-        </div>
+        <div class="section-head reveal"><span class="kicker"><i></i> MÜŞTERİ DENEYİMİ</span><h2>Güven, <em>iş bittikten sonra</em> da devam eder.</h2></div>
         <div class="testimonial-slider reveal" aria-roledescription="carousel">
           <button class="slider-button prev" type="button" aria-label="Önceki yorum">‹</button>
           <div class="testimonial-track">
-            <article class="testimonial active"><svg class="quote-icon"><use href="#i-quote"/></svg><p>“Banyo yenileme sürecinde her aşamayı açıkça anlattılar. İşçilik temiz, detaylar düzgün ve teslimat planlandığı gibi tamamlandı.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Banyo Yenileme</span></div></article>
-            <article class="testimonial"><svg class="quote-icon"><use href="#i-quote"/></svg><p>“Mutfak zemininde hem doğru malzemeye yönlendirdiler hem de uygulamayı çok düzenli yaptılar. Sonuç beklentimizin üzerinde oldu.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Mutfak Uygulaması</span></div></article>
-            <article class="testimonial"><svg class="quote-icon"><use href="#i-quote"/></svg><p>“Fayansların hizası, köşe kesimleri ve derz detayları gerçekten çok özenliydi. Güvenle tavsiye edebileceğimiz bir ekip.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Seramik Uygulaması</span></div></article>
+            <article class="testimonial active"><svg><use href="#i-quote"/></svg><p>“Banyo yenileme sürecinde ölçü ve planlamayı en başta detaylıca anlattılar. İşçilik temiz, derzler düzgün ve teslimat planlandığı gibi tamamlandı.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Banyo Yenileme</span></div></article>
+            <article class="testimonial"><svg><use href="#i-quote"/></svg><p>“Mutfak zemininde önce yüzeyi düzelttiler, sonra seramikleri çok düzenli uyguladılar. Sonuç hem estetik hem de sağlam oldu.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Mutfak Uygulaması</span></div></article>
+            <article class="testimonial"><svg><use href="#i-quote"/></svg><p>“Köşe kesimleri, damar takibi ve derz aralıkları gerçekten çok özenliydi. Süreç boyunca ne yapılacağını net biçimde anlattılar.”</p><div><strong>Örnek Müşteri Yorumu</strong><span>Seramik Uygulaması</span></div></article>
           </div>
           <button class="slider-button next" type="button" aria-label="Sonraki yorum">›</button>
           <div class="slider-dots" aria-label="Yorum seçimi"></div>
@@ -266,49 +255,30 @@
       </div>
     </section>
 
-    <section class="section faq" id="sss">
-      <div class="container faq-grid">
-        <div class="faq-intro reveal">
-          <span class="section-kicker">SIK SORULAN SORULAR</span>
-          <h2>Projeniz başlamadan önce bilmeniz gerekenler.</h2>
-          <p>Net fiyat ve süre, alanın ölçüsü, mevcut yüzeyin durumu ve seçilecek malzemeye göre belirlenir.</p>
-          <a href="https://wa.me/905415807369?text=Merhaba%20Yanar%20Seramik,%20bir%20sorum%20olacakt%C4%B1." target="_blank" rel="noreferrer">Başka bir sorunuz mu var? <svg><use href="#i-arrow"/></svg></a>
-        </div>
-        <div class="accordion reveal">
-          <div class="accordion-item active"><button type="button" aria-expanded="true"><span>Teklif nasıl hazırlanıyor?</span><b>+</b></button><div class="accordion-content"><p>Uygulama alanı, yüzey durumu, iş kapsamı ve malzeme tercihleri değerlendirildikten sonra iş kalemleri netleştirilir ve teklif sunulur.</p></div></div>
-          <div class="accordion-item"><button type="button" aria-expanded="false"><span>Malzemeyi siz mi temin ediyorsunuz?</span><b>+</b></button><div class="accordion-content"><p>Projeye göre yalnızca işçilik veya malzeme dâhil çözüm planlanabilir. Uygun ürün seçimi konusunda yönlendirme yapılır.</p></div></div>
-          <div class="accordion-item"><button type="button" aria-expanded="false"><span>Banyo tadilatı ne kadar sürer?</span><b>+</b></button><div class="accordion-content"><p>Süre; yıkım, tesisat, yalıtım, yüzey hazırlığı ve kaplama kapsamına göre değişir. İnceleme sonrası gerçekçi bir iş programı paylaşılır.</p></div></div>
-          <div class="accordion-item"><button type="button" aria-expanded="false"><span>Küçük metrajlı işler için hizmet veriyor musunuz?</span><b>+</b></button><div class="accordion-content"><p>İşin konumu, kapsamı ve uygulama detayına göre küçük ve büyük ölçekli talepler ayrı ayrı değerlendirilir.</p></div></div>
-          <div class="accordion-item"><button type="button" aria-expanded="false"><span>Keşif ücretli mi?</span><b>+</b></button><div class="accordion-content"><p>Ön değerlendirme telefon veya WhatsApp üzerinden yapılabilir. Yerinde keşif koşulları projenin konumu ve kapsamına göre netleştirilir.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact" id="iletisim">
-      <div class="contact-bg" aria-hidden="true"></div>
-      <div class="container contact-grid">
+    <section class="contact-section" id="iletisim">
+      <div class="contact-bg" aria-hidden="true"><img src="images/inspector.jpg" alt=""></div>
+      <div class="container contact-layout">
         <div class="contact-copy reveal">
-          <span class="section-kicker">İLETİŞİM</span>
-          <h2>Mekânınızı yenilemeye<br><em>bir konuşmayla başlayın.</em></h2>
-          <p>Uygulama alanının fotoğraflarını ve yaklaşık ölçülerini WhatsApp üzerinden gönderin; ihtiyacınızı birlikte değerlendirelim.</p>
+          <span class="kicker light"><i></i> ÜCRETSİZ ÖN DEĞERLENDİRME</span>
+          <h2>Projenizi fotoğraf ve ölçülerle gönderin, <em>birlikte planlayalım.</em></h2>
+          <p>Uygulama alanının fotoğraflarını, yaklaşık ölçülerini ve istediğiniz seramik modelini WhatsApp üzerinden paylaşın. İşin kapsamını birlikte değerlendirelim.</p>
           <div class="contact-lines">
             <a href="tel:+905415807369"><svg><use href="#i-phone"/></svg><span><small>1. İletişim Hattı</small><strong>0541 580 73 69</strong></span></a>
             <a href="tel:+905438964440"><svg><use href="#i-phone"/></svg><span><small>2. İletişim Hattı</small><strong>0543 896 44 40</strong></span></a>
             <div><svg><use href="#i-location"/></svg><span><small>Hizmet Bölgesi</small><strong>Konum ve proje kapsamı için arayın</strong></span></div>
           </div>
         </div>
-
         <form class="quote-form reveal" id="quoteForm">
-          <div class="form-title"><span>ÜCRETSİZ ÖN DEĞERLENDİRME</span><h3>Projenizi kısaca anlatın.</h3><p>Form gönderildiğinde bilgileriniz WhatsApp mesajı olarak hazırlanır.</p></div>
+          <div class="form-head"><span>PROJE BİLGİLERİ</span><h3>Keşif talebi oluşturun.</h3><p>Form, bilgilerinizi WhatsApp mesajı olarak hazırlar.</p></div>
           <div class="form-grid">
             <label><span>Ad Soyad</span><input type="text" name="name" placeholder="Adınız ve soyadınız" minlength="3" required></label>
             <label><span>Telefon</span><input type="tel" name="phone" placeholder="05xx xxx xx xx" inputmode="tel" required></label>
-            <label><span>Hizmet</span><select name="service" required><option value="">Hizmet seçin</option><option>Banyo Yenileme</option><option>Mutfak Uygulamaları</option><option>Fayans & Seramik</option><option>Granit Uygulama</option><option>Şap & Zemin Hazırlığı</option><option>Anahtar Teslim Tadilat</option></select></label>
+            <label><span>Hizmet</span><select name="service" required><option value="">Hizmet seçin</option><option>Banyo Yenileme</option><option>Mutfak Uygulamaları</option><option>Fayans & Seramik</option><option>Granit & Taş Yüzey</option><option>Şap & Zemin Hazırlığı</option><option>Anahtar Teslim Tadilat</option></select></label>
             <label><span>İlçe / Bölge</span><input type="text" name="location" placeholder="Projenin bulunduğu bölge"></label>
-            <label class="form-full"><span>Proje Detayı</span><textarea name="message" rows="4" placeholder="Yaklaşık alan, mevcut durum ve istediğiniz uygulama..."></textarea></label>
+            <label class="form-full"><span>Proje Detayı</span><textarea name="message" rows="4" placeholder="Yaklaşık alan, mevcut durum, seramik ölçüsü veya istediğiniz uygulama..."></textarea></label>
           </div>
           <label class="form-consent"><input type="checkbox" required><span>Bilgilerimin teklif iletişimi amacıyla kullanılmasını kabul ediyorum.</span></label>
-          <button class="button button-gold form-submit" type="submit">WhatsApp’tan Gönder <svg><use href="#i-message"/></svg></button>
+          <button class="button button-primary form-submit" type="submit">WhatsApp’tan Gönder <svg><use href="#i-message"/></svg></button>
           <p class="form-status" id="formStatus" aria-live="polite"></p>
         </form>
       </div>
@@ -317,20 +287,17 @@
 
   <footer class="footer">
     <div class="container footer-grid">
-      <div class="footer-brand">
-        <a class="brand" href="#anasayfa"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"/><path class="house" d="M16 29v28h42V29"/><rect x="23" y="35" width="11" height="10"/><rect x="39" y="35" width="11" height="10"/><rect x="23" y="48" width="11" height="9"/><rect x="39" y="48" width="11" height="9"/></svg></span><span class="brand-copy"><strong>YANAR</strong><small>SERAMİK</small></span></a>
-        <p>Hayalinizdeki mekânları profesyonel dokunuşlarla gerçeğe dönüştürüyoruz.</p>
-      </div>
-      <div><h4>Hızlı Bağlantılar</h4><a href="#hizmetler">Hizmetler</a><a href="#hakkimizda">Hakkımızda</a><a href="#projeler">Projeler</a><a href="#surec">Çalışma Süreci</a></div>
+      <div class="footer-brand"><a class="brand" href="#anasayfa"><span class="brand-mark"><svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"/><path d="M16 29v28h42V29"/><rect x="23" y="35" width="11" height="10"/><rect x="39" y="35" width="11" height="10"/><rect x="23" y="48" width="11" height="9"/><rect x="39" y="48" width="11" height="9"/></svg></span><span class="brand-copy"><strong>YANAR</strong><small>SERAMİK</small></span></a><p>Planlı uygulama, güçlü altyapı ve usta işçilikle yaşam alanlarını yeniliyoruz.</p></div>
+      <div><h4>Hızlı Bağlantılar</h4><a href="#iscilik">İşçilik Sistemimiz</a><a href="#hizmetler">Hizmetler</a><a href="#surec">Planlama</a><a href="#projeler">Projeler</a></div>
       <div><h4>Hizmetler</h4><a href="#hizmetler">Banyo & Mutfak</a><a href="#hizmetler">Fayans & Seramik</a><a href="#hizmetler">Granit & Şap</a><a href="#hizmetler">Anahtar Teslim Tadilat</a></div>
-      <div><h4>İletişim</h4><a href="tel:+905415807369">0541 580 73 69</a><a href="tel:+905438964440">0543 896 44 40</a><a href="https://wa.me/905415807369" target="_blank" rel="noreferrer">WhatsApp</a><a href="#iletisim">Teklif Formu</a></div>
+      <div><h4>İletişim</h4><a href="tel:+905415807369">0541 580 73 69</a><a href="tel:+905438964440">0543 896 44 40</a><a href="https://wa.me/905415807369" target="_blank" rel="noreferrer">WhatsApp</a><a href="#iletisim">Keşif Formu</a></div>
     </div>
-    <div class="container footer-bottom"><p>© <span id="currentYear"></span> Yanar Seramik. Tüm hakları saklıdır.</p><div><a href="#sss">Sık Sorulan Sorular</a><a href="#anasayfa">Yukarı Çık ↑</a></div></div>
+    <div class="container footer-bottom"><p>© <span id="currentYear"></span> Yanar Seramik. Tüm hakları saklıdır.</p><a href="#anasayfa">Yukarı Çık ↑</a></div>
   </footer>
 
-  <a class="floating-whatsapp" href="https://wa.me/905415807369?text=Merhaba%20Yanar%20Seramik,%20teklif%20almak%20istiyorum." target="_blank" rel="noreferrer" aria-label="WhatsApp ile iletişim"><svg><use href="#i-message"/></svg><span>WhatsApp</span></a>
-  <div class="mobile-actions" aria-label="Hızlı iletişim"><a href="tel:+905415807369"><svg><use href="#i-phone"/></svg><span>Ara</span></a><a href="#iletisim"><svg><use href="#i-ruler"/></svg><span>Teklif Al</span></a><a href="https://wa.me/905415807369" target="_blank" rel="noreferrer"><svg><use href="#i-message"/></svg><span>WhatsApp</span></a></div>
+  <a class="floating-whatsapp" href="https://wa.me/905415807369?text=Merhaba%20Yanar%20Seramik,%20ke%C5%9Fif%20talep%20ediyorum." target="_blank" rel="noreferrer" aria-label="WhatsApp ile iletişim"><svg><use href="#i-message"/></svg></a>
+  <div class="mobile-bar" aria-label="Hızlı iletişim"><a href="tel:+905415807369"><svg><use href="#i-phone"/></svg><span>Ara</span></a><a href="#iletisim"><svg><use href="#i-ruler"/></svg><span>Keşif</span></a><a href="https://wa.me/905415807369" target="_blank" rel="noreferrer"><svg><use href="#i-message"/></svg><span>WhatsApp</span></a></div>
 
-  <script src="js/script.js" defer></script>
+  <script src="js/script.js"></script>
 </body>
 </html>

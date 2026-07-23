@@ -1,29 +1,27 @@
-# Yanar Seramik Web Sitesi
+# Yanar Seramik — İşçilik ve Planlama Odaklı Web Sitesi
 
-Yanar Seramik için hazırlanmış, mobil uyumlu ve tek sayfalık kurumsal web sitesi.
+Bu sürüm, Yanar Seramik için sıfırdan yeniden tasarlanmış tek sayfalık kurumsal web sitesidir.
 
-## Dosyalar
+## Tasarım yaklaşımı
 
-- `index.html` — ana sayfa
-- `css/style.css` — tüm tasarım ve mobil uyumluluk
-- `js/script.js` — menü, animasyonlar, sayaçlar, galeri filtresi, yorum kaydırıcısı, SSS ve WhatsApp teklif formu
-- `images/` — yerel görseller ve favicon
-- `robots.txt`, `sitemap.xml` — temel SEO dosyaları
+- Apple benzeri güçlü ama kontrollü geçişler
+- Seramik ve lüks mekân görselleriyle doldurulmuş bölüm arka planları
+- Ölçü, planlama, yüzey hazırlığı, uygulama ve teslim süreçlerini öne çıkaran içerik
+- Scroll ile değişen işçilik hikâyesi
+- Etkileşimli hazırlık/sonuç karşılaştırma sürgüsü
+- 3B hareketli hizmet kartları
+- Proje mozaiği, sayaçlar, yorum carousel'i ve WhatsApp teklif formu
+- Mobilde sadeleştirilmiş menü, yatay işçilik kartları ve sabit iletişim çubuğu
 
 ## Çalıştırma
 
-Klasörü VS Code ile açıp `index.html` dosyasına sağ tıklayın ve **Open with Live Server** seçeneğini kullanın. Site doğrudan dosyaya çift tıklanarak da açılabilir.
+`index.html` dosyasını VS Code üzerinden **Open with Live Server** ile açın.
 
-## Yayına almadan önce kontrol edin
+## Yayına güncelleme
 
-1. Hizmet bölgesini gerçek çalışma alanına göre güncelleyin.
-2. Örnek müşteri yorumlarını gerçek yorumlarla değiştirin.
-3. Proje vitrini görsellerini firmanın kendi tamamlanmış iş fotoğraflarıyla değiştirmek marka güvenini artırır.
-4. Alan adı ve hosting bağlandıktan sonra `sitemap.xml` dosyasını Google Search Console'a gönderin.
+Mevcut GitHub projesindeki dosyaları bu klasördeki dosyalarla değiştirin. Ardından GitHub Desktop üzerinden:
 
-## İletişim numaraları
+1. Commit
+2. Push origin
 
-- 0541 580 73 69
-- 0543 896 44 40
-
-Teklif formu gönderildiğinde bilgiler bir WhatsApp mesajı olarak hazırlanır; ayrı bir veritabanı veya randevu sistemi yoktur.
+Vercel bağlıysa yayın otomatik güncellenir.
