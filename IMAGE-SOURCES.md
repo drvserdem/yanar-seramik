@@ -1,21 +1,16 @@
 # Görsel Kaynakları
 
-Sitedeki profesyonel örnek fotoğraflar Pexels üzerinden indirilmiştir ve Pexels kullanım koşullarına tabidir. Yayına geçerken firmanın gerçek proje görselleriyle değiştirilmesi önerilir.
+Bu sürümde hizmet kartlarında kullanılan görseller kullanıcı tarafından sağlanmıştır:
 
-Kullanılan Pexels fotoğraf kimlikleri:
-- 29181494
-- 11806490
-- 4030061
-- 8293648
-- 29080604
-- 8961298
-- 15220866
-- 7173665
-- 19245072
-- 8146212
-- 36035073
-- 11806489
+- `images/bathroom-green.jpg` — Banyo Yenileme
+- `images/kitchen-luxury.jpg` — Mutfak Uygulamaları
+- `images/tile-close.jpg` — Fayans & Seramik
+- `images/marble-kitchen.jpg` — Granit & Taş Yüzey
+- `images/cement-tile.jpg` — Şap & Zemin Hazırlığı
+- `images/renovation-room.jpg` — Anahtar Teslim Tadilat
 
-## Seramik Mozaik Sehpa
+`images/planning.jpg`, Keşif & Hassas Ölçü bölümü için proje kapsamında oluşturulan özgün tanıtım görselidir.
 
-3D ürün bölümü için kullanılan ürün fotoğrafları kullanıcı tarafından sağlanmıştır. Sarı ve yeşil 3D modeller, gönderilen ürün fotoğrafları ve 81 × 49 × 38 cm katalog ölçüleri temel alınarak bu proje için yeniden oluşturulmuştur.
+3D ürün modelleri ve ürün görselleri proje içindeki `models/`, `images/products/` ve `tools/` klasörlerinde yer alır.
+
+- `images/transformation-before.jpg` ve `images/transformation-after.jpg`: Aynı mekânın hazırlık ve tamamlanmış zemin uygulamasını gösteren eşleştirilmiş karşılaştırma görselleri.

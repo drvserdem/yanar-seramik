@@ -1,4 +1,5 @@
-# Yanar Seramik — İşçilik, Planlama ve 3D Ürün Deneyimi
+# Yanar Seramik — 3D / AR ve Güncel Hizmet Görselleri
+
 
 Bu sürüm, sevilen Yanar Seramik tasarımını korur ve siteye profesyonel bir **3D ürün görüntüleyici + artırılmış gerçeklik (Evinde Gör)** sistemi ekler.
 
