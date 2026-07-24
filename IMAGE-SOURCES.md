@@ -15,3 +15,7 @@ Kullanılan Pexels fotoğraf kimlikleri:
 - 8146212
 - 36035073
 - 11806489
+
+## Seramik Mozaik Sehpa
+
+3D ürün bölümü için kullanılan ürün fotoğrafları kullanıcı tarafından sağlanmıştır. Sarı ve yeşil 3D modeller, gönderilen ürün fotoğrafları ve 81 × 49 × 38 cm katalog ölçüleri temel alınarak bu proje için yeniden oluşturulmuştur.

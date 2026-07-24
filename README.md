@@ -1,27 +1,41 @@
-# Yanar Seramik — İşçilik ve Planlama Odaklı Web Sitesi
+# Yanar Seramik — İşçilik, Planlama ve 3D Ürün Deneyimi
 
-Bu sürüm, Yanar Seramik için sıfırdan yeniden tasarlanmış tek sayfalık kurumsal web sitesidir.
+Bu sürüm, sevilen Yanar Seramik tasarımını korur ve siteye profesyonel bir **3D ürün görüntüleyici + artırılmış gerçeklik (Evinde Gör)** sistemi ekler.
 
-## Tasarım yaklaşımı
+## Mevcut tasarım korunarak eklenenler
 
-- Apple benzeri güçlü ama kontrollü geçişler
-- Seramik ve lüks mekân görselleriyle doldurulmuş bölüm arka planları
-- Ölçü, planlama, yüzey hazırlığı, uygulama ve teslim süreçlerini öne çıkaran içerik
+- İşçilik ve planlama odaklı mevcut kurumsal tasarım
 - Scroll ile değişen işçilik hikâyesi
-- Etkileşimli hazırlık/sonuç karşılaştırma sürgüsü
-- 3B hareketli hizmet kartları
-- Proje mozaiği, sayaçlar, yorum carousel'i ve WhatsApp teklif formu
-- Mobilde sadeleştirilmiş menü, yatay işçilik kartları ve sabit iletişim çubuğu
+- Etkileşimli hazırlık/sonuç karşılaştırması
+- Hareketli hizmet ve proje kartları
+- Mobil sabit iletişim alanı
+- El yapımı seramik mozaik sehpanın gerçek ölçülü 3D modeli
+- Sarı ve yeşil renk seçenekleri
+- Fare ve dokunmatik ile 360° döndürme / yakınlaştırma
+- iPhone ve Android için “Evinde Gör” AR özelliği
+- Bilgisayardan telefona geçiş için QR kod
+- Ayrı tam ekran ürün sayfası: `urun-3d.html`
+
+## Ürün bilgileri
+
+- Ölçü: 81 × 49 × 38h cm
+- Ağırlık: 40 kg
+- Kaplama: Seramik veya cam mozaik
+- İç iskelet: Ahşap
+- Kullanım: Sadece iç mekân
+- Bakım: Nemli bez ile silinebilir
 
 ## Çalıştırma
 
 `index.html` dosyasını VS Code üzerinden **Open with Live Server** ile açın.
 
+3D model CDN bileşeni kullandığı için internet bağlantısı gerekir. AR özelliği yalnızca HTTPS üzerinden ve AR destekli telefonlarda çalışır. Vercel yayını bu şartı karşılar.
+
 ## Yayına güncelleme
 
-Mevcut GitHub projesindeki dosyaları bu klasördeki dosyalarla değiştirin. Ardından GitHub Desktop üzerinden:
+1. Dosyaları mevcut GitHub proje klasörüne kopyalayın.
+2. GitHub Desktop üzerinden commit oluşturun.
+3. `Push origin` yapın.
+4. Vercel bağlıysa site otomatik güncellenir.
 
-1. Commit
-2. Push origin
-
-Vercel bağlıysa yayın otomatik güncellenir.
+Ayrıntılar için `AR-KURULUM.md` dosyasına bakın.

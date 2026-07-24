@@ -14,6 +14,7 @@
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="images/bathroom-luxury.jpg" as="image">
   <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"></script>
   <title>Yanar Seramik | Planlama, Seramik İşçiliği ve Tadilat</title>
   <script type="application/ld+json">
   {
@@ -77,6 +78,7 @@
         <a href="#iscilik">İşçilik</a>
         <a href="#hizmetler">Hizmetler</a>
         <a href="#surec">Planlama</a>
+        <a href="#urun-3d">3D Ürün</a>
         <a href="#projeler">Projeler</a>
         <a href="#iletisim">İletişim</a>
       </nav>
@@ -205,6 +207,101 @@
       </div>
     </section>
 
+
+    <section class="product-ar-section" id="urun-3d">
+      <div class="product-ar-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-head split reveal">
+          <div>
+            <span class="kicker"><i></i> 3D ÜRÜN DENEYİMİ</span>
+            <h2>Ürünü her açıdan inceleyin, <em>evinizde gerçek ölçüsüyle görün.</em></h2>
+          </div>
+          <p>El yapımı mozaik sehpayı fareyle veya parmağınızla döndürün. Telefonunuzdan “Evinde Gör” seçeneğine dokunarak ürünü kamerada zemine yerleştirin.</p>
+        </div>
+
+        <div class="product-ar-layout">
+          <div class="product-viewer-card reveal">
+            <div class="viewer-toolbar">
+              <span><i></i> CANLI 3D MODEL</span>
+              <button type="button" id="resetProductCamera" aria-label="3D görünümünü sıfırla">Görünümü sıfırla</button>
+            </div>
+            <model-viewer
+              id="mosaicTableViewer"
+              src="models/mosaic-coffee-table-yellow.glb"
+              poster="images/products/mosaic-table-yellow-spec.webp"
+              alt="Sarı seramik mozaik kaplamalı el yapımı sehpanın üç boyutlu modeli"
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="1200"
+              rotation-per-second="18deg"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              ar-scale="fixed"
+              ar-placement="floor"
+              shadow-intensity="1.15"
+              shadow-softness="0.85"
+              exposure="1.05"
+              environment-image="neutral"
+              camera-orbit="35deg 68deg 1.35m"
+              min-camera-orbit="auto 25deg 0.8m"
+              max-camera-orbit="auto 90deg 2.6m"
+              field-of-view="30deg"
+              touch-action="pan-y">
+              <button slot="ar-button" class="viewer-ar-button" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9L12 2Z"/><path d="m4 6.5 8 4.5 8-4.5M12 11v9"/></svg>
+                Evinde Gör
+              </button>
+              <div class="ar-error" id="productArError">Bu cihazda AR açılamadı. 3D modeli tarayıcıda inceleyebilirsiniz.</div>
+            </model-viewer>
+
+            <div class="product-viewer-footer">
+              <div class="viewer-instruction"><span>↔</span> Döndürmek için sürükleyin <b>·</b> Yakınlaştırmak için kaydırın</div>
+              <div class="color-options" aria-label="Renk seçimi">
+                <span>Renk:</span>
+                <button class="color-option active" type="button" data-color="yellow" data-model="models/mosaic-coffee-table-yellow.glb" data-poster="images/products/mosaic-table-yellow-spec.webp" aria-pressed="true"><i class="swatch-yellow"></i>Sarı</button>
+                <button class="color-option" type="button" data-color="green" data-model="models/mosaic-coffee-table-green.glb" data-poster="images/products/mosaic-table-green-spec.webp" aria-pressed="false"><i class="swatch-green"></i>Yeşil</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="product-info-card reveal">
+            <div class="product-info-head">
+              <span>EL YAPIMI / MOZAİK KOLEKSİYONU</span>
+              <h3>Seramik Mozaik Orta Sehpa</h3>
+              <p>Ahşap iç iskelet üzerine seramik veya cam mozaik kaplama. Her ürün usta işçiliğiyle tek tek hazırlanır.</p>
+            </div>
+            <div class="product-spec-grid">
+              <div><small>Ölçü</small><strong>81 × 49 × 38h cm</strong></div>
+              <div><small>Ağırlık</small><strong>40 kg</strong></div>
+              <div><small>Kaplama</small><strong>Seramik / Cam Mozaik</strong></div>
+              <div><small>İç İskelet</small><strong>Ahşap</strong></div>
+              <div><small>Kullanım</small><strong>Sadece iç mekân</strong></div>
+              <div><small>Bakım</small><strong>Nemli bezle silinir</strong></div>
+            </div>
+            <div class="product-ar-actions">
+              <button class="button button-primary magnetic" id="openProductAR" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9L12 2Z"/><path d="m4 6.5 8 4.5 8-4.5M12 11v9"/></svg>
+                Evinde Gör
+              </button>
+              <a class="button product-detail-link" href="urun-3d.html">Tam ekran ürün deneyimi <svg><use href="#i-arrow"/></svg></a>
+            </div>
+            <div class="product-qr">
+              <img src="images/products/evinde-gor-qr.png" alt="Ürünü telefonda artırılmış gerçeklikle açan QR kodu" width="150" height="150">
+              <div><strong>Telefonla okutun</strong><p>QR kodu okutun, ürün sayfasında “Kamerada Gör” düğmesine dokunun ve sehpayı zemine yerleştirin.</p></div>
+            </div>
+            <p class="handmade-note"><b>Önemli not:</b> Ürünler el yapımı olduğu için küçük doğal kusurlar görülebilir. Farklı ışık koşulları seramiklerde ton farklılıklarına neden olabilir. 3D model, ölçü ve formu anlatan dijital bir temsildir.</p>
+          </aside>
+        </div>
+
+        <div class="product-photo-strip reveal" aria-label="Ürün fotoğrafları">
+          <figure><img src="images/products/mosaic-table-yellow-lifestyle.webp" alt="Sarı seramik mozaik sehpanın yaşam alanındaki görünümü" loading="lazy"><figcaption>Sarı / yaşam alanı</figcaption></figure>
+          <figure><img src="images/products/mosaic-table-yellow-detail.webp" alt="Sarı seramik mozaik sehpanın yakın işçilik detayı" loading="lazy"><figcaption>Sarı / işçilik detayı</figcaption></figure>
+          <figure><img src="images/products/mosaic-table-green-lifestyle.webp" alt="Yeşil seramik mozaik sehpanın yaşam alanındaki görünümü" loading="lazy"><figcaption>Yeşil / yaşam alanı</figcaption></figure>
+          <figure><img src="images/products/mosaic-table-green-detail.webp" alt="Yeşil seramik mozaik sehpanın yakın işçilik detayı" loading="lazy"><figcaption>Yeşil / işçilik detayı</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
     <section class="projects-section" id="projeler">
       <div class="projects-texture" aria-hidden="true"></div>
       <div class="container">
@@ -285,6 +382,17 @@
     </section>
   </main>
 
+  <div class="ar-guide" id="arGuide" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="arGuideTitle">
+    <div class="ar-guide-card">
+      <div class="ar-guide-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4.5v9L12 20l-8-4.5v-9L12 2Z"/><path d="m4 6.5 8 4.5 8-4.5M12 11v9"/></svg></div>
+      <h2 id="arGuideTitle">Sehpayı evinizde görün</h2>
+      <p id="arGuideMessage">Telefonunuzdan açtıysanız kamerayı başlatın. Bilgisayardaysanız aşağıdaki QR kodu telefonunuzla okutun.</p>
+      <img src="images/products/evinde-gor-qr.png" alt="Evinde Gör QR kodu" style="width:150px;margin:14px auto;border-radius:14px">
+      <ol><li>Zemini tarayın.</li><li>Sehpanın yerleşeceği noktaya dokunun.</li><li>Ürünü gerçek ölçüsünde inceleyin.</li></ol>
+      <div class="ar-guide-actions"><button class="button button-primary" id="startProductAR" type="button">Kamerayı Aç ve Başlat</button><button class="ar-guide-close" id="closeArGuide" type="button">Şimdilik kapat</button></div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand"><a class="brand" href="#anasayfa"><span class="brand-mark"><svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"/><path d="M16 29v28h42V29"/><rect x="23" y="35" width="11" height="10"/><rect x="39" y="35" width="11" height="10"/><rect x="23" y="48" width="11" height="9"/><rect x="39" y="48" width="11" height="9"/></svg></span><span class="brand-copy"><strong>YANAR</strong><small>SERAMİK</small></span></a><p>Planlı uygulama, güçlü altyapı ve usta işçilikle yaşam alanlarını yeniliyoruz.</p></div>
@@ -299,5 +407,6 @@
   <div class="mobile-bar" aria-label="Hızlı iletişim"><a href="tel:+905415807369"><svg><use href="#i-phone"/></svg><span>Ara</span></a><a href="#iletisim"><svg><use href="#i-ruler"/></svg><span>Keşif</span></a><a href="https://wa.me/905415807369" target="_blank" rel="noreferrer"><svg><use href="#i-message"/></svg><span>WhatsApp</span></a></div>
 
   <script src="js/script.js"></script>
+  <script src="js/product-3d.js"></script>
 </body>
 </html>
