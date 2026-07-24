@@ -1,35 +1,34 @@
-# 3D Ürün ve “Evinde Gör” Kurulumu
+# Yanar Seramik 3D / AR Kurulumu
 
-Bu sürümde Yanar Seramik ana sayfasına mevcut tasarımı bozmadan bir **3D ürün deneyimi** eklendi. Ayrıca QR kodla açılan ayrı bir ürün sayfası bulunur:
+## iPhone / iPad
 
-- Ana sayfa ürün bölümü: `https://yanarseramik.com/#urun-3d`
-- Tam ekran ürün sayfası: `https://yanarseramik.com/urun-3d.html`
-- QR / doğrudan AR girişi: `https://yanarseramik.com/urun-3d.html?ar=1`
+- Site, Apple AR Quick Look için doğrudan `.usdz` dosyaları kullanır.
+- Sarı ve yeşil ürün için ayrı USDZ dosyası vardır.
+- “Kamerayı Aç ve Başlat” düğmesi iPhone'da `rel="ar"` bağlantısını tetikler.
+- Instagram veya WhatsApp içi tarayıcıda açılmazsa bağlantı Safari'de açılmalıdır.
+- AR yalnızca HTTPS üzerinde çalışır. Vercel yayını bu koşulu sağlar.
+
+## Android
+
+- GLB dosyası WebXR veya Google Scene Viewer ile açılır.
+- `model-viewer` AR modu doğrudan başlatılır.
+
+## Gerçek ölçü
+
+Model dış ölçüsü 81 × 49 × 38 cm olarak hazırlanmıştır ve AR ölçeği sabittir.
 
 ## Dosyalar
 
 - `models/mosaic-coffee-table-yellow.glb`
 - `models/mosaic-coffee-table-green.glb`
-- `urun-3d.html`
-- `js/product-3d.js`
-- `images/products/evinde-gor-qr.png`
+- `models/mosaic-coffee-table-yellow.usdz`
+- `models/mosaic-coffee-table-green.usdz`
+- `vercel.json`: GLB ve USDZ MIME başlıklarını tanımlar.
 
-## AR çalışma şekli
+## Sorun giderme
 
-- Android: WebXR veya Google Scene Viewer
-- iPhone / iPad: Apple Quick Look
-- Desteklenmeyen cihaz: Normal 3D görüntüleyici
-
-Model gerçek katalog ölçülerinde hazırlanmıştır: **81 × 49 × 38 cm**. `ar-scale="fixed"` kullanıldığı için AR modunda ürünün ölçeği sabit tutulur.
-
-## Yayına alma
-
-1. Bu klasördeki dosyaları mevcut `yanar-seramik` proje klasörüne kopyalayın.
-2. GitHub Desktop içinde değişiklikleri commit edin.
-3. `Push origin` yapın.
-4. Vercel otomatik olarak yeni sürümü yayınlar.
-5. Telefonla `https://yanarseramik.com/urun-3d.html?ar=1` adresini açıp test edin.
-
-## Gerçek ürün modeli hakkında
-
-3D model, gönderilen ürün fotoğrafları ve katalog ölçüleri temel alınarak yeniden oluşturulmuş dijital bir temsildir. Ürünün formu, açık raf yapısı, mozaik kaplaması ve gerçek ölçüsü modellenmiştir. El yapımı tile düzensizlikleri, renk tonu ve ışık yansımaları fiziksel üründe farklılık gösterebilir.
+1. Sayfayı doğrudan Safari veya Chrome'da açın.
+2. Site adresinin `https://` ile başladığını kontrol edin.
+3. Eski sürüm görünüyorsa Safari geçmişi/site verisini temizleyin veya sayfayı yeniden yükleyin.
+4. iPhone'da AR açılmazsa modal içindeki “iPhone için doğrudan AR aç” bağlantısını kullanın.
+5. Daha aydınlık ve desenli bir zeminde telefonu yavaşça hareket ettirin.

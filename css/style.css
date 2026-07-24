@@ -207,3 +207,18 @@ model-viewer{display:block;width:100%;height:650px;background:radial-gradient(ci
 @media (max-width:640px){
   .product-ar-section{padding:82px 0}.product-viewer-card,.product-info-card,.product-page-card{border-radius:24px}.viewer-toolbar{padding:15px}.viewer-toolbar button{font-size:.72rem}.product-page .product-viewer-card model-viewer,model-viewer{height:470px}.product-viewer-footer{padding:15px}.color-options{width:100%}.color-option{flex:1;justify-content:center}.product-info-card,.product-page-card{padding:22px}.product-spec-grid{grid-template-columns:1fr}.product-qr,.product-page-qr{grid-template-columns:88px 1fr}.product-qr img,.product-page-qr img{width:88px;height:88px}.product-photo-strip{display:grid;grid-template-columns:repeat(4,82%);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}.product-photo-strip figure{scroll-snap-align:start}.product-photo-strip img{height:290px}.product-page-gallery img{height:112px}.viewer-instruction{font-size:.72rem}.viewer-ar-button{bottom:18px}.product-page-main{padding-bottom:70px}
 }
+
+/* AR compatibility and native iPhone Quick Look fallback */
+.ios-quicklook-link{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:.001!important;pointer-events:none!important;left:0;bottom:0}
+.ios-quicklook-link img,.quicklook-fallback img{width:1px!important;height:1px!important;position:absolute!important;opacity:.001!important;pointer-events:none!important}
+.quicklook-fallback{display:none!important;align-items:center;justify-content:center;width:100%;border:1px solid rgba(38,107,122,.2);background:#fff;color:var(--ink)}
+.quicklook-fallback.show{display:flex!important}
+.ar-diagnostic{margin:12px 0 0;padding:10px 12px;border-radius:14px;background:rgba(35,107,122,.07);color:var(--muted);font-size:.74rem;line-height:1.45;text-align:left}
+.ar-diagnostic:empty{display:none}
+.ar-error{z-index:4}
+model-viewer[ar-status="session-started"] .viewer-ar-button{opacity:0;pointer-events:none}
+
+@media(max-width:720px){
+  .ar-guide-card{max-height:min(90vh,680px);overflow:auto}
+  .ar-diagnostic{font-size:.7rem}
+}

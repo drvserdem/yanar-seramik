@@ -1,12 +1,10 @@
 # 3D Model Dosyaları
 
-- `mosaic-coffee-table-yellow.glb`: Sarı seramik mozaik sehpa
-- `mosaic-coffee-table-green.glb`: Yeşil seramik mozaik sehpa
+Bu klasörde sarı ve yeşil mozaik sehpa için web ve iPhone AR dosyaları bulunur.
 
-Her iki model de gerçek katalog ölçülerine normalize edilmiştir:
+- GLB: Web 3D görüntüleme ve Android AR
+- USDZ: Apple AR Quick Look / iPhone ve iPad
 
-- Genişlik: 0.81 m
-- Derinlik: 0.49 m
-- Yükseklik: 0.38 m
+Modeller 81 × 49 × 38 cm ölçüsünde hazırlanmıştır. PBR yüzeylerde sırlı seramik parlaklığı, derz çukurluğu, hafif ton farklılıkları ve el yapımı küçük düzensizlikler simüle edilir.
 
-Modeller, web ve AR kullanımı için GLB biçimindedir. `tools/create_mosaic_table.py` dosyası modellerin üretim kaynağını içerir.
+Kaynak üretim kodu: `tools/create_mosaic_table.py`
