@@ -4,36 +4,61 @@
   const app = document.querySelector('#tileStudioApp');
   if (!app) return;
 
-  const shell = document.querySelector('#cameraShell');
-  const video = document.querySelector('#cameraVideo');
-  const poster = document.querySelector('#studioPoster');
-  const canvas = document.querySelector('#tileOverlay');
-  const pointsWrap = document.querySelector('#surfaceGuide');
-  const pointButtons = [...document.querySelectorAll('.surface-point')];
-  const status = document.querySelector('#cameraStatus');
-  const instruction = document.querySelector('#cameraInstruction');
-  const toast = document.querySelector('#studioToast');
-  const startButtons = [document.querySelector('#startCamera'), document.querySelector('#startCameraPrimary')].filter(Boolean);
-  const switchCameraButton = document.querySelector('#switchCamera');
-  const captureButton = document.querySelector('#captureDesign');
-  const resetSurfaceButton = document.querySelector('#resetSurface');
-  const offerButton = document.querySelector('#requestStudioOffer');
-  const surfaceButtons = [...document.querySelectorAll('[data-surface]')];
-  const materialButtons = [...document.querySelectorAll('.material-option[data-material]')];
-  const customColorInput = document.querySelector('#customTileColor');
-  const customColorOption = customColorInput?.closest('.custom-color');
-  const tileSizeSelect = document.querySelector('#tileSize');
-  const patternSelect = document.querySelector('#layoutPattern');
-  const surfaceWidthInput = document.querySelector('#surfaceWidth');
-  const surfaceHeightInput = document.querySelector('#surfaceHeight');
-  const groutColorSelect = document.querySelector('#groutColor');
-  const groutWidthInput = document.querySelector('#groutWidth');
-  const opacityInput = document.querySelector('#tileOpacity');
-  const opacityValue = document.querySelector('#tileOpacityValue');
-  const designSummary = document.querySelector('#designSummary');
-  const designDetail = document.querySelector('#designDetail');
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
 
-  const materialNames = {
+  const cameraInput = $('#cameraInput');
+  const galleryInput = $('#galleryInput');
+  const takePhotoButton = $('#takePhotoButton');
+  const choosePhotoButton = $('#choosePhotoButton');
+  const changePhotoButton = $('#changePhotoButton');
+  const photoUploader = $('#photoUploader');
+  const uploadEmpty = $('#uploadEmpty');
+  const uploadPreview = $('#uploadPreview');
+  const imageProcessing = $('#imageProcessing');
+  const sourcePreview = $('#sourcePreview');
+  const photoMeta = $('#photoMeta');
+  const surfaceButtons = $$('[data-surface]');
+  const materialButtons = $$('.material-option[data-material]');
+  const customColorOption = $('#customColorOption');
+  const customTileColor = $('#customTileColor');
+  const tileSize = $('#tileSize');
+  const customSizeFields = $('#customSizeFields');
+  const customTileWidth = $('#customTileWidth');
+  const customTileHeight = $('#customTileHeight');
+  const layoutPattern = $('#layoutPattern');
+  const groutColor = $('#groutColor');
+  const groutWidth = $('#groutWidth');
+  const customGroutField = $('#customGroutField');
+  const customGroutColor = $('#customGroutColor');
+  const finishButtons = $$('[data-finish]');
+  const designSummary = $('#designSummary');
+  const designDetail = $('#designDetail');
+  const privacyConsent = $('#privacyConsent');
+  const renderButton = $('#renderDesign');
+  const renderStatusSection = $('#renderStatusSection');
+  const renderStatusTitle = $('#renderStatusTitle');
+  const renderStatusText = $('#renderStatusText');
+  const resultSection = $('#resultSection');
+  const beforeImage = $('#beforeImage');
+  const afterImage = $('#afterImage');
+  const afterWrap = $('#afterWrap');
+  const compareRange = $('#compareRange');
+  const compareDivider = $('#compareDivider');
+  const resultSummary = $('#resultSummary');
+  const resultDetail = $('#resultDetail');
+  const downloadResult = $('#downloadResult');
+  const redesignButton = $('#redesignButton');
+  const whatsappResult = $('#whatsappResult');
+  const toast = $('#studioToast');
+
+  const MAX_SOURCE_BYTES = 32 * 1024 * 1024;
+  const TARGET_UPLOAD_BYTES = 2.7 * 1024 * 1024;
+  const MAX_IMAGE_EDGE = 1800;
+  const REQUEST_TIMEOUT_MS = 210000;
+  const SUPPORTED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
+  const materialLabels = {
     calacatta: 'Calacatta',
     travertine: 'Traverten',
     sage: 'Adaçayı',
@@ -43,601 +68,448 @@
     mustard: 'Hardal',
     custom: 'Özel Renk'
   };
-  const materialIndexes = {
-    calacatta: 0,
-    travertine: 1,
-    sage: 2,
-    ocean: 3,
-    graphite: 4,
-    terracotta: 5,
-    mustard: 6,
-    custom: 7
-  };
-  const patternNames = {
-    straight: 'Düz döşeme',
+
+  const patternLabels = {
+    straight: 'Düz',
+    horizontal: 'Yatay',
+    vertical: 'Dikey',
     staggered: 'Şaşırtmalı',
-    vertical: 'Dikey döşeme',
-    checker: 'Ton geçişli'
+    herringbone: 'Balıksırtı',
+    diagonal: 'Çapraz'
   };
-  const groutNames = {
-    '#f3f1e9': 'Kırık Beyaz',
-    '#d0d0cc': 'Açık Gri',
-    '#8b8b88': 'Orta Gri',
-    '#363b3d': 'Antrasit',
-    '#c5af91': 'Bej'
-  };
+
+  const finishLabels = { matte: 'Mat', glossy: 'Parlak' };
 
   const state = {
+    file: null,
+    sourceUrl: '',
+    resultDataUrl: '',
     surface: 'wall',
     material: 'calacatta',
-    baseColor: '#e9e7df',
-    tileWidth: 60,
-    tileHeight: 60,
-    pattern: 'straight',
-    surfaceWidth: 240,
-    surfaceHeight: 240,
-    groutColor: '#f3f1e9',
-    groutWidth: 0.4,
-    opacity: 0.82,
-    facingMode: 'environment',
-    cameraActive: false,
-    stream: null,
-    points: []
+    customTileColor: '#4d8d82',
+    finish: 'matte',
+    rendering: false
   };
 
-  const presets = {
-    wall: [
-      { x: 0.18, y: 0.17 },
-      { x: 0.82, y: 0.19 },
-      { x: 0.80, y: 0.82 },
-      { x: 0.20, y: 0.82 }
-    ],
-    floor: [
-      { x: 0.18, y: 0.49 },
-      { x: 0.82, y: 0.50 },
-      { x: 0.96, y: 0.94 },
-      { x: 0.04, y: 0.94 }
-    ]
-  };
-
-  const inAppBrowser = /Instagram|FBAN|FBAV|Line\/|WhatsApp|TikTok|GSA\//i.test(navigator.userAgent || '');
   let toastTimer = 0;
-  let animationFrame = 0;
-  let activeDrag = null;
+  let statusTimer = 0;
 
-  function showToast(message, duration = 4400) {
-    if (!toast) return;
+  function showToast(message, duration = 5200) {
     window.clearTimeout(toastTimer);
     toast.textContent = message;
     toast.classList.add('show');
     toastTimer = window.setTimeout(() => toast.classList.remove('show'), duration);
   }
 
-  function hexToRgb(hex) {
-    const value = String(hex || '#ffffff').replace('#', '');
-    const full = value.length === 3 ? value.split('').map((part) => part + part).join('') : value.padEnd(6, 'f');
-    const number = Number.parseInt(full, 16);
-    return [((number >> 16) & 255) / 255, ((number >> 8) & 255) / 255, (number & 255) / 255];
+  function formatBytes(bytes) {
+    if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1).replace('.', ',')} MB`;
   }
 
-  function clonePreset(name) {
-    return presets[name].map((point) => ({ ...point }));
+  function getTileSizeLabel() {
+    if (tileSize.value !== 'custom') return `${tileSize.value.replace('x', ' × ')} cm`;
+    const width = Math.max(2, Math.min(300, Number(customTileWidth.value) || 40));
+    const height = Math.max(2, Math.min(300, Number(customTileHeight.value) || 80));
+    return `${String(width).replace('.', ',')} × ${String(height).replace('.', ',')} cm`;
   }
 
-  function updatePointPositions() {
-    pointButtons.forEach((button, index) => {
-      const point = state.points[index];
-      if (!point) return;
-      button.style.left = `${point.x * 100}%`;
-      button.style.top = `${point.y * 100}%`;
-    });
+  function getGroutLabel() {
+    const selected = groutColor.options[groutColor.selectedIndex];
+    if (groutColor.value === 'custom') return `Özel Renk (${customGroutColor.value.toUpperCase()})`;
+    return selected?.dataset.label || selected?.textContent || 'Kırık Beyaz';
   }
 
-  function resetSurface() {
-    state.points = clonePreset(state.surface);
-    updatePointPositions();
-    updateHomography();
-    showToast(`${state.surface === 'wall' ? 'Duvar' : 'Zemin'} alanı başlangıç konumuna getirildi.`);
+  function getMaterialLabel() {
+    if (state.material === 'custom') return `Özel Renk (${state.customTileColor.toUpperCase()})`;
+    return materialLabels[state.material] || 'Calacatta';
   }
 
-  function setSurface(name) {
-    state.surface = name === 'floor' ? 'floor' : 'wall';
-    surfaceButtons.forEach((button) => button.classList.toggle('active', button.dataset.surface === state.surface));
-    if (state.surface === 'floor') {
-      state.surfaceWidth = 300;
-      state.surfaceHeight = 240;
-      surfaceWidthInput.value = '300';
-      surfaceHeightInput.value = '240';
-      instruction.textContent = 'Noktaları zeminin dört köşesine taşıyın; alt iki noktayı size yakın kenara yerleştirin.';
-    } else {
-      state.surfaceWidth = 240;
-      state.surfaceHeight = 240;
-      surfaceWidthInput.value = '240';
-      surfaceHeightInput.value = '240';
-      instruction.textContent = 'Dört noktayı kaplamak istediğiniz duvar yüzeyinin köşelerine taşıyın.';
-    }
-    resetSurface();
-    updateSummary();
-  }
-
-  pointButtons.forEach((button, index) => {
-    button.addEventListener('pointerdown', (event) => {
-      event.preventDefault();
-      activeDrag = index;
-      button.classList.add('dragging');
-      button.setPointerCapture?.(event.pointerId);
-    });
-    button.addEventListener('pointermove', (event) => {
-      if (activeDrag !== index) return;
-      event.preventDefault();
-      const rect = shell.getBoundingClientRect();
-      const x = Math.min(0.99, Math.max(0.01, (event.clientX - rect.left) / rect.width));
-      const y = Math.min(0.99, Math.max(0.01, (event.clientY - rect.top) / rect.height));
-      state.points[index] = { x, y };
-      updatePointPositions();
-      updateHomography();
-    });
-    const endDrag = (event) => {
-      if (activeDrag !== index) return;
-      activeDrag = null;
-      button.classList.remove('dragging');
-      try { button.releasePointerCapture?.(event.pointerId); } catch (_) { /* no-op */ }
-    };
-    button.addEventListener('pointerup', endDrag);
-    button.addEventListener('pointercancel', endDrag);
-  });
-
-  surfaceButtons.forEach((button) => button.addEventListener('click', () => setSurface(button.dataset.surface)));
-  resetSurfaceButton?.addEventListener('click', resetSurface);
-
-  // --- Canvas live tile renderer -----------------------------------------------
-  const context = canvas.getContext('2d', { alpha: true });
-  if (!context) {
-    showToast('Bu tarayıcı canlı kaplama görüntüsünü desteklemiyor. Safari veya Chrome ile tekrar deneyin.', 8000);
-    return;
-  }
-
-  let drawQueued = false;
-
-  function resizeCanvas() {
-    const rect = shell.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = Math.max(1, Math.round(rect.width * dpr));
-    const height = Math.max(1, Math.round(rect.height * dpr));
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-    }
-  }
-
-  function scaledPoints() {
-    return state.points.map((point) => ({ x: point.x * canvas.width, y: point.y * canvas.height }));
-  }
-
-  function quadPoint(points, u, v) {
-    const topX = points[0].x + (points[1].x - points[0].x) * u;
-    const topY = points[0].y + (points[1].y - points[0].y) * u;
-    const bottomX = points[3].x + (points[2].x - points[3].x) * u;
-    const bottomY = points[3].y + (points[2].y - points[3].y) * u;
+  function getSelection() {
     return {
-      x: topX + (bottomX - topX) * v,
-      y: topY + (bottomY - topY) * v
+      surface: state.surface,
+      surfaceLabel: state.surface === 'floor' ? 'Zemin' : 'Duvar',
+      material: state.material,
+      materialLabel: getMaterialLabel(),
+      customTileColor: state.customTileColor,
+      tileSize: tileSize.value,
+      tileSizeLabel: getTileSizeLabel(),
+      customTileWidth: customTileWidth.value,
+      customTileHeight: customTileHeight.value,
+      pattern: layoutPattern.value,
+      patternLabel: patternLabels[layoutPattern.value] || 'Düz',
+      finish: state.finish,
+      finishLabel: finishLabels[state.finish] || 'Mat',
+      groutColor: groutColor.value,
+      groutColorLabel: getGroutLabel(),
+      customGroutColor: customGroutColor.value,
+      groutWidth: String(Math.max(1, Math.min(12, Number(groutWidth.value) || 3)))
     };
-  }
-
-  function polygonPath(points) {
-    context.beginPath();
-    context.moveTo(points[0].x, points[0].y);
-    for (let index = 1; index < points.length; index += 1) context.lineTo(points[index].x, points[index].y);
-    context.closePath();
-  }
-
-  function varyColor(hex, amount) {
-    const [r, g, b] = hexToRgb(hex).map((value) => value * 255);
-    const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
-    return `rgb(${clamp(r + amount)},${clamp(g + amount)},${clamp(b + amount)})`;
-  }
-
-  function seededVariation(row, column) {
-    const value = Math.sin((row + 1) * 12.9898 + (column + 1) * 78.233) * 43758.5453;
-    return (value - Math.floor(value)) - 0.5;
-  }
-
-  function tileFill(tilePoints, row, column) {
-    const variation = seededVariation(row, column);
-    const minX = Math.min(...tilePoints.map((point) => point.x));
-    const maxX = Math.max(...tilePoints.map((point) => point.x));
-    const minY = Math.min(...tilePoints.map((point) => point.y));
-    const maxY = Math.max(...tilePoints.map((point) => point.y));
-    const gradient = context.createLinearGradient(minX, minY, maxX, maxY);
-
-    if (state.material === 'calacatta') {
-      gradient.addColorStop(0, varyColor('#f0eee7', variation * 14));
-      gradient.addColorStop(0.52, varyColor('#dfded8', variation * 10));
-      gradient.addColorStop(1, varyColor('#f7f5ef', variation * 12));
-    } else if (state.material === 'travertine') {
-      gradient.addColorStop(0, varyColor('#d7c9ae', variation * 18));
-      gradient.addColorStop(0.5, varyColor('#bca98c', variation * 12));
-      gradient.addColorStop(1, varyColor('#e1d4bc', variation * 16));
-    } else {
-      gradient.addColorStop(0, varyColor(state.baseColor, variation * 24 + 10));
-      gradient.addColorStop(0.55, varyColor(state.baseColor, variation * 18));
-      gradient.addColorStop(1, varyColor(state.baseColor, variation * 22 - 11));
-    }
-    return gradient;
-  }
-
-  function drawMaterialDetail(tilePoints, row, column) {
-    const minX = Math.min(...tilePoints.map((point) => point.x));
-    const maxX = Math.max(...tilePoints.map((point) => point.x));
-    const minY = Math.min(...tilePoints.map((point) => point.y));
-    const maxY = Math.max(...tilePoints.map((point) => point.y));
-    const width = maxX - minX;
-    const height = maxY - minY;
-    if (width < 8 || height < 8) return;
-
-    context.save();
-    polygonPath(tilePoints);
-    context.clip();
-
-    if (state.material === 'calacatta') {
-      context.globalAlpha = 0.20;
-      context.strokeStyle = '#687178';
-      context.lineWidth = Math.max(0.8, Math.min(width, height) * 0.035);
-      context.beginPath();
-      const seed = seededVariation(row, column);
-      context.moveTo(minX - width * 0.1, minY + height * (0.28 + seed * 0.25));
-      context.bezierCurveTo(minX + width * 0.25, minY + height * (0.02 + seed * 0.15), minX + width * 0.62, minY + height * (0.84 - seed * 0.2), maxX + width * 0.1, minY + height * (0.48 + seed * 0.22));
-      context.stroke();
-    } else if (state.material === 'travertine') {
-      context.globalAlpha = 0.15;
-      context.strokeStyle = '#796d59';
-      context.lineWidth = Math.max(0.7, height * 0.025);
-      for (let line = 1; line < 4; line += 1) {
-        const y = minY + (height * line) / 4;
-        context.beginPath();
-        context.moveTo(minX, y);
-        context.lineTo(maxX, y + seededVariation(row + line, column) * height * 0.08);
-        context.stroke();
-      }
-    }
-
-    const gloss = context.createLinearGradient(minX, minY, maxX, maxY);
-    gloss.addColorStop(0, 'rgba(255,255,255,.20)');
-    gloss.addColorStop(0.35, 'rgba(255,255,255,.02)');
-    gloss.addColorStop(0.75, 'rgba(255,255,255,.10)');
-    gloss.addColorStop(1, 'rgba(255,255,255,0)');
-    context.globalAlpha = 0.65;
-    context.fillStyle = gloss;
-    context.fillRect(minX, minY, width, height);
-    context.restore();
-  }
-
-  function drawTiles() {
-    drawQueued = false;
-    resizeCanvas();
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    const quad = scaledPoints();
-    if (quad.length !== 4) return;
-
-    context.save();
-    context.globalAlpha = state.opacity;
-    context.lineJoin = 'round';
-    polygonPath(quad);
-    context.clip();
-    context.fillStyle = state.groutColor;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    let tileWidth = state.tileWidth;
-    let tileHeight = state.tileHeight;
-    if (state.pattern === 'vertical') [tileWidth, tileHeight] = [tileHeight, tileWidth];
-
-    const rawColumns = Math.max(1, Math.ceil(state.surfaceWidth / tileWidth));
-    const rawRows = Math.max(1, Math.ceil(state.surfaceHeight / tileHeight));
-    const columns = Math.min(rawColumns, 90);
-    const rows = Math.min(rawRows, 90);
-    const uStep = 1 / columns;
-    const vStep = 1 / rows;
-    const groutU = Math.min(uStep * 0.42, state.groutWidth / state.surfaceWidth);
-    const groutV = Math.min(vStep * 0.42, state.groutWidth / state.surfaceHeight);
-
-    for (let row = 0; row < rows; row += 1) {
-      const offset = state.pattern === 'staggered' && row % 2 ? -0.5 : 0;
-      for (let column = -1; column <= columns; column += 1) {
-        let u0 = (column + offset) * uStep;
-        let u1 = u0 + uStep;
-        const v0 = row * vStep;
-        const v1 = v0 + vStep;
-        if (u1 <= 0 || u0 >= 1 || v1 <= 0 || v0 >= 1) continue;
-        u0 = Math.max(0, u0);
-        u1 = Math.min(1, u1);
-
-        const insetU = Math.min((u1 - u0) * 0.32, groutU * 0.5);
-        const insetV = Math.min((v1 - v0) * 0.32, groutV * 0.5);
-        const a = quadPoint(quad, u0 + insetU, v0 + insetV);
-        const b = quadPoint(quad, u1 - insetU, v0 + insetV);
-        const c = quadPoint(quad, u1 - insetU, v1 - insetV);
-        const d = quadPoint(quad, u0 + insetU, v1 - insetV);
-        const tilePoints = [a, b, c, d];
-
-        context.fillStyle = tileFill(tilePoints, row, column);
-        polygonPath(tilePoints);
-        context.fill();
-
-        if (state.pattern === 'checker' && (row + column) % 2 === 0) {
-          context.fillStyle = 'rgba(0,0,0,.08)';
-          polygonPath(tilePoints);
-          context.fill();
-        }
-        drawMaterialDetail(tilePoints, row, column);
-      }
-    }
-    context.restore();
-  }
-
-  function scheduleDraw() {
-    if (drawQueued) return;
-    drawQueued = true;
-    requestAnimationFrame(drawTiles);
-  }
-
-  function updateHomography() {
-    scheduleDraw();
-  }
-
-  function updateMaterial(material, color) {
-    state.material = material;
-    state.baseColor = color;
-    materialButtons.forEach((button) => button.classList.toggle('active', button.dataset.material === material));
-    customColorOption?.classList.toggle('active', material === 'custom');
-    updateSummary();
-    scheduleDraw();
-  }
-
-  materialButtons.forEach((button) => {
-    button.addEventListener('click', () => updateMaterial(button.dataset.material, button.dataset.color));
-  });
-
-  customColorInput?.addEventListener('input', () => {
-    const color = customColorInput.value;
-    const swatch = customColorOption?.querySelector('i');
-    if (swatch) swatch.style.background = color;
-    updateMaterial('custom', color);
-  });
-
-  tileSizeSelect?.addEventListener('change', () => {
-    const [width, height] = tileSizeSelect.value.split(',').map(Number);
-    state.tileWidth = width;
-    state.tileHeight = height;
-    updateSummary();
-    scheduleDraw();
-  });
-  patternSelect?.addEventListener('change', () => { state.pattern = patternSelect.value; updateSummary(); scheduleDraw(); });
-  surfaceWidthInput?.addEventListener('input', () => { state.surfaceWidth = Math.max(50, Number(surfaceWidthInput.value) || 240); updateSummary(); scheduleDraw(); });
-  surfaceHeightInput?.addEventListener('input', () => { state.surfaceHeight = Math.max(50, Number(surfaceHeightInput.value) || 240); updateSummary(); scheduleDraw(); });
-  groutColorSelect?.addEventListener('change', () => { state.groutColor = groutColorSelect.value; updateSummary(); scheduleDraw(); });
-  groutWidthInput?.addEventListener('input', () => { state.groutWidth = Math.max(0.1, Number(groutWidthInput.value) || 0.4); updateSummary(); scheduleDraw(); });
-  opacityInput?.addEventListener('input', () => {
-    state.opacity = Number(opacityInput.value) / 100;
-    opacityValue.value = `${opacityInput.value}%`;
-    scheduleDraw();
-  });
-
-  function formatNumber(value) {
-    return Number.isInteger(value) ? String(value) : String(value).replace('.', ',');
   }
 
   function updateSummary() {
-    const size = `${formatNumber(state.tileWidth)} × ${formatNumber(state.tileHeight)} cm`;
-    designSummary.textContent = `${materialNames[state.material]} · ${size} · ${patternNames[state.pattern]}`;
-    designDetail.textContent = `${state.surface === 'wall' ? 'Duvar' : 'Zemin'} · ${formatNumber(state.surfaceWidth)} × ${formatNumber(state.surfaceHeight)} cm · ${groutNames[state.groutColor] || 'Özel'} derz`;
+    const selection = getSelection();
+    designSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel} · ${selection.patternLabel}`;
+    designDetail.textContent = `${selection.surfaceLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
   }
 
-  // --- Camera -------------------------------------------------------------------
-  async function stopCamera() {
-    if (state.stream) {
-      state.stream.getTracks().forEach((track) => track.stop());
-      state.stream = null;
+  function updateRenderAvailability() {
+    renderButton.disabled = !state.file || !privacyConsent.checked || state.rendering;
+  }
+
+  function setProcessing(active) {
+    imageProcessing.hidden = !active;
+    if (active) {
+      uploadEmpty.hidden = true;
+      uploadPreview.hidden = true;
     }
-    video.srcObject = null;
-    state.cameraActive = false;
-    shell.classList.remove('camera-active');
-    status.innerHTML = '<i></i> DEMO GÖRÜNÜMÜ';
-    switchCameraButton.disabled = true;
-    captureButton.disabled = true;
-    startButtons.forEach((button) => {
-      button.disabled = false;
-      button.innerHTML = '<svg><use href="#i-camera"></use></svg> Kamerayı Aç';
+  }
+
+  function revokeSourceUrl() {
+    if (state.sourceUrl) URL.revokeObjectURL(state.sourceUrl);
+    state.sourceUrl = '';
+  }
+
+  async function loadImageSource(file) {
+    if ('createImageBitmap' in window) {
+      try {
+        const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+        return {
+          width: bitmap.width,
+          height: bitmap.height,
+          draw(context, width, height) { context.drawImage(bitmap, 0, 0, width, height); },
+          close() { bitmap.close?.(); }
+        };
+      } catch (_) {
+        // Safari versions that do not accept imageOrientation use the fallback below.
+      }
+    }
+
+    const url = URL.createObjectURL(file);
+    try {
+      const image = await new Promise((resolve, reject) => {
+        const element = new Image();
+        element.onload = () => resolve(element);
+        element.onerror = () => reject(new Error('IMAGE_DECODE_FAILED'));
+        element.src = url;
+      });
+      return {
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        draw(context, width, height) { context.drawImage(image, 0, 0, width, height); },
+        close() { URL.revokeObjectURL(url); }
+      };
+    } catch (error) {
+      URL.revokeObjectURL(url);
+      throw error;
+    }
+  }
+
+  function canvasToBlob(canvas, quality) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('IMAGE_ENCODE_FAILED')), 'image/jpeg', quality);
     });
   }
 
-  function cameraErrorMessage(error) {
-    switch (error?.name) {
-      case 'NotAllowedError':
-      case 'SecurityError':
-        return 'Kamera izni verilmedi. Safari adres çubuğundaki sayfa ayarlarından Kamera → İzin Ver seçeneğini açın.';
-      case 'NotFoundError':
-      case 'DevicesNotFoundError':
-        return 'Bu cihazda kullanılabilir kamera bulunamadı.';
-      case 'NotReadableError':
-      case 'TrackStartError':
-        return 'Kamera başka bir uygulama tarafından kullanılıyor olabilir. Diğer kamera uygulamalarını kapatıp tekrar deneyin.';
-      case 'OverconstrainedError':
-        return 'İstenen kamera modu bu cihazda bulunamadı. Farklı kamerayla tekrar deneniyor.';
-      default:
-        return 'Kamera başlatılamadı. Sayfayı Safari veya Chrome ile HTTPS üzerinden açıp tekrar deneyin.';
-    }
-  }
+  async function compressImage(file) {
+    if (!SUPPORTED_TYPES.has(file.type)) throw new Error('UNSUPPORTED_FILE');
+    if (file.size > MAX_SOURCE_BYTES) throw new Error('SOURCE_TOO_LARGE');
 
-  async function startCamera() {
-    if (!window.isSecureContext && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
-      showToast('Kamera yalnızca güvenli HTTPS bağlantısında çalışır.', 7000);
-      return;
-    }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      showToast('Bu tarayıcı canlı kamera erişimini desteklemiyor. Safari veya Chrome ile açın.', 7000);
-      return;
-    }
-    if (inAppBrowser) {
-      showToast('Instagram veya WhatsApp içi tarayıcı kamerayı kısıtlayabilir. Sorun yaşarsanız menüden “Safari’de Aç” seçeneğini kullanın.', 7500);
-    }
-
+    const source = await loadImageSource(file);
     try {
-      await stopCamera();
-      startButtons.forEach((button) => { button.disabled = true; button.textContent = 'Kamera hazırlanıyor…'; });
-      const constraints = {
-        audio: false,
-        video: {
-          facingMode: { ideal: state.facingMode },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 },
-          frameRate: { ideal: 30, max: 60 }
+      if (!source.width || !source.height || source.width < 40 || source.height < 40) throw new Error('IMAGE_DECODE_FAILED');
+
+      let scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(source.width, source.height));
+      let width = Math.max(1, Math.round(source.width * scale));
+      let height = Math.max(1, Math.round(source.height * scale));
+      let quality = 0.88;
+      let blob = null;
+
+      for (let attempt = 0; attempt < 8; attempt += 1) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d', { alpha: false });
+        if (!context) throw new Error('CANVAS_UNSUPPORTED');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, width, height);
+        source.draw(context, width, height);
+        blob = await canvasToBlob(canvas, quality);
+
+        if (blob.size <= TARGET_UPLOAD_BYTES) break;
+        if (quality > 0.63) {
+          quality -= 0.08;
+        } else {
+          width = Math.max(720, Math.round(width * 0.84));
+          height = Math.max(720, Math.round(height * 0.84));
+          quality = 0.78;
         }
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      state.stream = stream;
-      video.srcObject = stream;
-      await video.play();
-      state.cameraActive = true;
-      shell.classList.add('camera-active');
-      status.innerHTML = '<i></i> CANLI KAMERA';
-      instruction.textContent = state.surface === 'wall'
-        ? 'Dört noktayı kaplamak istediğiniz duvar yüzeyinin köşelerine taşıyın.'
-        : 'Noktaları zeminin dört köşesine taşıyın; alt iki noktayı size yakın kenara yerleştirin.';
-      switchCameraButton.disabled = false;
-      captureButton.disabled = false;
-      startButtons.forEach((button) => {
-        button.disabled = false;
-        button.innerHTML = '<svg><use href="#i-refresh"></use></svg> Kamerayı Yeniden Başlat';
-      });
-      showToast('Kamera açıldı. Şimdi dört köşe noktasını yüzeyin sınırlarına yerleştirin.');
-    } catch (error) {
-      console.error('Kamera hatası:', error);
-      showToast(cameraErrorMessage(error), 8000);
-      startButtons.forEach((button) => {
-        button.disabled = false;
-        button.innerHTML = '<svg><use href="#i-camera"></use></svg> Kamerayı Aç';
-      });
+      }
+
+      if (!blob || blob.size > 3.2 * 1024 * 1024) throw new Error('COMPRESSED_TOO_LARGE');
+      return new File([blob], 'yanar-seramik-mekan.jpg', { type: 'image/jpeg', lastModified: Date.now() });
+    } finally {
+      source.close();
     }
   }
 
-  startButtons.forEach((button) => button.addEventListener('click', startCamera));
-  switchCameraButton?.addEventListener('click', async () => {
-    state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
-    await startCamera();
-  });
-
-  function drawCover(context, source, width, height) {
-    const sourceWidth = source.videoWidth || source.naturalWidth || source.width;
-    const sourceHeight = source.videoHeight || source.naturalHeight || source.height;
-    if (!sourceWidth || !sourceHeight) return;
-    const scale = Math.max(width / sourceWidth, height / sourceHeight);
-    const drawWidth = sourceWidth * scale;
-    const drawHeight = sourceHeight * scale;
-    const x = (width - drawWidth) / 2;
-    const y = (height - drawHeight) / 2;
-    context.drawImage(source, x, y, drawWidth, drawHeight);
+  function fileErrorMessage(error) {
+    switch (error?.message) {
+      case 'UNSUPPORTED_FILE': return 'Bu dosya türü desteklenmiyor. Lütfen JPG, PNG veya WebP fotoğraf seçin.';
+      case 'SOURCE_TOO_LARGE': return 'Fotoğraf çok büyük. Lütfen 32 MB’den küçük bir fotoğraf seçin.';
+      case 'COMPRESSED_TOO_LARGE': return 'Fotoğraf güvenli yükleme boyutuna indirilemedi. Daha düşük çözünürlüklü başka bir fotoğraf deneyin.';
+      case 'IMAGE_DECODE_FAILED': return 'Fotoğraf okunamadı. HEIC yerine JPG, PNG veya WebP formatında tekrar deneyin.';
+      case 'CANVAS_UNSUPPORTED': return 'Tarayıcınız fotoğraf küçültmeyi desteklemiyor. Güncel Safari veya Chrome ile tekrar deneyin.';
+      default: return 'Fotoğraf hazırlanırken bir sorun oluştu. Başka bir fotoğrafla tekrar deneyin.';
+    }
   }
 
-  async function createSnapshotBlob() {
-    const rect = shell.getBoundingClientRect();
-    const width = Math.min(1600, Math.max(720, Math.round(rect.width * 1.65)));
-    const height = Math.round(width * (rect.height / rect.width));
-    const output = document.createElement('canvas');
-    output.width = width;
-    output.height = height;
-    const context = output.getContext('2d');
-    context.fillStyle = '#10272d';
-    context.fillRect(0, 0, width, height);
-    drawCover(context, state.cameraActive ? video : poster, width, height);
-    context.drawImage(canvas, 0, 0, width, height);
+  async function handleSelectedFile(file) {
+    if (!file) return;
+    setProcessing(true);
+    resultSection.hidden = true;
 
-    const gradient = context.createLinearGradient(0, height * 0.68, 0, height);
-    gradient.addColorStop(0, 'rgba(6,22,27,0)');
-    gradient.addColorStop(1, 'rgba(6,22,27,.82)');
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, width, height);
-    context.fillStyle = '#ffffff';
-    context.font = `700 ${Math.round(width * 0.025)}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
-    context.fillText('YANAR SERAMİK · CANLI STÜDYO', Math.round(width * 0.04), Math.round(height * 0.91));
-    context.font = `500 ${Math.round(width * 0.016)}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
-    context.fillStyle = 'rgba(255,255,255,.78)';
-    context.fillText(designSummary.textContent, Math.round(width * 0.04), Math.round(height * 0.95));
-
-    return new Promise((resolve, reject) => output.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Görsel oluşturulamadı')), 'image/png', 0.95));
-  }
-
-  async function saveSnapshot() {
     try {
-      const blob = await createSnapshotBlob();
-      const file = new File([blob], `yanar-seramik-onizleme-${Date.now()}.png`, { type: 'image/png' });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ title: 'Yanar Seramik Canlı Önizleme', text: designSummary.textContent, files: [file] });
+      const compressed = await compressImage(file);
+      revokeSourceUrl();
+      state.file = compressed;
+      state.sourceUrl = URL.createObjectURL(compressed);
+      sourcePreview.src = state.sourceUrl;
+      photoMeta.textContent = `${formatBytes(compressed.size)} · Tasarım için hazır`;
+      uploadEmpty.hidden = true;
+      uploadPreview.hidden = false;
+      showToast(file.size > compressed.size ? `Fotoğraf ${formatBytes(file.size)} boyutundan ${formatBytes(compressed.size)} boyutuna küçültüldü.` : 'Fotoğraf tasarım için hazır.');
+    } catch (error) {
+      console.error('Fotoğraf hazırlama hatası:', error);
+      state.file = null;
+      uploadEmpty.hidden = false;
+      uploadPreview.hidden = true;
+      showToast(fileErrorMessage(error), 7200);
+    } finally {
+      setProcessing(false);
+      if (state.file) {
+        uploadEmpty.hidden = true;
+        uploadPreview.hidden = false;
       } else {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = file.name;
-        link.click();
-        window.setTimeout(() => URL.revokeObjectURL(url), 1200);
-        showToast('Görünüm cihazınıza kaydedildi.');
+        uploadEmpty.hidden = false;
       }
-    } catch (error) {
-      if (error?.name !== 'AbortError') {
-        console.error(error);
-        showToast('Görünüm kaydedilemedi. Tekrar deneyin.');
-      }
+      cameraInput.value = '';
+      galleryInput.value = '';
+      updateRenderAvailability();
     }
   }
 
-  captureButton?.addEventListener('click', saveSnapshot);
+  takePhotoButton.addEventListener('click', () => cameraInput.click());
+  choosePhotoButton.addEventListener('click', () => galleryInput.click());
+  changePhotoButton.addEventListener('click', () => galleryInput.click());
+  cameraInput.addEventListener('change', () => handleSelectedFile(cameraInput.files?.[0]));
+  galleryInput.addEventListener('change', () => handleSelectedFile(galleryInput.files?.[0]));
 
-  function offerText() {
-    return [
-      'Merhaba Yanar Seramik, Canlı Seramik Stüdyosu üzerinden bir tasarım oluşturdum.',
-      '',
-      `Yüzey: ${state.surface === 'wall' ? 'Duvar' : 'Zemin'}`,
-      `Koleksiyon / Renk: ${materialNames[state.material]}`,
-      `Seramik Ebatı: ${formatNumber(state.tileWidth)} × ${formatNumber(state.tileHeight)} cm`,
-      `Döşeme: ${patternNames[state.pattern]}`,
-      `Derz: ${groutNames[state.groutColor] || 'Özel'} / ${formatNumber(state.groutWidth)} cm`,
-      `Yaklaşık Yüzey: ${formatNumber(state.surfaceWidth)} × ${formatNumber(state.surfaceHeight)} cm`,
-      '',
-      'Bu görünüm için keşif ve fiyat bilgisi almak istiyorum.'
-    ].join('\n');
-  }
+  ['dragenter', 'dragover'].forEach((eventName) => photoUploader.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    photoUploader.classList.add('is-dragging');
+  }));
+  ['dragleave', 'drop'].forEach((eventName) => photoUploader.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    photoUploader.classList.remove('is-dragging');
+  }));
+  photoUploader.addEventListener('drop', (event) => handleSelectedFile(event.dataTransfer?.files?.[0]));
 
-  offerButton?.addEventListener('click', async () => {
-    const text = offerText();
-    try {
-      if (state.cameraActive) {
-        const blob = await createSnapshotBlob();
-        const file = new File([blob], `yanar-seramik-tasarim-${Date.now()}.png`, { type: 'image/png' });
-        if (navigator.canShare?.({ files: [file] })) {
-          await navigator.share({ title: 'Yanar Seramik Tasarım Talebi', text, files: [file] });
-          return;
-        }
-      }
-    } catch (error) {
-      if (error?.name === 'AbortError') return;
-      console.warn('Paylaşım görseli hazırlanamadı:', error);
-    }
-    const url = `https://wa.me/905415807369?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+  surfaceButtons.forEach((button) => button.addEventListener('click', () => {
+    state.surface = button.dataset.surface === 'floor' ? 'floor' : 'wall';
+    surfaceButtons.forEach((item) => item.classList.toggle('active', item === button));
+    updateSummary();
+  }));
+
+  materialButtons.forEach((button) => button.addEventListener('click', () => {
+    state.material = button.dataset.material;
+    materialButtons.forEach((item) => item.classList.toggle('active', item === button));
+    customColorOption.classList.remove('active');
+    updateSummary();
+  }));
+
+  customColorOption.addEventListener('click', () => {
+    state.material = 'custom';
+    materialButtons.forEach((item) => item.classList.remove('active'));
+    customColorOption.classList.add('active');
+    updateSummary();
   });
 
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    updatePointPositions();
-  }, { passive: true });
-  window.addEventListener('pagehide', stopCamera);
+  customTileColor.addEventListener('input', () => {
+    state.material = 'custom';
+    state.customTileColor = customTileColor.value;
+    customColorOption.querySelector('i').style.background = customTileColor.value;
+    materialButtons.forEach((item) => item.classList.remove('active'));
+    customColorOption.classList.add('active');
+    updateSummary();
+  });
 
-  // Initial state
-  state.points = clonePreset('wall');
-  updatePointPositions();
+  tileSize.addEventListener('change', () => {
+    customSizeFields.hidden = tileSize.value !== 'custom';
+    updateSummary();
+  });
+  [customTileWidth, customTileHeight, layoutPattern, groutWidth].forEach((element) => element.addEventListener('input', updateSummary));
+
+  groutColor.addEventListener('change', () => {
+    customGroutField.hidden = groutColor.value !== 'custom';
+    updateSummary();
+  });
+  customGroutColor.addEventListener('input', updateSummary);
+
+  finishButtons.forEach((button) => button.addEventListener('click', () => {
+    state.finish = button.dataset.finish === 'glossy' ? 'glossy' : 'matte';
+    finishButtons.forEach((item) => item.classList.toggle('active', item === button));
+    updateSummary();
+  }));
+
+  privacyConsent.addEventListener('change', updateRenderAvailability);
+
+  function apiErrorMessage(status, payload) {
+    const code = payload?.code || payload?.error?.code;
+    if (code === 'MISSING_API_KEY') return 'Sistem yapılandırması eksik: OPENAI_API_KEY bulunamadı. Vercel Environment Variables ayarını kontrol edin.';
+    if (code === 'OPENAI_BILLING' || status === 402) return 'OpenAI kredi veya bakiye limiti nedeniyle tasarım oluşturulamadı. API hesabının kullanım ve ödeme ayarlarını kontrol edin.';
+    if (code === 'PAYLOAD_TOO_LARGE' || status === 413) return 'Fotoğraf istek sınırını aşıyor. Daha düşük çözünürlüklü bir fotoğraf seçin.';
+    if (code === 'UNSUPPORTED_FILE' || status === 415) return 'Bu dosya türü desteklenmiyor. JPG, PNG veya WebP kullanın.';
+    if (code === 'TIMEOUT' || status === 504) return 'Tasarım işlemi zaman aşımına uğradı. Aynı fotoğrafla yeniden deneyin.';
+    if (code === 'RATE_LIMIT' || status === 429) return 'Şu anda çok fazla tasarım isteği var. Kısa süre sonra yeniden deneyin.';
+    if (code === 'CONTENT_REJECTED') return 'Fotoğraf güvenlik kontrolleri nedeniyle işlenemedi. Farklı bir mekân fotoğrafı deneyin.';
+    if (code === 'MODEL_UNAVAILABLE') return 'Görüntü modeli bu API hesabında kullanılamıyor. OPENAI_IMAGE_MODEL veya OpenAI proje erişimini kontrol edin.';
+    return payload?.message || payload?.error?.message || 'Tasarım oluşturulamadı. Lütfen tekrar deneyin.';
+  }
+
+  function startStatusMessages() {
+    const messages = [
+      ['Mekânınız tasarlanıyor', 'Yapay zekâ mimari detayları koruyarak fotoğrafı analiz ediyor.'],
+      ['Yüzey sınırları belirleniyor', `Seçilen ${state.surface === 'floor' ? 'zemin' : 'duvar'} alanı perspektife göre hazırlanıyor.`],
+      ['Seramik uygulanıyor', 'Ölçü, döşeme, yüzey ve derz seçimleri fotogerçekçi olarak işleniyor.'],
+      ['Son dokunuşlar yapılıyor', 'Işık, gölge, yansıma ve mevcut eşyalar korunarak sonuç hazırlanıyor.']
+    ];
+    let index = 0;
+    renderStatusTitle.textContent = messages[0][0];
+    renderStatusText.textContent = messages[0][1];
+    window.clearInterval(statusTimer);
+    statusTimer = window.setInterval(() => {
+      index = Math.min(index + 1, messages.length - 1);
+      renderStatusTitle.textContent = messages[index][0];
+      renderStatusText.textContent = messages[index][1];
+    }, 12000);
+  }
+
+  function stopStatusMessages() {
+    window.clearInterval(statusTimer);
+    statusTimer = 0;
+  }
+
+  function setRendering(active) {
+    state.rendering = active;
+    renderStatusSection.hidden = !active;
+    renderButton.innerHTML = active
+      ? '<span class="studio-spinner" aria-hidden="true"></span> Tasarlanıyor…'
+      : '<svg><use href="#i-spark"></use></svg> Mekânımı Tasarla';
+    updateRenderAvailability();
+    if (active) {
+      startStatusMessages();
+      renderStatusSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      stopStatusMessages();
+    }
+  }
+
+  function configureResult(selection, imageBase64, mimeType = 'image/jpeg') {
+    state.resultDataUrl = `data:${mimeType};base64,${imageBase64}`;
+    beforeImage.src = state.sourceUrl;
+    afterImage.src = state.resultDataUrl;
+    resultSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel}`;
+    resultDetail.textContent = `${selection.surfaceLabel} · ${selection.patternLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
+
+    const whatsappText = [
+      'Merhaba Yanar Seramik, Yapay Zekâ Seramik Stüdyosu’nda hazırladığım tasarım için teklif almak istiyorum.',
+      '',
+      `Uygulama yüzeyi: ${selection.surfaceLabel}`,
+      `Seramik: ${selection.materialLabel}`,
+      `Ölçü: ${selection.tileSizeLabel}`,
+      `Döşeme: ${selection.patternLabel}`,
+      `Yüzey: ${selection.finishLabel}`,
+      `Derz: ${selection.groutColorLabel} / ${selection.groutWidth.replace('.', ',')} mm`,
+      '',
+      'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
+    ].join('\n');
+    whatsappResult.href = `https://wa.me/905415807369?text=${encodeURIComponent(whatsappText)}`;
+    resultSection.hidden = false;
+    compareRange.value = '50';
+    updateComparison(50);
+    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function renderDesign() {
+    if (!state.file) {
+      showToast('Önce mekân fotoğrafınızı çekin veya galeriden seçin.');
+      return;
+    }
+    if (!privacyConsent.checked) {
+      showToast('Devam etmek için gizlilik ve açık onay kutusunu işaretleyin.');
+      return;
+    }
+
+    const selection = getSelection();
+    const formData = new FormData();
+    formData.append('image', state.file, state.file.name);
+    Object.entries(selection).forEach(([key, value]) => formData.append(key, String(value)));
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    setRendering(true);
+    resultSection.hidden = true;
+
+    try {
+      const response = await fetch('/api/render-ceramic', {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal,
+        headers: { Accept: 'application/json' }
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw Object.assign(new Error(apiErrorMessage(response.status, payload)), { status: response.status, payload });
+      if (!payload.imageBase64) throw new Error('API geçerli bir tasarım görseli döndürmedi.');
+      configureResult(selection, payload.imageBase64, payload.mimeType || 'image/jpeg');
+      showToast('Tasarımınız hazır. Önce-sonra sürgüsüyle karşılaştırabilirsiniz.');
+    } catch (error) {
+      console.error('Seramik tasarım hatası:', error);
+      const message = error.name === 'AbortError'
+        ? 'Tasarım işlemi zaman aşımına uğradı. Aynı fotoğrafla yeniden deneyin.'
+        : error.message || 'Tasarım oluşturulamadı. Lütfen tekrar deneyin.';
+      showToast(message, 8200);
+    } finally {
+      window.clearTimeout(timeout);
+      setRendering(false);
+    }
+  }
+
+  function updateComparison(value) {
+    const position = Math.max(0, Math.min(100, Number(value) || 50));
+    afterWrap.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+    compareDivider.style.left = `${position}%`;
+  }
+
+  compareRange.addEventListener('input', () => updateComparison(compareRange.value));
+  renderButton.addEventListener('click', renderDesign);
+
+  downloadResult.addEventListener('click', () => {
+    if (!state.resultDataUrl) return;
+    const link = document.createElement('a');
+    link.href = state.resultDataUrl;
+    link.download = `yanar-seramik-ai-tasarim-${Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  });
+
+  redesignButton.addEventListener('click', () => {
+    resultSection.hidden = true;
+    app.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Seçimlerinizi değiştirip yeniden tasarlayabilirsiniz.');
+  });
+
+  window.addEventListener('beforeunload', revokeSourceUrl);
   updateSummary();
-  resizeCanvas();
-  scheduleDraw();
+  updateRenderAvailability();
 })();

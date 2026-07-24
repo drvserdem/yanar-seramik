@@ -1,39 +1,40 @@
-# Yanar Seramik Canlı Seramik Stüdyosu
+# Yapay Zekâ Seramik Stüdyosu — Kurulum
 
-## Yeni sayfa
+## Dosyalar
 
-- `canli-seramik.html`
-- Canlı motor: `js/tile-studio.js`
+- Sayfa: `canli-seramik.html`
+- Tarayıcı uygulaması: `js/tile-studio.js`
 - Sayfa tasarımı: `css/tile-studio.css`
-- QR: `images/canli-seramik-qr.png`
+- Vercel Function: `api/render-ceramic.js`
+- Vercel ayarı: `vercel.json`
 
-## Çalışma şekli
+## Ortam değişkenleri
 
-1. Kullanıcı **Kamerayı Aç** butonuna dokunur.
-2. Tarayıcı arka kamera için izin ister.
-3. Kullanıcı **Duvar** veya **Zemin** modunu seçer.
-4. Dört köşe noktası, kaplanacak yüzeyin köşelerine taşınır.
-5. Seramik koleksiyonu, ebat, döşeme düzeni, derz rengi ve derz kalınlığı anlık değiştirilir.
-6. Görünüm cihazda kaydedilebilir veya paylaşım menüsü üzerinden WhatsApp'a gönderilebilir.
+Vercel projesinde aşağıdaki değişken sunucu tarafında tanımlı olmalıdır:
 
-## Neden dört köşe kalibrasyonu kullanılıyor?
+- `OPENAI_API_KEY` — zorunlu, Sensitive olarak Production ve Preview ortamlarında.
+- `OPENAI_IMAGE_MODEL` — isteğe bağlı. Tanımlanmazsa `gpt-image-2` kullanılır.
 
-Tarayıcı içinde manuel dört köşe kalibrasyonu, farklı iPhone ve Android modellerinde daha kararlı sonuç verir. Yüzeyin gerçek perspektifi bu dört noktadan hesaplanır. Bu sürüm otomatik yapay zekâ duvar segmentasyonu kullanmaz.
+API anahtarı HTML veya tarayıcı JavaScript dosyalarına yazılmaz. Yalnızca Vercel Function içindeki `process.env.OPENAI_API_KEY` üzerinden okunur.
 
-## Kamera şartları
+## Çalışma akışı
 
-- Sayfa HTTPS üzerinden açılmalıdır. Vercel bunu otomatik sağlar.
-- Kamera, kullanıcı butona dokunduktan sonra açılır.
-- iPhone'da video öğesinde `playsinline`, `muted` ve `autoplay` kullanılır.
-- Instagram/WhatsApp içi tarayıcı sorun çıkarırsa bağlantı Safari'de açılmalıdır.
-- `vercel.json` içinde `Permissions-Policy: camera=(self)` başlığı bulunur.
+1. Kullanıcı kamerayla fotoğraf çeker veya galeriden JPG, PNG ya da WebP seçer.
+2. Fotoğraf tarayıcıda en fazla 1800 piksel kenara ve yaklaşık 2,7 MB hedef boyuta küçültülür.
+3. Seçimler ve küçültülmüş fotoğraf `POST /api/render-ceramic` adresine multipart form olarak gönderilir.
+4. Function, OpenAI Images Edit API’ye sunucu tarafından bağlanır.
+5. Sonuç tarayıcıda önce-sonra sürgüsü, indirme ve WhatsApp teklif akışıyla gösterilir.
 
-## Test adresi
+Fotoğraflar proje dosya sistemine, veritabanına veya kalıcı depolamaya yazılmaz. İstek süresince bellekte işlenir ve tasarım üretimi için OpenAI API’ye gönderilir.
 
-Yayınlandıktan sonra:
+## Vercel sınırı
 
-`https://yanarseramik.com/canli-seramik.html`
+Vercel Function istek ve yanıt gövdesi sınırına yaklaşmamak için fotoğraf istemcide küçültülür. Function ayrıca içerik uzunluğunu ve dosya boyutunu doğrular; büyük isteklerde `413 PAYLOAD_TOO_LARGE` döndürür.
 
-## Önemli ticari not
+## Yerel kontrol
 
-Canlı stüdyo, müşterinin tasarım kararını kolaylaştıran bir önizleme aracıdır. Nihai renk tonu, gerçek seramik dokusu, metraj, fire oranı, yüzey hazırlığı ve uygulama detayları yerinde keşifle netleştirilmelidir.
+```bash
+npm run check
+```
+
+Gerçek görüntü üretimi için yerel ortamda `OPENAI_API_KEY` tanımlanmalı ve site Vercel uyumlu bir geliştirme sunucusunda çalıştırılmalıdır.

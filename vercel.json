@@ -69,5 +69,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/render-ceramic.js": {
+      "maxDuration": 300
+    }
+  }
 }

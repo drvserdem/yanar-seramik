@@ -23,18 +23,9 @@ Dosyaları mevcut GitHub klasörüne kopyalayın. GitHub Desktop'ta commit ve pu
 - Masaüstü: 3D model döndürme, renk seçimi ve QR kod
 
 
-## Canlı Seramik Stüdyosu
 
-Yeni `canli-seramik.html` sayfası, uygulama indirmeden telefon kamerası üzerinden duvar ve zemin seramiği önizlemesi sunar.
+## Yapay Zekâ Seramik Stüdyosu
 
-Özellikler:
-- iPhone ve Android tarayıcılarında arka kamera erişimi
-- Duvar ve zemin için ayrı perspektif başlangıçları
-- Dört köşe noktasıyla yüzey kalibrasyonu
-- 5×5 cm ile 120×120 cm arasında seramik ebatları
-- Düz, şaşırtmalı, dikey ve ton geçişli döşeme
-- Seramik koleksiyonu, özel renk, derz rengi ve derz kalınlığı
-- Görünümü cihazda kaydetme veya paylaşım ekranından WhatsApp'a gönderme
-- Seçim bilgilerini WhatsApp teklif mesajına aktarma
+`canli-seramik.html`, fotoğraf yükleme veya kamera çekimi üzerinden çalışan yapay zekâ destekli seramik önizleme sayfasıdır. Mobil fotoğraf tarayıcıda küçültülür; seramik modeli, ölçüsü, döşeme biçimi, yüzey ve derz seçimleri `api/render-ceramic.js` Vercel Function'ına gönderilir. API anahtarı yalnızca `process.env.OPENAI_API_KEY` üzerinden sunucuda kullanılır.
 
-Kamera özelliği HTTPS gerektirir. Vercel yayını bu koşulu otomatik sağlar. Instagram veya WhatsApp içi tarayıcı sorun çıkarırsa sayfa Safari/Chrome içinde açılmalıdır.
+Ayrıntılı kurulum: `CANLI-SERAMIK-KURULUM.md`
