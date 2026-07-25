@@ -4,26 +4,29 @@
   const viewer = document.querySelector('#mosaicTableViewer');
   if (!viewer) return;
 
-  const colorButtons = [...document.querySelectorAll('.color-option')];
+  const colorButtons = [...document.querySelectorAll('.color-option[data-model]')];
   const resetButton = document.querySelector('#resetProductCamera');
   const openArButton = document.querySelector('#openProductAR');
   const arError = document.querySelector('#productArError');
-  const guide = document.querySelector('#arGuide');
-  const guideStart = document.querySelector('#startProductAR');
-  const guideClose = document.querySelector('#closeArGuide');
-  const guideMessage = document.querySelector('#arGuideMessage');
-  const diagnostic = document.querySelector('#arDiagnostic');
   const quickLookLink = document.querySelector('#iosQuickLookLink');
   const directQuickLook = document.querySelector('#directQuickLook');
   const galleryButtons = [...document.querySelectorAll('[data-product-image]')];
+  const loader = document.querySelector('#cinemaModelLoader');
+  const stage = document.querySelector('#productCinemaStage');
+  const cinemaSection = document.querySelector('.product-cinema-section');
+  const arDock = document.querySelector('#cinemaArDock') || document.querySelector('.product-page-qr');
+  const arState = document.querySelector('#cinemaArState') || document.querySelector('#arDiagnostic');
 
-  const DEFAULT_ORBIT = '35deg 68deg 1.35m';
+  const DEFAULT_ORBIT = viewer.getAttribute('camera-orbit') || '32deg 66deg 1.05m';
+  const DEFAULT_TARGET = viewer.getAttribute('camera-target') || '0m 0.18m 0m';
+  const DEFAULT_FOV = viewer.getAttribute('field-of-view') || '27deg';
   const ua = navigator.userAgent || '';
   const isiOS = /iPad|iPhone|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
   const isInAppBrowser = /Instagram|FBAN|FBAV|Line\/|WhatsApp|TikTok|GSA\//i.test(ua);
-  let activeColor = 'yellow';
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
   let modelLoaded = Boolean(viewer.loaded);
+  let dockTimer = 0;
 
   function withQuickLookOptions(url) {
     const clean = String(url || '').split('#')[0];
@@ -42,6 +45,21 @@
     viewer.setAttribute('ios-src', usdz);
   }
 
+  function updateActiveColorLabel(color) {
+    const label = color === 'green' ? 'Yeşil' : 'Sarı';
+    document.querySelectorAll('[data-active-color]').forEach((node) => {
+      node.textContent = label;
+    });
+    cinemaSection?.setAttribute('data-product-color', color);
+  }
+
+  function setLoaderProgress(value) {
+    if (!loader) return;
+    const safeValue = Math.max(0, Math.min(1, Number(value) || 0));
+    loader.style.setProperty('--model-progress', `${Math.round(safeValue * 100)}%`);
+    loader.dataset.progress = String(Math.round(safeValue * 100));
+  }
+
   function setColor(button) {
     const model = button.dataset.model;
     const usdz = button.dataset.usdz;
@@ -49,12 +67,14 @@
     const color = button.dataset.color || 'yellow';
     if (!model) return;
 
-    activeColor = color;
     modelLoaded = false;
-    viewer.src = model;
-    if (poster) viewer.poster = poster;
+    loader?.classList.remove('is-ready');
+    setLoaderProgress(0);
+    viewer.pause?.();
+    viewer.setAttribute('src', model);
+    if (poster) viewer.setAttribute('poster', poster);
     updateQuickLookLinks(usdz, poster);
-    viewer.alt = `${color === 'green' ? 'Yeşil' : 'Sarı'} seramik mozaik kaplamalı el yapımı sehpanın gerçek yüzey dokulu üç boyutlu modeli`;
+    viewer.alt = `${color === 'green' ? 'Yeşil' : 'Sarı'} seramik mozaik kaplamalı el yapımı orta sehpanın gerçek ölçülü üç boyutlu dijital ikizi`;
 
     colorButtons.forEach((item) => {
       const selected = item === button;
@@ -62,46 +82,22 @@
       item.setAttribute('aria-pressed', String(selected));
     });
 
-    const title = document.querySelector('[data-active-color]');
-    if (title) title.textContent = color === 'green' ? 'Yeşil' : 'Sarı';
-    updateDiagnostic();
+    updateActiveColorLabel(color);
+    setArState('3D DİJİTAL İKİZ YÜKLENİYOR');
   }
 
-  colorButtons.forEach((button) => button.addEventListener('click', () => setColor(button)));
-
-  resetButton?.addEventListener('click', () => {
-    viewer.cameraOrbit = DEFAULT_ORBIT;
-    viewer.fieldOfView = '30deg';
-    viewer.jumpCameraToGoal?.();
-  });
-
-  function showGuide(message) {
-    if (message && guideMessage) guideMessage.textContent = message;
-    if (guide) {
-      guide.classList.add('show');
-      guide.setAttribute('aria-hidden', 'false');
-      directQuickLook?.classList.toggle('show', isiOS);
-      updateDiagnostic();
-      guideStart?.focus();
-    }
-  }
-
-  function hideGuide() {
-    if (guide) {
-      guide.classList.remove('show');
-      guide.setAttribute('aria-hidden', 'true');
-    }
+  function setArState(message) {
+    if (arState) arState.textContent = message;
   }
 
   function showError(message) {
-    if (arError) {
-      arError.textContent = message;
-      arError.classList.add('show');
-      window.setTimeout(() => arError.classList.remove('show'), 5600);
-    }
+    if (!arError) return;
+    arError.textContent = message;
+    arError.classList.add('show');
+    window.setTimeout(() => arError.classList.remove('show'), 6000);
   }
 
-  function waitForModel(timeout = 9000) {
+  function waitForModel(timeout = 12000) {
     if (viewer.loaded || modelLoaded) return Promise.resolve();
     return new Promise((resolve, reject) => {
       const timer = window.setTimeout(() => {
@@ -122,9 +118,20 @@
       showError('iPhone AR dosyası bulunamadı. Sayfayı yenileyip tekrar deneyin.');
       return false;
     }
-    // Apple recommends a direct user-initiated <a rel="ar"> handoff to USDZ.
     link.click();
     return true;
+  }
+
+  function highlightDesktopAR() {
+    if (!arDock) {
+      showError('AR deneyimi için bu sayfayı iPhone veya Android telefondan açın.');
+      return;
+    }
+    arDock.classList.add('is-highlighted');
+    arDock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.clearTimeout(dockTimer);
+    dockTimer = window.setTimeout(() => arDock.classList.remove('is-highlighted'), 4200);
+    setArState('QR KODU TELEFONLA OKUTUN · GERÇEK ÖLÇÜ HAZIR');
   }
 
   async function launchAR() {
@@ -133,98 +140,121 @@
       return;
     }
 
-    // Keep the Apple Quick Look handoff inside the original tap event. Waiting
-    // for any promise first can cause Safari to discard the required user gesture.
+    if (!(isiOS || isAndroid || isCoarse)) {
+      highlightDesktopAR();
+      return;
+    }
+
     if (isiOS) {
-      if (isInAppBrowser && guideMessage) {
-        guideMessage.textContent = 'Bu bağlantı Instagram veya WhatsApp içinden açıldı. AR açılmazsa sağ üst menüden “Safari’de Aç” seçeneğini kullanın.';
+      if (isInAppBrowser) {
+        showError('Instagram veya WhatsApp içindeyseniz sayfayı Safari’de açın.');
       }
+      setArState('APPLE QUICK LOOK AÇILIYOR · ZEMİNİ TARAYIN');
       openNativeQuickLook();
       return;
     }
 
     try {
+      setArState('AR HAZIRLANIYOR · MODEL YÜKLENİYOR');
       await customElements.whenDefined('model-viewer');
       await waitForModel();
-      hideGuide();
       await viewer.activateAR();
     } catch (error) {
       console.warn('AR başlatılamadı:', error);
-      if (isiOS && openNativeQuickLook()) return;
-      showError('Kamera modu başlatılamadı. Tarayıcı izinlerini kontrol edin veya sayfayı Safari/Chrome ile açın.');
-      showGuide();
+      showError('Kamera modu başlatılamadı. Chrome izinlerini ve cihaz AR desteğini kontrol edin.');
+      setArState('AR BAŞLATILAMADI · 3D MODELİ İNCELEYEBİLİRSİNİZ');
     }
   }
 
-  function updateDiagnostic() {
-    if (!diagnostic) return;
-    const mode = isiOS ? 'iPhone / Apple Quick Look' : 'Android / WebXR veya Scene Viewer';
-    const browser = isInAppBrowser ? 'uygulama içi tarayıcı' : (isSafari ? 'Safari' : 'standart tarayıcı');
-    const secure = window.isSecureContext ? 'HTTPS hazır' : 'HTTPS gerekli';
-    const loaded = viewer.loaded || modelLoaded ? 'model yüklendi' : 'model yükleniyor';
-    const capability = typeof viewer.canActivateAR === 'boolean' ? `AR tahmini: ${viewer.canActivateAR ? 'uygun' : 'belirsiz'}` : 'AR tahmini bekleniyor';
-    diagnostic.textContent = `${mode} · ${browser} · ${secure} · ${loaded} · ${capability}`;
-  }
+  colorButtons.forEach((button) => button.addEventListener('click', () => setColor(button)));
 
-  openArButton?.addEventListener('click', () => {
-    if (window.matchMedia('(pointer: coarse)').matches || isiOS) {
-      showGuide(isiOS
-        ? 'Kamerayı açtığınızda telefonu zemine tutun. Ürün, gerçek ölçüsüyle Apple Quick Look içinde yerleştirilecektir.'
-        : 'Kamera açıldığında telefonu zemine tutun ve yüzey algılanana kadar yavaşça hareket ettirin.');
-    } else {
-      showGuide('Bilgisayardan bakıyorsunuz. QR kodu telefonunuzla okutun; telefonda açılan sayfada kamerayı başlatın.');
-    }
+  resetButton?.addEventListener('click', () => {
+    viewer.cameraOrbit = DEFAULT_ORBIT;
+    viewer.cameraTarget = DEFAULT_TARGET;
+    viewer.fieldOfView = DEFAULT_FOV;
+    viewer.jumpCameraToGoal?.();
+    setArState('GÖRÜNÜM SIFIRLANDI · SÜRÜKLEYEREK DÖNDÜRÜN');
   });
-  guideStart?.addEventListener('click', launchAR);
-  directQuickLook?.addEventListener('click', () => {
-    // Keep href navigation native. Closing the guide avoids a stale overlay on return.
-    window.setTimeout(hideGuide, 250);
-  });
-  guideClose?.addEventListener('click', hideGuide);
-  guide?.addEventListener('click', (event) => {
-    if (event.target === guide) hideGuide();
+
+  openArButton?.addEventListener('click', launchAR);
+
+  viewer.addEventListener('progress', (event) => {
+    setLoaderProgress(event.detail?.totalProgress || 0);
   });
 
   viewer.addEventListener('load', () => {
     modelLoaded = true;
     viewer.setAttribute('ar-scale', 'fixed');
     viewer.setAttribute('ar-placement', 'floor');
-    updateDiagnostic();
+    setLoaderProgress(1);
+    window.setTimeout(() => loader?.classList.add('is-ready'), 240);
+    setArState('CANLI 3D · PARMAKLA DÖNDÜRÜLEBİLİR');
   });
 
-  // ar-status is emitted for WebXR; Quick Look is a native hand-off and does
-  // not report its state back to the webpage.
+  viewer.addEventListener('error', (event) => {
+    console.error('3D model yüklenemedi:', event);
+    showError('3D model yüklenemedi. İnternet bağlantınızı kontrol edip sayfayı yenileyin.');
+    setArState('3D MODEL YÜKLENEMEDİ');
+  });
+
   viewer.addEventListener('ar-status', (event) => {
-    if (event.detail?.status === 'failed') {
-      showError('AR yüzey takibi başlatılamadı. Daha aydınlık bir zeminde tekrar deneyin.');
+    const status = event.detail?.status;
+    if (status === 'session-started') setArState('AR AKTİF · ÜRÜN GERÇEK ÖLÇÜDE');
+    if (status === 'object-placed') setArState('ÜRÜN ZEMİNE YERLEŞTİRİLDİ');
+    if (status === 'failed') {
+      showError('AR yüzey takibi başlatılamadı. Daha aydınlık ve boş bir zeminde tekrar deneyin.');
+      setArState('AR YÜZEYİ ALGILAYAMADI');
     }
+    if (status === 'not-presenting') setArState('CANLI 3D · PARMAKLA DÖNDÜRÜLEBİLİR');
   });
 
   galleryButtons.forEach((button) => {
     button.addEventListener('click', () => {
       galleryButtons.forEach((item) => item.classList.toggle('active', item === button));
       const image = button.dataset.productImage;
-      if (image) viewer.poster = image;
+      if (image) viewer.setAttribute('poster', image);
     });
   });
 
+  // Subtle cinematic depth: the model remains fully interactive while the
+  // surrounding typography responds to pointer movement.
+  if (stage && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    let frame = 0;
+    stage.addEventListener('pointermove', (event) => {
+      const rect = stage.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 18;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 12;
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        stage.style.setProperty('--pointer-x', `${x}px`);
+        stage.style.setProperty('--pointer-y', `${y}px`);
+      });
+    });
+    stage.addEventListener('pointerleave', () => {
+      stage.style.setProperty('--pointer-x', '0px');
+      stage.style.setProperty('--pointer-y', '0px');
+    });
+  }
+
   const params = new URLSearchParams(window.location.search);
-  if (params.get('color') === 'green') {
-    const green = colorButtons.find((button) => button.dataset.color === 'green');
-    if (green) setColor(green);
-  } else {
-    const selected = colorButtons.find((button) => button.classList.contains('active')) || colorButtons[0];
-    if (selected) updateQuickLookLinks(selected.dataset.usdz, selected.dataset.poster);
+  const requestedColor = params.get('color');
+  const selected = colorButtons.find((button) => button.dataset.color === requestedColor)
+    || colorButtons.find((button) => button.classList.contains('active'))
+    || colorButtons[0];
+
+  if (selected) {
+    updateQuickLookLinks(selected.dataset.usdz, selected.dataset.poster);
+    updateActiveColorLabel(selected.dataset.color || 'yellow');
   }
 
   if (params.get('ar') === '1') {
     window.setTimeout(() => {
       viewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      showGuide(isiOS
-        ? 'Ürün hazır. “Kamerayı Aç ve Başlat” düğmesine dokunarak Apple Quick Look ile odanıza yerleştirin.'
-        : 'Ürün hazır. Kamerayı başlatıp zemini yavaşça tarayın.');
-    }, 850);
+      if (isiOS || isAndroid || isCoarse) {
+        setArState('EVİNDE GÖR DÜĞMESİYLE KAMERAYI BAŞLATIN');
+      } else {
+        highlightDesktopAR();
+      }
+    }, 650);
   }
-
-  updateDiagnostic();
 })();

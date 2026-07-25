@@ -29,3 +29,26 @@
 Vercel’de `OPENAI_API_KEY` Production ve Preview ortamlarında tanımlı olmalıdır. İsteğe bağlı `OPENAI_IMAGE_MODEL` tek model veya virgülle ayrılmış sıra kabul eder. Tanımlanmadığında Function sırasıyla `gpt-image-2`, `gpt-image-1.5` ve `gpt-image-1` modellerini dener. API anahtarı hiçbir HTML veya tarayıcı JavaScript dosyasına eklenmemelidir.
 
 Gerçek OpenAI üretim çağrısı, kaynak paket hazırlanırken yerel test ortamında gerçek bir API anahtarı bulunmadığı için çalıştırılmadı. Function’ın istek oluşturması, model geri dönüşü, başarılı yanıt işlemesi ve hata davranışları kontrollü mock yanıtlarla doğrulandı.
+
+## 2026-07-25 — Cinematic Digital Twin v3.1
+
+### Otomatik kontroller
+- `index.html`, `urun-3d.html`, `canli-seramik.html` HTML ayrıştırma kontrolü: başarılı
+- Yinelenen HTML `id` kontrolü: 0 hata
+- Yerel HTML/model/poster/AR dosya yolu kontrolü: 0 eksik dosya
+- CSS ayrıştırma kontrolü (`tinycss2`): 0 parse hatası
+- JavaScript söz dizimi: `script.js`, `product-3d.js`, `tile-studio.js`, `render-ceramic.js` başarılı
+- Yerel HTTP üzerinden ana sayfa, ürün sayfası, GLB model ve WebP poster erişimi: başarılı
+- GLB dosya tipi ve boyutu doğrulaması: başarılı
+- WhatsApp bağlantı denetimi: yalnızca `905438964440`
+
+### Mobil/AR mantık kontrolü
+- iOS: kullanıcı dokunuşu içinde doğrudan `rel="ar"` Quick Look geçişi
+- Android: `model-viewer.activateAR()` ile Scene Viewer/WebXR
+- Masaüstü: popup yerine sayfa içi QR alanı
+- AR ölçeği: `ar-scale="fixed"`
+- AR yerleşimi: `ar-placement="floor"`
+- Sarı/yeşil seçiminde GLB, USDZ ve poster birlikte değişiyor
+
+### Sınır
+Bu çalışma ortamında gerçek iPhone/Android kamera oturumu başlatılamadığı için fiziksel AR yüzey takibi cihaz üzerinde test edilmelidir. Dosya yolları, MIME başlık tanımları ve istemci akışı kontrol edilmiştir.

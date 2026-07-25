@@ -34,3 +34,6 @@ Ayrıntılı kurulum: `CANLI-SERAMIK-KURULUM.md`
 ## Sürüm 2.1 — Model erişim düzeltmesi
 
 OpenAI görüntü modeli erişimi için otomatik model geri dönüşü eklendi. `gpt-image-2` kullanılırken artık desteklenmeyen `input_fidelity` parametresi gönderilmez. Hesap doğrulama ve API anahtarı izin adımları için `OPENAI-HESAP-KONTROL.md` dosyasına bakın.
+
+## Cinematic Digital Twin v3.1
+Ana sayfadaki mozaik sehpa artık kart/popup görünümünde değildir. Model tam genişlikte sinematik sahneye gömülüdür ve masaüstünde canlı 3D, mobilde doğrudan AR akışı sunar. Ayrıntılar için `CINEMATIC-3D-AR-NOTLARI.md` dosyasına bakın.
