@@ -80,3 +80,39 @@
 }
 .studio-header-actions{display:flex;align-items:center;gap:10px}.studio-store-link{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:1px solid rgba(72,129,132,.16);border-radius:14px;background:#fff;color:#285f63;font-weight:900}
 @media(max-width:640px){.studio-store-link{display:none}.studio-header-actions{margin-left:auto}}
+
+/* Premium warm visual skin; studio behavior and API flow are unchanged. */
+.tile-studio-page{
+  --ink:#153b32;
+  --ink-2:#294d42;
+  --muted:#6a776f;
+  --paper:#f5f0e7;
+  --paper-2:#e9dfd1;
+  --green:#2f7259;
+  --green-dark:#1e5a48;
+  --blue:#597e6c;
+  --blue-dark:#285b49;
+  --aqua:#b8cbb9;
+  --line:rgba(46,78,62,.14);
+  --shadow:0 30px 80px rgba(60,49,33,.13);
+  --shadow-soft:0 16px 45px rgba(60,49,33,.08);
+  background:#f5f0e7;
+}
+.studio-header{background:rgba(242,235,223,.90);border-bottom-color:rgba(47,72,58,.10)}
+.studio-header .brand-mark{display:none}
+.studio-header .brand-copy strong{color:#153d33;letter-spacing:.15em}.studio-header .brand-copy small{color:#466458}
+.studio-header-badge,.studio-back,.studio-store-link{background:#fbf8f2}
+.studio-hero{background:radial-gradient(circle at 82% 12%,rgba(208,164,81,.22),transparent 27%),radial-gradient(circle at 13% 80%,rgba(69,111,83,.14),transparent 30%),linear-gradient(145deg,#f4eee4,#e9dfd1)}
+.studio-hero:before{opacity:.12}
+.studio-workspace-section,.render-status-section,.studio-result-section{background:linear-gradient(#eee6da,#f8f4ed)}
+.studio-photo-column,.studio-controls,.studio-tech-card,.result-card{background:rgba(255,253,249,.92);border-color:rgba(255,255,255,.72)}
+.photo-uploader{background:#e4dccc}
+.upload-empty,.image-processing{background:radial-gradient(circle at 50% 35%,rgba(255,253,248,.88),rgba(240,233,222,.82)),url('../images/brand/yanar-hero-mobile.jpg') center/cover}
+.upload-empty:before,.image-processing:before{background:rgba(241,234,223,.84)}
+.upload-icon,.studio-step-heading>span{background:linear-gradient(135deg,#3d7a5d,#205d4a)}
+.segmented-control{background:#eee7db}.segmented-control button.active{color:#285b49}
+.design-mode-control button.active{background:linear-gradient(135deg,#214f40,#39775e);box-shadow:0 14px 30px rgba(33,79,64,.18)}
+.studio-summary{background:linear-gradient(145deg,#eee7db,#f2ece2);border-color:rgba(62,93,74,.1)}
+.studio-marketing{background:linear-gradient(145deg,#173f34,#102e27)}
+.studio-footer{background:#102f28}
+.studio-render-button,.tile-studio-page .button-primary{background:linear-gradient(135deg,#3c7a5d,#205c49)}
