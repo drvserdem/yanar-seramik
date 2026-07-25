@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Yanar Seramik el yapımı seramik mobilya mağazası. Ürünleri 3D inceleyin, AR ile mekânınızda görün ve yapay zekâ ile fotoğrafınıza yerleştirin.">
+<meta name="theme-color" content="#eff7f6">
+<title>Yanar Seramik Mağaza | El Yapımı Seramik Mobilyalar</title>
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=20260725-store1">
+<link rel="stylesheet" href="css/store.css?v=20260725-store1">
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"></script>
+</head>
+<body class="store-page">
+<header class="site-header" id="siteHeader">
+  <div class="container nav-shell">
+    <a class="brand" href="index.html" aria-label="Yanar Seramik ana sayfa">
+      <span class="brand-mark"><svg viewBox="0 0 74 66"><path class="roof" d="M7 31 35 6l30 25M52 11v12"></path><path d="M16 29v28h42V29"></path><rect height="10" width="11" x="23" y="35"></rect><rect height="10" width="11" x="39" y="35"></rect><rect height="9" width="11" x="23" y="48"></rect><rect height="9" width="11" x="39" y="48"></rect></svg></span>
+      <span class="brand-copy"><strong>YANAR</strong><small>SERAMİK</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-controls="mainNav" aria-expanded="false" aria-label="Menüyü aç"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Mağaza menüsü">
+      <a href="index.html">Ana Sayfa</a><a class="active" href="magaza.html">Mağaza</a><a href="canli-seramik.html">Mekânında Dene</a><a href="index.html#urun-3d">3D + AR</a><a href="index.html#projeler">Projeler</a><a href="index.html#iletisim">İletişim</a>
+    </nav>
+    <button class="store-cart-button" type="button" data-open-quote>Teklif Listem <b data-quote-count>0</b></button>
+  </div>
+</header>
+<main class="store-main">
+  <section class="store-hero">
+    <div class="container store-hero-grid">
+      <div class="store-hero-copy">
+        <span class="kicker"><i></i> EL YAPIMI SERAMİK MOBİLYALAR</span>
+        <h1>Ürünü seçin, <em>mekânınızda görün.</em></h1>
+        <p>Yanar Seramik mağazasında her ürünü gerçek fotoğraflarıyla inceleyin, üç boyutlu modelini döndürün, iPhone veya Android kameranızda AR ile yerleştirin ve yapay zekâ stüdyosunda kendi oda fotoğrafınıza uygulayın.</p>
+        <div class="store-hero-actions"><a class="button button-primary" href="#koleksiyon">Koleksiyonu İncele</a><a class="button button-glass" href="#ai-rehber">Yapay Zekâ Rehberi</a></div>
+        <div class="store-hero-proof"><span><b>01</b><small>Gerçek ürün fotoğrafları</small></span><span><b>02</b><small>3D + ölçeklenebilir AR</small></span><span><b>03</b><small>Fotoğrafınızda AI yerleşimi</small></span></div>
+      </div>
+      <div class="store-hero-object">
+        <div class="store-hero-live"><i></i> CANLI 3D ÜRÜN</div>
+        <model-viewer src="models/mosaic-coffee-table-yellow.glb?v=20260725-store1" poster="images/products/mosaic-table-yellow-cinema.webp" alt="Sarı mozaik orta sehpa 3D modeli" camera-controls auto-rotate rotation-per-second="11deg" camera-orbit="28deg 70deg 1.55m" camera-target="0m 0.18m 0m" field-of-view="28deg" min-camera-orbit="auto 24deg .8m" max-camera-orbit="auto 91deg 2.4m" ar ar-modes="webxr quick-look scene-viewer" ar-scale="auto" ar-placement="floor" scale=".8 .8 .8" environment-image="neutral" exposure="1.15" shadow-intensity="1.15" shadow-softness=".85" touch-action="pan-y" interaction-prompt="none">
+          <button slot="ar-button" class="store-ar-native">Kamerada Gör</button>
+        </model-viewer>
+        <div class="store-hero-object-note"><b>Başlangıç ölçeği küçültüldü</b>Ürün, AR açıldığında daha kontrollü görünür ve iki parmakla büyütülüp küçültülebilir.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="store-catalog" id="koleksiyon">
+    <div class="container">
+      <div class="store-section-head"><div><span class="kicker"><i></i> YANAR KOLEKSİYONU</span><h2>El işçiliği ürünleri <em>teknolojiyle keşfedin.</em></h2></div><p>Fiyatlar ve ödeme sistemi sonraki aşamada eklenecek şekilde ürün altyapısı hazırlandı. Şimdilik ürünleri teklif listenize ekleyebilir, tek mesajla fiyat ve teslimat bilgisi isteyebilirsiniz.</p></div>
+      <div class="store-toolbar"><div class="store-filters" id="storeFilters"></div><label class="store-search-wrap"><input id="storeSearch" type="search" placeholder="Ürün ara"><span id="storeProductCount">0 ürün</span></label></div>
+      <div class="store-product-grid" id="storeProductGrid"></div>
+    </div>
+  </section>
+
+  <section class="store-guide" id="ai-rehber">
+    <div class="container store-guide-grid">
+      <div class="store-guide-copy"><span class="kicker light"><i></i> YAPAY ZEKÂ ÜRÜN REHBERİ</span><h2>Doğru ürünü seçin, <em>son adıma kadar yönlendirelim.</em></h2><p>Odanızı ve ihtiyacınızı seçin. Rehber size uygun ürünü önerir; ardından AR görünümüne, yapay zekâ yerleştirmesine veya ürün detayına geçebilirsiniz.</p></div>
+      <div class="store-guide-panel">
+        <div class="guide-fields">
+          <label>Hangi mekân?<select id="guideRoom"><option value="living">Salon</option><option value="bedroom">Yatak odası</option><option value="entry">Giriş / Koridor</option><option value="dining">Yemek alanı</option></select></label>
+          <label>Temel ihtiyaç<select id="guideGoal"><option value="accent">Dekoratif odak</option><option value="tv">TV ve medya alanı</option><option value="storage">Depolama</option><option value="dining">Yemek / masa kullanımı</option></select></label>
+          <button type="button" id="guideRecommend">Ürün Öner</button>
+        </div>
+        <div class="guide-result" id="guideResult" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="store-journey">
+    <div class="container"><div class="store-section-head"><div><span class="kicker"><i></i> SATIN ALMA YOLCULUĞU</span><h2>Karardan teklife <em>tek akış.</em></h2></div><p>Bu yapı, daha sonra fiyat, stok, sepet ve online ödeme sistemi eklenecek biçimde veri tabanlı hazırlandı.</p></div>
+      <div class="store-journey-grid"><article><span>01</span><h3>Ürünü seçin</h3><p>Gerçek fotoğrafları, ölçüleri, renk seçeneklerini ve ürün detaylarını inceleyin.</p></article><article><span>02</span><h3>AR’da yerleştirin</h3><p>Kamerayı açın; ürünü zeminde görün ve iki parmakla ölçeğini ayarlayın.</p></article><article><span>03</span><h3>Fotoğrafınızda deneyin</h3><p>Yapay zekâ stüdyosu seçilen ürünü mevcut mobilyanın yerine, odadaki diğer eşyaları koruyarak yerleştirir.</p></article><article><span>04</span><h3>Teklif alın</h3><p>Ürünleri teklif listenize ekleyin ve WhatsApp’tan toplu fiyat, üretim ve teslimat bilgisi isteyin.</p></article></div>
+    </div>
+  </section>
+</main>
+<footer class="store-footer"><div class="container store-footer-inner"><div><strong>YANAR SERAMİK MAĞAZA</strong><p>El işçiliği · Yapay zekâ · 3D + AR</p></div><div><a href="tel:+905415807369">0541 580 73 69</a> · <a href="https://wa.me/905438964440">0543 896 44 40</a></div></div></footer>
+
+<div class="store-modal" id="storeArModal" hidden>
+  <div class="store-modal-panel"><button class="store-modal-close" type="button" data-close-ar>×</button><div class="store-ar-layout">
+    <div class="store-ar-viewer"><model-viewer id="storeArViewer" camera-controls auto-rotate rotation-per-second="10deg" ar ar-modes="webxr quick-look scene-viewer" ar-placement="floor" ar-scale="auto" environment-image="neutral" exposure="1.15" shadow-intensity="1.2" shadow-softness=".82" touch-action="pan-y" interaction-prompt="none"><button slot="ar-button" class="store-ar-native">AR Kamerasını Aç</button></model-viewer></div>
+    <div class="store-ar-copy"><span>3D + ARTIRILMIŞ GERÇEKLİK</span><h2 id="storeArTitle">Ürün</h2><p id="storeArSpecs"></p><div class="store-ar-variants" id="storeArVariants"></div><div class="store-scale-control"><label for="storeArScale">Başlangıç ürün ölçeği</label><input id="storeArScale" type="range" min="60" max="110" value="82"><output id="storeArScaleValue">%82</output></div><p>AR açıldığında zemini tarayın. Ürün büyük görünürse iki parmakla küçültün; model ölçeklendirmesi artık serbesttir.</p><div class="store-ar-actions"><button class="primary" type="button" onclick="document.querySelector('#storeArViewer').activateAR()">Kamerada Gör</button><a id="storeArAiLink" href="canli-seramik.html">Mekânımda Yapay Zekâ ile Dene</a><a id="storeArDetailLink" href="urun.html">Ürün Detayları</a></div></div>
+  </div></div>
+</div>
+
+<div class="quote-drawer" id="quoteDrawer" hidden><div class="quote-drawer-panel"><div class="quote-drawer-head"><h2>Teklif Listem <span data-quote-count>0</span></h2><button type="button" data-close-quote>×</button></div><div class="quote-drawer-list" id="quoteDrawerList"></div><div class="quote-drawer-footer"><a id="quoteWhatsApp" href="#" target="_blank" rel="noreferrer">WhatsApp’tan Toplu Teklif Al</a><button type="button" data-clear-quote>Listeyi Temizle</button></div></div></div>
+<div class="store-mobile-bar"><a href="#koleksiyon">Ürünler</a><button type="button" data-open-quote>Teklif Listem <b data-quote-count>0</b></button></div>
+<div class="store-toast" id="storeToast" role="status"></div>
+<script type="module" src="js/store.js?v=20260725-store1"></script>
+</body>
+</html>

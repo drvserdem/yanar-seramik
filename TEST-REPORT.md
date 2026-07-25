@@ -52,3 +52,12 @@ Gerçek OpenAI üretim çağrısı, kaynak paket hazırlanırken yerel test orta
 
 ### Sınır
 Bu çalışma ortamında gerçek iPhone/Android kamera oturumu başlatılamadığı için fiziksel AR yüzey takibi cihaz üzerinde test edilmelidir. Dosya yolları, MIME başlık tanımları ve istemci akışı kontrol edilmiştir.
+
+## Mağaza / AR v4 kontrolleri
+
+- `magaza.html` ve `urun.html` yerel dosya yolları kontrol edildi.
+- Tüm HTML kimlikleri tekrar etmeyecek şekilde kontrol edildi.
+- Mağaza JavaScript modülleri `node --check` ile doğrulandı.
+- Yeni GLB modelleri `trimesh` ile tekrar açıldı ve metre cinsinden sınır ölçüleri doğrulandı.
+- `vercel.json` yeni GLB dosyaları için MIME ve uzun süreli önbellek başlığı içerir.
+- `sitemap.xml` mağaza ve ürün sayfalarıyla güncellendi.

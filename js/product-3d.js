@@ -30,7 +30,7 @@
 
   function withQuickLookOptions(url) {
     const clean = String(url || '').split('#')[0];
-    return `${clean}#allowsContentScaling=0`;
+    return `${clean}#allowsContentScaling=1`;
   }
 
   function updateQuickLookLinks(usdz, poster) {
@@ -184,7 +184,7 @@
 
   viewer.addEventListener('load', () => {
     modelLoaded = true;
-    viewer.setAttribute('ar-scale', 'fixed');
+    viewer.setAttribute('ar-scale', 'auto');
     viewer.setAttribute('ar-placement', 'floor');
     setLoaderProgress(1);
     window.setTimeout(() => loader?.classList.add('is-ready'), 240);
@@ -199,7 +199,7 @@
 
   viewer.addEventListener('ar-status', (event) => {
     const status = event.detail?.status;
-    if (status === 'session-started') setArState('AR AKTİF · ÜRÜN GERÇEK ÖLÇÜDE');
+    if (status === 'session-started') setArState('AR AKTİF · İKİ PARMAKLA ÖLÇEK AYARLANABİLİR');
     if (status === 'object-placed') setArState('ÜRÜN ZEMİNE YERLEŞTİRİLDİ');
     if (status === 'failed') {
       showError('AR yüzey takibi başlatılamadı. Daha aydınlık ve boş bir zeminde tekrar deneyin.');

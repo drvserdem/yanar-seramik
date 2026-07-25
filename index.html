@@ -14,7 +14,7 @@
 <link href="https://yanarseramik.com/" rel="canonical"/>
 <link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link as="image" href="images/bathroom-luxury.jpg" rel="preload"/>
-<link href="css/style.css?v=20260725-studio2" rel="stylesheet"/>
+<link href="css/style.css?v=20260725-store1" rel="stylesheet"/>
 <script src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js" type="module"></script>
 <title>Yanar Seramik | Planlama, Seramik İşçiliği ve Tadilat</title>
 <script type="application/ld+json">
@@ -76,6 +76,7 @@
 <a href="#hizmetler">Hizmetler</a>
 <a href="#surec">Planlama</a>
 <a href="#urun-3d">Özel Ürünler</a>
+<a href="magaza.html">Mağaza</a>
 <a href="#canli-seramik">Mekânında Dene</a>
 <a href="#projeler">Projeler</a>
 <a href="#iletisim">İletişim</a>
@@ -94,6 +95,7 @@
 <p>Ölçüden tesviyeye, yüzey hazırlığından son derze kadar her adımı planlıyor; banyo, mutfak ve yaşam alanlarında kusursuz hizayı, sağlam altyapıyı ve temiz teslimi birlikte sunuyoruz.</p>
 <div class="hero-actions"><a aria-label="Yapay zekâ ile mekânını tasarla" class="button button-ai magnetic" href="canli-seramik.html">Mekânımı Tasarla <svg><use href="#i-spark"></use></svg></a>
 <a class="button button-primary magnetic" href="#iscilik">İşçilik Sistemimizi Gör <svg><use href="#i-arrow"></use></svg></a>
+<a class="button button-glass" href="magaza.html">Mağazayı Keşfet</a>
 <a class="button button-glass" href="tel:+905415807369"><svg><use href="#i-phone"></use></svg> Hemen Ara</a>
 </div>
 <div class="hero-proof">
@@ -122,6 +124,11 @@
 <a class="innovation-chip" href="#urun-3d">
 <span class="innovation-chip-icon"><svg><use href="#i-home"></use></svg></span>
 <span><small>CANLI 3D + AR</small><strong>Ürünü döndür, evinde gerçek ölçüde gör</strong></span>
+<i>→</i>
+</a>
+<a class="innovation-chip innovation-chip-store" href="magaza.html">
+<span class="innovation-chip-icon"><svg><use href="#i-grid"></use></svg></span>
+<span><small>YANAR MAĞAZA</small><strong>Ürünleri incele, AR’da gör, teklif listene ekle</strong></span>
 <i>→</i>
 </a>
 </div>
@@ -190,17 +197,17 @@
       ios-src="models/mosaic-coffee-table-yellow.usdz?v=20260725-studio2"
       poster="images/products/mosaic-table-yellow-cinema.webp?v=20260725-studio2"
       ar
-      ar-modes="quick-look webxr scene-viewer"
+      ar-modes="webxr quick-look scene-viewer"
       ar-placement="floor"
-      ar-scale="fixed"
+      ar-scale="auto"
       camera-controls
       auto-rotate
       auto-rotate-delay="900"
       rotation-per-second="12deg"
-      camera-orbit="28deg 70deg 1.24m"
+      camera-orbit="28deg 70deg 1.72m"
       camera-target="0m 0.17m 0m"
-      field-of-view="24deg"
-      min-camera-orbit="auto 24deg 0.82m"
+      field-of-view="29deg"
+      min-camera-orbit="auto 24deg 1.0m"
       max-camera-orbit="auto 91deg 2.3m"
       min-field-of-view="18deg"
       max-field-of-view="38deg"
@@ -210,7 +217,7 @@
       exposure="1.1"
       shadow-intensity="1.2"
       shadow-softness="0.82"
-      interaction-prompt="none"
+      interaction-prompt="none" scale="0.78 0.78 0.78"
       loading="eager"
       reveal="auto"
       touch-action="pan-y">
@@ -220,7 +227,7 @@
       </button>
       <div class="ar-error" id="productArError">AR başlatılamadı. Safari veya Chrome ile tekrar deneyin.</div>
     </model-viewer>
-    <a aria-label="iPhone için Apple Quick Look ile artırılmış gerçeklikte aç" class="ios-quicklook-link" href="models/mosaic-coffee-table-yellow.usdz?v=20260725-studio2#allowsContentScaling=0" id="iosQuickLookLink" rel="ar"><img alt="" src="images/products/mosaic-table-yellow-cinema.webp?v=20260725-studio2"/></a>
+    <a aria-label="iPhone için Apple Quick Look ile artırılmış gerçeklikte aç" class="ios-quicklook-link" href="models/mosaic-coffee-table-yellow.usdz?v=20260725-studio2#allowsContentScaling=1" id="iosQuickLookLink" rel="ar"><img alt="" src="images/products/mosaic-table-yellow-cinema.webp?v=20260725-studio2"/></a>
   </div>
   <div class="cinema-live-status" aria-live="polite"><i></i><span id="cinemaArState">CANLI 3D · PARMAKLA DÖNDÜRÜLEBİLİR</span></div>
   <div class="cinema-controls">
@@ -504,7 +511,7 @@
 </footer>
 <a aria-label="WhatsApp ile iletişim" class="floating-whatsapp" href="https://wa.me/905438964440?text=Merhaba%20Yanar%20Seramik,%20ke%C5%9Fif%20talep%20ediyorum." rel="noreferrer" target="_blank"><svg><use href="#i-message"></use></svg></a>
 <div aria-label="Hızlı iletişim" class="mobile-bar"><a href="tel:+905415807369"><svg><use href="#i-phone"></use></svg><span>Ara</span></a><a href="#iletisim"><svg><use href="#i-ruler"></use></svg><span>Keşif</span></a><a href="https://wa.me/905438964440" rel="noreferrer" target="_blank"><svg><use href="#i-message"></use></svg><span>WhatsApp</span></a></div>
-<script src="js/script.js?v=20260725-studio2"></script>
-<script src="js/product-3d.js?v=20260725-studio2"></script>
+<script src="js/script.js?v=20260725-store1"></script>
+<script src="js/product-3d.js?v=20260725-store1"></script>
 </body>
 </html>

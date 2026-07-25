@@ -121,6 +121,21 @@
       placementHint: 'Find an existing console, dresser or narrow sideboard in the room and replace ONLY that furniture item with the referenced Yanar console. Preserve every mirror, artwork, lamp, vase, book, tray, plant and decorative object that was on or above the old console; put those exact objects back on or above the new console in the same relative positions. If there is no matching console, place the new console in a clearly empty wall area without removing or moving any existing object.',
       replacementPolicy: 'Replace only an existing console/dresser; preserve all objects on and around it.'
     },
+    'console-cream': {
+      slug: 'console-cream',
+      name: 'Krem Seramik Dresuar',
+      summary: 'Krem Dresuar',
+      description: 'Yapay zekâ, açık krem seramik yüzeyli dresuarı giriş, koridor veya duvar önünde doğal bir konsol yerleşimiyle gösterir.',
+      specs: '81 × 28 × 91h cm · 45 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      whatsapp: 'Krem Seramik Dresuar',
+      referenceImages: [
+        'images/products/console-cream-lifestyle.webp',
+        'images/products/console-cream-detail.webp'
+      ],
+      previewImage: 'images/products/console-cream-angle.webp',
+      placementHint: 'Find an existing console, dresser or narrow sideboard in the room and replace ONLY that furniture item with the referenced cream Yanar console. Preserve every mirror, artwork, lamp, vase, book, tray, plant and decorative object that was on or above the old console; put those exact objects back on or above the new console in the same relative positions. If there is no matching console, place the new console in a clearly empty wall area without removing or moving any existing object.',
+      replacementPolicy: 'Replace only an existing console/dresser; preserve all objects on and around it.'
+    },
     'table-blue': {
       slug: 'table-blue',
       name: 'Seramik Masa',
