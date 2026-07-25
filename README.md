@@ -29,3 +29,8 @@ Dosyaları mevcut GitHub klasörüne kopyalayın. GitHub Desktop'ta commit ve pu
 `canli-seramik.html`, fotoğraf yükleme veya kamera çekimi üzerinden çalışan yapay zekâ destekli seramik önizleme sayfasıdır. Mobil fotoğraf tarayıcıda küçültülür; seramik modeli, ölçüsü, döşeme biçimi, yüzey ve derz seçimleri `api/render-ceramic.js` Vercel Function'ına gönderilir. API anahtarı yalnızca `process.env.OPENAI_API_KEY` üzerinden sunucuda kullanılır.
 
 Ayrıntılı kurulum: `CANLI-SERAMIK-KURULUM.md`
+
+
+## Sürüm 2.1 — Model erişim düzeltmesi
+
+OpenAI görüntü modeli erişimi için otomatik model geri dönüşü eklendi. `gpt-image-2` kullanılırken artık desteklenmeyen `input_fidelity` parametresi gönderilmez. Hesap doğrulama ve API anahtarı izin adımları için `OPENAI-HESAP-KONTROL.md` dosyasına bakın.

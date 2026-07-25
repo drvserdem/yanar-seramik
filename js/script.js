@@ -257,7 +257,7 @@
     ].join('\n');
 
     if (formStatus) formStatus.textContent = 'WhatsApp mesajınız hazırlanıyor…';
-    const url = `https://wa.me/905415807369?text=${encodeURIComponent(text)}`;
+    const url = `https://wa.me/905438964440?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
     window.setTimeout(() => {
       if (formStatus) formStatus.textContent = 'Mesaj penceresi açıldı. WhatsApp üzerinden gönderebilirsiniz.';

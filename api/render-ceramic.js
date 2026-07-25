@@ -2,6 +2,7 @@ const OPENAI_IMAGES_ENDPOINT = 'https://api.openai.com/v1/images/edits';
 const MAX_IMAGE_BYTES = 3.25 * 1024 * 1024;
 const OPENAI_TIMEOUT_MS = 270000;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const DEFAULT_IMAGE_MODELS = ['gpt-image-2', 'gpt-image-1.5', 'gpt-image-1'];
 
 const allowedValues = {
   surface: new Set(['wall', 'floor']),
@@ -104,47 +105,123 @@ function buildPrompt(options) {
   ].join(' ');
 }
 
-function mapOpenAIError(status, data) {
-  const message = String(data?.error?.message || data?.message || '').toLowerCase();
-  const type = String(data?.error?.type || data?.error?.code || '').toLowerCase();
+function getModelCandidates() {
+  const configured = cleanText(process.env.OPENAI_IMAGE_MODEL, 180)
+    .split(/[\s,;]+/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return [...new Set([...configured, ...DEFAULT_IMAGE_MODELS])];
+}
 
-  if (status === 401 || status === 403) {
-    return { status: 503, code: 'MODEL_UNAVAILABLE', message: 'OpenAI API erişimi doğrulanamadı veya görüntü modeli bu projede kullanılamıyor.' };
+function errorText(data) {
+  return `${data?.error?.message || data?.message || ''} ${data?.error?.type || ''} ${data?.error?.code || ''}`.trim().toLowerCase();
+}
+
+function isOrganizationVerificationError(status, data) {
+  const text = errorText(data);
+  return status === 403 && /(organization|organisation|org).*(verif|verified)|verify.*(organization|organisation|org)/i.test(text);
+}
+
+function isKeyPermissionError(status, data) {
+  const text = errorText(data);
+  return status === 403 && /(api key|key).*(permission|scope)|permission.*(images|endpoint)|not permitted.*endpoint|insufficient.*permission/i.test(text);
+}
+
+function isModelAccessError(status, data) {
+  const text = errorText(data);
+  return [400, 403, 404].includes(status) && /(model.*(not found|does not exist|not available|unavailable|access|permission|allowed|supported)|do not have access.*model|not authorized.*model|unsupported.*model)/i.test(text);
+}
+
+function mapOpenAIError(status, data, attemptedModels = []) {
+  const text = errorText(data);
+
+  if (isOrganizationVerificationError(status, data)) {
+    return {
+      status: 503,
+      code: 'ORG_VERIFICATION_REQUIRED',
+      message: 'OpenAI kuruluş doğrulaması tamamlanmadan görüntü modeli kullanılamıyor.'
+    };
   }
-  if (status === 429 && /(quota|billing|credit|balance|spend)/i.test(`${message} ${type}`)) {
+  if (status === 401) {
+    return { status: 503, code: 'INVALID_API_KEY', message: 'OpenAI API anahtarı geçersiz veya devre dışı.' };
+  }
+  if (isKeyPermissionError(status, data)) {
+    return { status: 503, code: 'KEY_PERMISSION_DENIED', message: 'OpenAI API anahtarının Images uç noktasına yazma izni bulunmuyor.' };
+  }
+  if (status === 429 && /(quota|billing|credit|balance|spend|limit reached)/i.test(text)) {
     return { status: 402, code: 'OPENAI_BILLING', message: 'OpenAI kredi, bakiye veya harcama limiti nedeniyle işlem tamamlanamadı.' };
   }
   if (status === 429) return { status: 429, code: 'RATE_LIMIT', message: 'OpenAI istek limiti aşıldı.' };
-  if (status === 400 && /(content|safety|moderation|policy)/i.test(`${message} ${type}`)) {
+  if (status === 400 && /(content|safety|moderation|policy)/i.test(text)) {
     return { status: 400, code: 'CONTENT_REJECTED', message: 'Fotoğraf güvenlik kontrolleri nedeniyle işlenemedi.' };
   }
-  if (status === 400 && /(model|not found|access)/i.test(`${message} ${type}`)) {
-    return { status: 503, code: 'MODEL_UNAVAILABLE', message: 'Seçili OpenAI görüntü modeli kullanılamıyor.' };
+  if (isModelAccessError(status, data)) {
+    return {
+      status: 503,
+      code: 'MODEL_UNAVAILABLE',
+      message: 'Bu OpenAI projesinde kullanılabilir bir GPT Image modeli bulunamadı.',
+      attemptedModels
+    };
   }
-  return { status: status >= 500 ? 502 : 400, code: 'OPENAI_ERROR', message: data?.error?.message || 'OpenAI görüntü düzenleme isteği tamamlanamadı.' };
+  if (status >= 500) return { status: 502, code: 'OPENAI_UPSTREAM_ERROR', message: 'OpenAI görüntü servisi geçici bir hata döndürdü.' };
+  return { status: 400, code: 'OPENAI_ERROR', message: data?.error?.message || 'OpenAI görüntü düzenleme isteği tamamlanamadı.' };
 }
 
-async function callOpenAI(image, prompt, apiKey, model, signal, includeCompression = true) {
+function buildOpenAIForm(image, prompt, model, options = {}) {
   const upstreamForm = new FormData();
   upstreamForm.append('model', model);
   upstreamForm.append('image[]', image, image.name || 'mekan.jpg');
   upstreamForm.append('prompt', prompt);
   upstreamForm.append('quality', 'medium');
-  upstreamForm.append('input_fidelity', 'high');
   upstreamForm.append('size', 'auto');
   upstreamForm.append('output_format', 'jpeg');
   upstreamForm.append('background', 'opaque');
-  if (includeCompression) upstreamForm.append('output_compression', '82');
 
+  // gpt-image-2 always uses high input fidelity and rejects this parameter.
+  if (model !== 'gpt-image-2' && !options.omitInputFidelity) {
+    upstreamForm.append('input_fidelity', 'high');
+  }
+  if (!options.omitCompression) {
+    upstreamForm.append('output_compression', '82');
+  }
+  return upstreamForm;
+}
+
+async function callOpenAI(image, prompt, apiKey, model, signal, options = {}) {
   return fetch(OPENAI_IMAGES_ENDPOINT, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
       Accept: 'application/json'
     },
-    body: upstreamForm,
+    body: buildOpenAIForm(image, prompt, model, options),
     signal
   });
+}
+
+function unsupportedParameterName(data) {
+  const message = String(data?.error?.message || '');
+  const match = message.match(/(?:unknown|unsupported|unrecognized)\s+(?:parameter|field)[:\s]+["']?([a-z_]+)/i);
+  return match?.[1]?.toLowerCase() || '';
+}
+
+async function callModelWithCompatibilityRetry(image, prompt, apiKey, model, signal) {
+  let options = {};
+  let upstream = await callOpenAI(image, prompt, apiKey, model, signal, options);
+  let data = await upstream.json().catch(() => ({}));
+
+  if (!upstream.ok && upstream.status === 400) {
+    const unsupported = unsupportedParameterName(data);
+    if (unsupported === 'output_compression') options = { ...options, omitCompression: true };
+    if (unsupported === 'input_fidelity') options = { ...options, omitInputFidelity: true };
+
+    if (unsupported === 'output_compression' || unsupported === 'input_fidelity') {
+      upstream = await callOpenAI(image, prompt, apiKey, model, signal, options);
+      data = await upstream.json().catch(() => ({}));
+    }
+  }
+
+  return { upstream, data };
 }
 
 async function handleRequest(request) {
@@ -196,42 +273,58 @@ async function handleRequest(request) {
   };
 
   const prompt = buildPrompt(options);
-  const model = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2';
+  const modelCandidates = getModelCandidates();
+  const attemptedModels = [];
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), OPENAI_TIMEOUT_MS);
 
   try {
-    let upstream = await callOpenAI(image, prompt, apiKey, model, controller.signal, true);
-    let data = await upstream.json().catch(() => ({}));
+    let lastFailure = null;
 
-    // Older GPT Image deployments may reject output_compression. Retry once without it.
-    if (!upstream.ok && upstream.status === 400 && /output_compression|unknown parameter|unsupported parameter/i.test(String(data?.error?.message || ''))) {
-      upstream = await callOpenAI(image, prompt, apiKey, model, controller.signal, false);
-      data = await upstream.json().catch(() => ({}));
-    }
+    for (const model of modelCandidates) {
+      attemptedModels.push(model);
+      const { upstream, data } = await callModelWithCompatibilityRetry(image, prompt, apiKey, model, controller.signal);
+      const requestId = upstream.headers.get('x-request-id') || '';
 
-    if (!upstream.ok) {
-      const mapped = mapOpenAIError(upstream.status, data);
-      return jsonResponse({ code: mapped.code, message: mapped.message }, mapped.status, {
-        'X-OpenAI-Request-Id': upstream.headers.get('x-request-id') || ''
+      if (!upstream.ok) {
+        lastFailure = { upstream, data, requestId };
+        if (isOrganizationVerificationError(upstream.status, data) || isKeyPermissionError(upstream.status, data) || upstream.status === 401) break;
+        if (isModelAccessError(upstream.status, data)) continue;
+
+        const mapped = mapOpenAIError(upstream.status, data, attemptedModels);
+        console.error('OpenAI image edit failed:', { status: upstream.status, code: mapped.code, requestId, model });
+        return jsonResponse({ code: mapped.code, message: mapped.message }, mapped.status, {
+          'X-OpenAI-Request-Id': requestId
+        });
+      }
+
+      const imageBase64 = data?.data?.[0]?.b64_json;
+      if (!imageBase64) {
+        console.error('OpenAI image edit returned no image:', { requestId, model });
+        return jsonResponse({ code: 'EMPTY_IMAGE_RESPONSE', message: 'OpenAI geçerli bir görüntü döndürmedi.' }, 502);
+      }
+      if (imageBase64.length > 4.1 * 1024 * 1024) {
+        return jsonResponse({ code: 'OUTPUT_TOO_LARGE', message: 'Oluşturulan görüntü Vercel yanıt sınırını aşıyor.' }, 502);
+      }
+
+      return jsonResponse({
+        imageBase64,
+        mimeType: 'image/jpeg',
+        model,
+        requestId: requestId || undefined
+      }, 200, {
+        'X-OpenAI-Request-Id': requestId
       });
     }
 
-    const imageBase64 = data?.data?.[0]?.b64_json;
-    if (!imageBase64) {
-      return jsonResponse({ code: 'EMPTY_IMAGE_RESPONSE', message: 'OpenAI geçerli bir görüntü döndürmedi.' }, 502);
-    }
-    if (imageBase64.length > 4.1 * 1024 * 1024) {
-      return jsonResponse({ code: 'OUTPUT_TOO_LARGE', message: 'Oluşturulan görüntü Vercel yanıt sınırını aşıyor.' }, 502);
-    }
-
-    return jsonResponse({
-      imageBase64,
-      mimeType: 'image/jpeg',
-      model,
-      requestId: upstream.headers.get('x-request-id') || undefined
-    }, 200, {
-      'X-OpenAI-Request-Id': upstream.headers.get('x-request-id') || ''
+    const mapped = mapOpenAIError(lastFailure?.upstream?.status || 503, lastFailure?.data || {}, attemptedModels);
+    console.error('No usable OpenAI image model:', {
+      code: mapped.code,
+      requestId: lastFailure?.requestId || '',
+      attemptedModels
+    });
+    return jsonResponse({ code: mapped.code, message: mapped.message, attemptedModels }, mapped.status, {
+      'X-OpenAI-Request-Id': lastFailure?.requestId || ''
     });
   } catch (error) {
     if (error?.name === 'AbortError') return jsonResponse({ code: 'TIMEOUT', message: 'OpenAI görüntü işlemi zaman aşımına uğradı.' }, 504);

@@ -16,13 +16,16 @@
 - API anahtarının yalnızca sunucu tarafında `process.env.OPENAI_API_KEY` ile okunması
 - İstemci tarafında JPG/PNG/WebP doğrulaması ve mobil görsel küçültme
 - Sunucu tarafında dosya türü, dosya boyutu, istek yöntemi ve seçenek doğrulaması
-- Eksik API anahtarı, büyük fotoğraf, desteklenmeyen dosya, zaman aşımı, hız limiti ve kredi/bakiye hata eşlemesi
-- OpenAI başarılı yanıtı ve uyumsuz `output_compression` parametresinde tek seferlik geri dönüş testi
+- Eksik/geçersiz API anahtarı, yetki, organizasyon doğrulaması, büyük fotoğraf, desteklenmeyen dosya, zaman aşımı, hız limiti ve kredi/bakiye hata eşlemesi
+- `gpt-image-2` için yasak olan `input_fidelity` parametresinin gönderilmemesi
+- Model erişim hatasında `gpt-image-2` → `gpt-image-1.5` → `gpt-image-1` otomatik geri dönüş testi
+- Uyumsuz `output_compression` veya `input_fidelity` parametresinde tek seferlik uyumluluk tekrar denemesi
+- Başarılı OpenAI yanıtı, kullanılan model ve istek kimliği işleme testi
 - Masaüstü ve 390 px mobil tarayıcı görünümü
 - Fotoğraf yükleme, seçim özeti, açık onay, render isteği, sonuç ekranı ve WhatsApp mesajı uçtan uca tarayıcı testi
 
 ## Dağıtım notu
 
-Vercel’de `OPENAI_API_KEY` Production ve Preview ortamlarında tanımlı olmalıdır. İsteğe bağlı olarak `OPENAI_IMAGE_MODEL` tanımlanabilir; tanımlanmazsa `gpt-image-2` kullanılır. API anahtarı hiçbir HTML veya tarayıcı JavaScript dosyasına eklenmemelidir.
+Vercel’de `OPENAI_API_KEY` Production ve Preview ortamlarında tanımlı olmalıdır. İsteğe bağlı `OPENAI_IMAGE_MODEL` tek model veya virgülle ayrılmış sıra kabul eder. Tanımlanmadığında Function sırasıyla `gpt-image-2`, `gpt-image-1.5` ve `gpt-image-1` modellerini dener. API anahtarı hiçbir HTML veya tarayıcı JavaScript dosyasına eklenmemelidir.
 
-Gerçek OpenAI üretim çağrısı, kaynak paket hazırlanırken yerel test ortamında gerçek bir API anahtarı bulunmadığı için çalıştırılmadı. Function’ın istek oluşturması, başarılı yanıt işlemesi ve hata davranışları kontrollü mock yanıtlarla doğrulandı.
+Gerçek OpenAI üretim çağrısı, kaynak paket hazırlanırken yerel test ortamında gerçek bir API anahtarı bulunmadığı için çalıştırılmadı. Function’ın istek oluşturması, model geri dönüşü, başarılı yanıt işlemesi ve hata davranışları kontrollü mock yanıtlarla doğrulandı.

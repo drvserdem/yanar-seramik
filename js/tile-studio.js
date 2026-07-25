@@ -365,14 +365,16 @@
 
   function apiErrorMessage(status, payload) {
     const code = payload?.code || payload?.error?.code;
-    if (code === 'MISSING_API_KEY') return 'Sistem yapılandırması eksik: OPENAI_API_KEY bulunamadı. Vercel Environment Variables ayarını kontrol edin.';
-    if (code === 'OPENAI_BILLING' || status === 402) return 'OpenAI kredi veya bakiye limiti nedeniyle tasarım oluşturulamadı. API hesabının kullanım ve ödeme ayarlarını kontrol edin.';
+    if (code === 'MISSING_API_KEY' || code === 'INVALID_API_KEY') return 'Yapay zekâ stüdyosu geçici olarak kullanılamıyor. Lütfen kısa süre sonra yeniden deneyin.';
+    if (code === 'ORG_VERIFICATION_REQUIRED') return 'Yapay zekâ stüdyosunun OpenAI hesap doğrulaması tamamlanmamış. Lütfen kısa süre sonra yeniden deneyin.';
+    if (code === 'KEY_PERMISSION_DENIED') return 'Yapay zekâ stüdyosunun sunucu izni eksik. Lütfen kısa süre sonra yeniden deneyin.';
+    if (code === 'OPENAI_BILLING' || status === 402) return 'Yapay zekâ stüdyosunun kullanım limiti dolmuş. Lütfen kısa süre sonra yeniden deneyin.';
     if (code === 'PAYLOAD_TOO_LARGE' || status === 413) return 'Fotoğraf istek sınırını aşıyor. Daha düşük çözünürlüklü bir fotoğraf seçin.';
     if (code === 'UNSUPPORTED_FILE' || status === 415) return 'Bu dosya türü desteklenmiyor. JPG, PNG veya WebP kullanın.';
     if (code === 'TIMEOUT' || status === 504) return 'Tasarım işlemi zaman aşımına uğradı. Aynı fotoğrafla yeniden deneyin.';
     if (code === 'RATE_LIMIT' || status === 429) return 'Şu anda çok fazla tasarım isteği var. Kısa süre sonra yeniden deneyin.';
     if (code === 'CONTENT_REJECTED') return 'Fotoğraf güvenlik kontrolleri nedeniyle işlenemedi. Farklı bir mekân fotoğrafı deneyin.';
-    if (code === 'MODEL_UNAVAILABLE') return 'Görüntü modeli bu API hesabında kullanılamıyor. OPENAI_IMAGE_MODEL veya OpenAI proje erişimini kontrol edin.';
+    if (code === 'MODEL_UNAVAILABLE') return 'Yapay zekâ görüntü modeli bu projede henüz etkin değil. Lütfen kısa süre sonra yeniden deneyin.';
     return payload?.message || payload?.error?.message || 'Tasarım oluşturulamadı. Lütfen tekrar deneyin.';
   }
 
@@ -433,7 +435,7 @@
       '',
       'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
     ].join('\n');
-    whatsappResult.href = `https://wa.me/905415807369?text=${encodeURIComponent(whatsappText)}`;
+    whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
     resultSection.hidden = false;
     compareRange.value = '50';
     updateComparison(50);
