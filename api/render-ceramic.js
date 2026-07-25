@@ -107,16 +107,20 @@ function buildSurfacePrompt(options) {
 
 function buildProductPrompt(options) {
   return [
-    'Create a photorealistic interior design edit.',
-    'The first image is the room photo to edit. Any additional images are exact reference photos of the product that must be inserted into that room.',
-    `Add exactly one ${options.productName} into the room.`,
-    `Preserve the exact product identity from the references: color, materials, proportions, silhouette, texture, drawer count, surface pattern and handmade character. Product specs: ${options.productSpecs}.`,
-    options.placementHint || 'Place the product in a natural, believable position that suits the room.',
-    'Keep the original room architecture, camera perspective, lens, lighting direction, shadows, windows, doors, walls, floor, ceiling and existing objects unchanged unless minor occlusion is necessary behind the new product.',
-    'Do not redesign the room. Do not add extra furniture, decor, artwork or accessories that are not required. Do not duplicate the product. Keep exactly one product instance.',
-    'Match the product scale realistically to the room, with natural contact shadow, correct perspective and believable grounding on the floor.',
-    'No text, labels, logos, watermarks, borders, collage or before-and-after layout. Return one edited photograph only.'
-  ].join(' ');
+    'STRICT LOCAL PRODUCT-REPLACEMENT EDIT. The first image is the authoritative room photograph. Additional images are exact reference photos of the Yanar product.',
+    `Insert exactly one ${options.productName}. Product specifications: ${options.productSpecs}.`,
+    'PRIMARY TASK: identify the existing furniture item of the same functional category and replace only that single furniture item. Do not redesign the room and do not clear the scene.',
+    options.replacementPolicy || '',
+    options.placementHint || '',
+    'HARD PRESERVATION RULE: outside the silhouette and immediate contact-shadow area of the furniture being replaced, the first image must remain visually identical. Preserve the exact camera viewpoint, crop, perspective, wall, ceiling, floor, doors, windows, curtains, lighting, shadows and every unrelated object.',
+    'PROTECTED OBJECTS: television screens and their content, monitors, speakers, soundbars, game consoles, cables, plants, rugs, sofas, chairs, beds, lamps, artwork, mirrors, books, framed photos, ornaments, trays, flowers, glasses, remotes and all other decor must remain present, unchanged and in the same positions.',
+    'OBJECT TRANSFER RULE: any item resting on, attached to, directly above, directly below or immediately beside the old furniture must be preserved and placed back on, above, below or beside the new product in the same relative arrangement. Never delete these objects.',
+    'If the target furniture is partly hidden, infer only its hidden shape. Never remove the TV, wall panel, accessories or nearby furniture to make space.',
+    'If no matching furniture item exists, place the product only in a genuinely empty suitable area. Do not remove, move, resize or replace any existing object to create space.',
+    'Preserve the exact product identity from the reference images: color, tile grid, grout lines, materials, proportions, silhouette, edge radius, drawer count, shelf openings, texture and handmade variations. Do not redesign or simplify the product.',
+    'Match realistic scale, perspective, floor contact, occlusion, reflections and natural contact shadow. Keep exactly one product instance.',
+    'Return one edited photograph only. No text, labels, logos, watermarks, borders, split-screen or collage.'
+  ].filter(Boolean).join(' ');
 }
 
 function getModelCandidates() {
@@ -305,7 +309,8 @@ async function handleRequest(request) {
       productName: cleanText(formData.get('productName'), 120) || 'product',
       productDescription: cleanText(formData.get('productDescription'), 220),
       productSpecs: cleanText(formData.get('productSpecs'), 220),
-      placementHint: cleanText(formData.get('placementHint'), 320)
+      placementHint: cleanText(formData.get('placementHint'), 1400),
+      replacementPolicy: cleanText(formData.get('replacementPolicy'), 500)
     };
 
     prompt = buildProductPrompt(options);

@@ -103,7 +103,8 @@
         'images/products/tv-unit-detail.webp'
       ],
       previewImage: 'images/products/tv-unit-lifestyle.webp',
-      placementHint: 'Place the TV unit naturally against a suitable wall as a low console. Keep exactly one unit. Do not add a television or extra accessories unless already present in the original room.'
+      placementHint: 'Find the existing TV console, media cabinet or low unit directly beneath the television and replace ONLY that furniture item with the referenced Yanar TV unit. The television is protected and must remain exactly where it is, at the same size, angle and screen content. Preserve speakers, soundbar, game console, cables, plants, framed photos, books, ornaments and every object that was on or beside the old TV unit; place the same objects back on or beside the new unit in the same relative positions. If there is no existing TV console, place the new unit beneath the existing TV without removing or moving anything else.',
+      replacementPolicy: 'Replace only the existing TV console or media cabinet beneath the TV. Protect the television and all surrounding objects.'
     },
     'console-green': {
       slug: 'console-green',
@@ -117,7 +118,8 @@
         'images/products/console-green-detail.webp'
       ],
       previewImage: 'images/products/console-green-lifestyle.webp',
-      placementHint: 'Place the console naturally against a free wall, hallway or behind a sofa as a slim decorative piece. Keep exactly one unit and preserve the room.'
+      placementHint: 'Find an existing console, dresser or narrow sideboard in the room and replace ONLY that furniture item with the referenced Yanar console. Preserve every mirror, artwork, lamp, vase, book, tray, plant and decorative object that was on or above the old console; put those exact objects back on or above the new console in the same relative positions. If there is no matching console, place the new console in a clearly empty wall area without removing or moving any existing object.',
+      replacementPolicy: 'Replace only an existing console/dresser; preserve all objects on and around it.'
     },
     'table-blue': {
       slug: 'table-blue',
@@ -131,7 +133,8 @@
         'images/products/table-blue-detail.webp'
       ],
       previewImage: 'images/products/table-blue-lifestyle.webp',
-      placementHint: 'Place the square table naturally in the center of a suitable living or dining area. Keep exactly one table. Do not invent chairs unless similar chairs already exist in the room.'
+      placementHint: 'Find the existing dining table or square table and replace ONLY that table with the referenced Yanar table. Preserve all chairs exactly, including their number, position and design. Preserve every object on the old tabletop such as books, bowls, glasses, flowers, candles and tableware; place the same objects back on the new tabletop in the same relative positions. If no matching table exists, place the new table only in a clearly empty dining area and do not remove any furniture.',
+      replacementPolicy: 'Replace only the existing table; preserve chairs and all tabletop objects.'
     },
     'nightstand-green': {
       slug: 'nightstand-green',
@@ -145,7 +148,8 @@
         'images/products/nightstand-green-open.webp'
       ],
       previewImage: 'images/products/nightstand-green-lifestyle.webp',
-      placementHint: 'Place the nightstand naturally beside a bed when possible, otherwise as a small side unit near seating or a wall. Keep exactly one unit.'
+      placementHint: 'Find the existing bedside table or small side cabinet and replace ONLY that furniture item with the referenced Yanar nightstand. Preserve the bed, headboard, lamp, books, charger, clock, glass, decorations and every object that was on or beside the old nightstand; place the same objects back on or beside the new nightstand in the same relative positions. If no matching nightstand exists, place the new product in an empty bedside area without moving anything else.',
+      replacementPolicy: 'Replace only the existing nightstand/side cabinet; preserve bed, lamp and all small objects.'
     },
     'mosaic-coffee-table': {
       slug: 'mosaic-coffee-table',
@@ -159,7 +163,8 @@
         'images/products/mosaic-table-green-detail.webp'
       ],
       previewImage: 'images/products/mosaic-table-green-room.webp',
-      placementHint: 'Place the coffee table naturally in front of seating or in a living area. Keep exactly one unit.'
+      placementHint: 'Find the existing coffee table or center table and replace ONLY that furniture item with the referenced Yanar coffee table. Preserve sofas, armchairs, rugs and their exact positions. Preserve every book, tray, vase, glass, remote, candle and decorative object on the old table; place the same objects back on the new table in the same relative positions. If there is no existing coffee table, place the new product only in a clearly empty area in front of the seating without removing anything.',
+      replacementPolicy: 'Replace only the existing coffee table; preserve seating, rug and all tabletop objects.'
     }
   };
 
@@ -224,6 +229,7 @@
         productDescription: product.description,
         productSpecs: product.specs,
         placementHint: product.placementHint,
+        replacementPolicy: product.replacementPolicy,
         referenceImages: product.referenceImages
       };
     }
@@ -644,6 +650,7 @@
       formData.append('productDescription', selection.productDescription);
       formData.append('productSpecs', selection.productSpecs);
       formData.append('placementHint', selection.placementHint);
+      formData.append('replacementPolicy', selection.replacementPolicy || '');
 
       try {
         const referenceFiles = await Promise.all(selection.referenceImages.map((url, index) => (
