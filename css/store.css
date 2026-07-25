@@ -55,3 +55,19 @@ body.store-modal-open{overflow:hidden}
 .related-products-section{padding:80px 0;background:#fff}.related-products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}.related-products article{overflow:hidden;border:1px solid var(--store-line);border-radius:24px;background:#fff}.related-products img{width:100%;height:240px;object-fit:cover}.related-products a{display:block;color:#183c42}.related-products span,.related-products h3,.related-products p{display:block;margin-left:18px;margin-right:18px}.related-products span{margin-top:15px;color:#438982;font-size:.65rem;font-weight:900;letter-spacing:.12em}.related-products h3{margin-top:7px;margin-bottom:0}.related-products p{margin-top:7px;margin-bottom:18px;color:#71878a}
 @media(max-width:1000px){.product-detail-grid,.product-detail-lifestyle{grid-template-columns:1fr}.product-detail-card{position:static}.related-products{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.product-detail-main{padding-top:28px}.product-detail-visual,.product-detail-visual model-viewer{min-height:430px;height:430px}.product-detail-gallery{grid-template-columns:repeat(4,1fr)}.product-detail-gallery img{height:72px}.product-detail-card{padding:22px 18px}.product-detail-actions{grid-template-columns:1fr}.product-detail-actions .primary,.product-detail-actions .quote{grid-column:auto}.related-products{grid-template-columns:1fr}.product-detail-lifestyle{margin-top:45px}}
+
+/* --- Interaction hotfix: hidden overlays must never cover the page --- */
+.store-modal[hidden],
+.quote-drawer[hidden]{display:none!important}
+
+.store-modal,
+.quote-drawer{
+  pointer-events:none;
+  visibility:hidden;
+}
+
+.store-modal.open,
+.quote-drawer.open{
+  pointer-events:auto;
+  visibility:visible;
+}
