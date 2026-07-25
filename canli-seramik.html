@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#edf6f5">
   <meta name="description" content="Yanar Seramik Yapay Zekâ Seramik Stüdyosu ile mekânınızın fotoğrafını yükleyin; duvar veya zemininizi seçtiğiniz seramik, ölçü, döşeme ve derz seçenekleriyle tasarlayın.">
   <meta property="og:title" content="Yapay Zekâ Seramik Stüdyosu | Yanar Seramik">
-  <meta property="og:description" content="Fotoğrafınızı yükleyin, seçtiğiniz seramiği mimariyi bozmadan duvarınızda veya zemininizde görün.">
+  <meta property="og:description" content="Fotoğrafınızı yükleyin; seçtiğiniz seramiği duvarınızda görün veya Yanar ürünlerini mekânınıza yerleştirin.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yanarseramik.com/canli-seramik.html">
   <meta property="og:image" content="https://yanarseramik.com/images/bathroom-luxury.jpg">
   <link rel="canonical" href="https://yanarseramik.com/canli-seramik.html">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=20260724-ai1">
-  <link rel="stylesheet" href="css/tile-studio.css?v=20260724-ai1">
+  <link rel="stylesheet" href="css/style.css?v=20260725-studio2">
+  <link rel="stylesheet" href="css/tile-studio.css?v=20260725-studio2">
   <title>Yapay Zekâ Seramik Stüdyosu | Yanar Seramik</title>
 </head>
 <body class="tile-studio-page">
@@ -69,7 +69,7 @@
         <div class="studio-section-head">
           <div>
             <span class="kicker"><i></i> 3 ADIMDA TASARLA</span>
-            <h2 id="studioTitle">Fotoğrafınızı seçin, <em>detayları belirleyin.</em></h2>
+            <h2 id="studioTitle">Fotoğrafınızı seçin, <em>seramiği veya ürünü belirleyin.</em></h2>
           </div>
           <p>Net, iyi aydınlatılmış ve uygulanacak yüzeyi mümkün olduğunca karşıdan gösteren bir fotoğraf en iyi sonucu verir.</p>
         </div>
@@ -114,87 +114,141 @@
           <aside class="studio-controls" aria-label="Seramik tasarım seçenekleri">
             <div class="studio-step-heading"><span>02</span><div><strong>Tasarım seçimleri</strong><small>Seramik ve uygulama detayları</small></div></div>
 
-            <div class="control-section">
-              <div class="control-title"><span>A</span><div><strong>Uygulanacak yüzey</strong><small>Yapay zekânın değiştireceği alan</small></div></div>
-              <div class="segmented-control surface-control" role="group" aria-label="Uygulanacak yüzey">
-                <button type="button" class="active" data-surface="wall"><svg><use href="#i-wall"></use></svg> Duvar</button>
-                <button type="button" data-surface="floor"><svg><use href="#i-floor"></use></svg> Zemin</button>
+            <div class="control-section mode-switcher-section">
+              <div class="control-title"><span>A</span><div><strong>Deneyim türü</strong><small>Seramik yüzeyi tasarla veya ürün yerleştir</small></div></div>
+              <div class="segmented-control design-mode-control" role="group" aria-label="Deneyim türü">
+                <button type="button" class="active" data-mode="surface">Seramik Yüzey</button>
+                <button type="button" data-mode="product">Özel Ürün Yerleştir</button>
               </div>
             </div>
 
-            <div class="control-section">
-              <div class="control-title"><span>B</span><div><strong>Seramik modeli</strong><small>Renk ve yüzey karakteri</small></div></div>
-              <div class="material-grid" id="materialGrid">
-                <button type="button" class="material-option active" data-material="calacatta" data-label="Calacatta"><i class="material-calacatta"></i><span>Calacatta</span></button>
-                <button type="button" class="material-option" data-material="travertine" data-label="Traverten"><i class="material-travertine"></i><span>Traverten</span></button>
-                <button type="button" class="material-option" data-material="sage" data-label="Adaçayı"><i class="material-sage"></i><span>Adaçayı</span></button>
-                <button type="button" class="material-option" data-material="ocean" data-label="Okyanus"><i class="material-ocean"></i><span>Okyanus</span></button>
-                <button type="button" class="material-option" data-material="graphite" data-label="Grafit"><i class="material-graphite"></i><span>Grafit</span></button>
-                <button type="button" class="material-option" data-material="terracotta" data-label="Terakota"><i class="material-terracotta"></i><span>Terakota</span></button>
-                <button type="button" class="material-option" data-material="mustard" data-label="Hardal"><i class="material-mustard"></i><span>Hardal</span></button>
-                <label class="material-option custom-color" id="customColorOption"><input type="color" id="customTileColor" value="#4d8d82" aria-label="Özel seramik rengi"><i></i><span>Özel Renk</span></label>
+            <div id="surfaceControlSections">
+              <div class="control-section">
+                <div class="control-title"><span>B</span><div><strong>Uygulanacak yüzey</strong><small>Yapay zekânın değiştireceği alan</small></div></div>
+                <div class="segmented-control surface-control" role="group" aria-label="Uygulanacak yüzey">
+                  <button type="button" class="active" data-surface="wall"><svg><use href="#i-wall"></use></svg> Duvar</button>
+                  <button type="button" data-surface="floor"><svg><use href="#i-floor"></use></svg> Zemin</button>
+                </div>
+              </div>
+
+              <div class="control-section">
+                <div class="control-title"><span>C</span><div><strong>Seramik modeli</strong><small>Renk ve yüzey karakteri</small></div></div>
+                <div class="material-grid" id="materialGrid">
+                  <button type="button" class="material-option active" data-material="calacatta" data-label="Calacatta"><i class="material-calacatta"></i><span>Calacatta</span></button>
+                  <button type="button" class="material-option" data-material="travertine" data-label="Traverten"><i class="material-travertine"></i><span>Traverten</span></button>
+                  <button type="button" class="material-option" data-material="sage" data-label="Adaçayı"><i class="material-sage"></i><span>Adaçayı</span></button>
+                  <button type="button" class="material-option" data-material="ocean" data-label="Okyanus"><i class="material-ocean"></i><span>Okyanus</span></button>
+                  <button type="button" class="material-option" data-material="graphite" data-label="Grafit"><i class="material-graphite"></i><span>Grafit</span></button>
+                  <button type="button" class="material-option" data-material="terracotta" data-label="Terakota"><i class="material-terracotta"></i><span>Terakota</span></button>
+                  <button type="button" class="material-option" data-material="mustard" data-label="Hardal"><i class="material-mustard"></i><span>Hardal</span></button>
+                  <label class="material-option custom-color" id="customColorOption"><input type="color" id="customTileColor" value="#4d8d82" aria-label="Özel seramik rengi"><i></i><span>Özel Renk</span></label>
+                </div>
+              </div>
+
+              <div class="control-section control-grid-two">
+                <label class="field-control">
+                  <span>Seramik ölçüsü</span>
+                  <select id="tileSize">
+                    <option value="5x5">5 × 5 cm</option>
+                    <option value="10x10">10 × 10 cm</option>
+                    <option value="10x20">10 × 20 cm</option>
+                    <option value="20x20">20 × 20 cm</option>
+                    <option value="30x60">30 × 60 cm</option>
+                    <option value="60x60" selected>60 × 60 cm</option>
+                    <option value="60x120">60 × 120 cm</option>
+                    <option value="80x80">80 × 80 cm</option>
+                    <option value="120x120">120 × 120 cm</option>
+                    <option value="custom">Özel ölçü</option>
+                  </select>
+                </label>
+                <label class="field-control">
+                  <span>Döşeme biçimi</span>
+                  <select id="layoutPattern">
+                    <option value="straight">Düz</option>
+                    <option value="horizontal">Yatay</option>
+                    <option value="vertical">Dikey</option>
+                    <option value="staggered">Şaşırtmalı</option>
+                    <option value="herringbone">Balıksırtı</option>
+                    <option value="diagonal">Çapraz</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="control-section custom-size-grid" id="customSizeFields" hidden>
+                <label class="field-control"><span>Özel en</span><div class="unit-input"><input id="customTileWidth" type="number" inputmode="decimal" min="2" max="300" step="0.5" value="40"><b>cm</b></div></label>
+                <label class="field-control"><span>Özel boy</span><div class="unit-input"><input id="customTileHeight" type="number" inputmode="decimal" min="2" max="300" step="0.5" value="80"><b>cm</b></div></label>
+              </div>
+
+              <div class="control-section control-grid-two">
+                <label class="field-control">
+                  <span>Derz rengi</span>
+                  <select id="groutColor">
+                    <option value="warm-white" data-label="Kırık Beyaz">Kırık Beyaz</option>
+                    <option value="light-gray" data-label="Açık Gri">Açık Gri</option>
+                    <option value="medium-gray" data-label="Orta Gri">Orta Gri</option>
+                    <option value="anthracite" data-label="Antrasit">Antrasit</option>
+                    <option value="beige" data-label="Bej">Bej</option>
+                    <option value="custom" data-label="Özel Renk">Özel Renk</option>
+                  </select>
+                </label>
+                <label class="field-control">
+                  <span>Derz kalınlığı</span>
+                  <div class="unit-input"><input id="groutWidth" type="number" inputmode="decimal" min="1" max="12" step="0.5" value="3"><b>mm</b></div>
+                </label>
+              </div>
+
+              <label class="field-control custom-grout" id="customGroutField" hidden><span>Özel derz rengi</span><input id="customGroutColor" type="color" value="#d5d1c6"></label>
+
+              <div class="control-section finish-section">
+                <div class="control-title"><span>D</span><div><strong>Yüzey görünümü</strong><small>Işık yansıması ve doku</small></div></div>
+                <div class="segmented-control" role="group" aria-label="Yüzey görünümü">
+                  <button type="button" class="active" data-finish="matte">Mat</button>
+                  <button type="button" data-finish="glossy">Parlak</button>
+                </div>
               </div>
             </div>
 
-            <div class="control-section control-grid-two">
-              <label class="field-control">
-                <span>Seramik ölçüsü</span>
-                <select id="tileSize">
-                  <option value="5x5">5 × 5 cm</option>
-                  <option value="10x10">10 × 10 cm</option>
-                  <option value="10x20">10 × 20 cm</option>
-                  <option value="20x20">20 × 20 cm</option>
-                  <option value="30x60">30 × 60 cm</option>
-                  <option value="60x60" selected>60 × 60 cm</option>
-                  <option value="60x120">60 × 120 cm</option>
-                  <option value="80x80">80 × 80 cm</option>
-                  <option value="120x120">120 × 120 cm</option>
-                  <option value="custom">Özel ölçü</option>
-                </select>
-              </label>
-              <label class="field-control">
-                <span>Döşeme biçimi</span>
-                <select id="layoutPattern">
-                  <option value="straight">Düz</option>
-                  <option value="horizontal">Yatay</option>
-                  <option value="vertical">Dikey</option>
-                  <option value="staggered">Şaşırtmalı</option>
-                  <option value="herringbone">Balıksırtı</option>
-                  <option value="diagonal">Çapraz</option>
-                </select>
-              </label>
-            </div>
+            <div id="productControlSections" hidden>
+              <div class="control-section">
+                <div class="control-title"><span>B</span><div><strong>Yerleştirilecek ürün</strong><small>Gönderdiğiniz gerçek ürün fotoğraflarıyla çalışır</small></div></div>
+                <div class="product-selector-grid" id="productSelectorGrid">
+                  <button type="button" class="product-option active" data-product="tv-unit">
+                    <img src="images/products/tv-unit-standalone.webp" alt="TV ünitesi ürün seçimi">
+                    <span><b>TV Ünitesi</b><small>142 × 42 × 47h cm</small></span>
+                  </button>
+                  <button type="button" class="product-option" data-product="console-green">
+                    <img src="images/products/console-green-standalone.webp" alt="Dresuar ürün seçimi">
+                    <span><b>Dresuar</b><small>81 × 28 × 91h cm</small></span>
+                  </button>
+                  <button type="button" class="product-option" data-product="table-blue">
+                    <img src="images/products/table-blue-standalone.webp" alt="Masa ürün seçimi">
+                    <span><b>Masa</b><small>91 × 91 × 76h cm</small></span>
+                  </button>
+                  <button type="button" class="product-option" data-product="nightstand-green">
+                    <img src="images/products/nightstand-green-standalone.webp" alt="Komidin ürün seçimi">
+                    <span><b>Komidin</b><small>38 × 38 × 54h cm</small></span>
+                  </button>
+                  <button type="button" class="product-option" data-product="mosaic-coffee-table">
+                    <img src="images/products/mosaic-table-green-spec.webp" alt="Mozaik sehpa ürün seçimi">
+                    <span><b>Mozaik Sehpa</b><small>81 × 49 × 38h cm</small></span>
+                  </button>
+                </div>
+              </div>
 
-            <div class="control-section custom-size-grid" id="customSizeFields" hidden>
-              <label class="field-control"><span>Özel en</span><div class="unit-input"><input id="customTileWidth" type="number" inputmode="decimal" min="2" max="300" step="0.5" value="40"><b>cm</b></div></label>
-              <label class="field-control"><span>Özel boy</span><div class="unit-input"><input id="customTileHeight" type="number" inputmode="decimal" min="2" max="300" step="0.5" value="80"><b>cm</b></div></label>
-            </div>
+              <div class="control-section product-placement-card" id="productPlacementCard">
+                <div class="product-placement-media"><img id="selectedProductPreview" src="images/products/tv-unit-lifestyle.webp" alt="Seçili ürün önizlemesi"></div>
+                <div class="product-placement-copy">
+                  <span>SEÇİLİ ÜRÜN</span>
+                  <strong id="selectedProductName">Seramik TV Ünitesi</strong>
+                  <p id="selectedProductDescription">Yapay zekâ, ürünü fotoğrafınızdaki uygun duvar veya yaşam alanına doğal ışık ve perspektifle yerleştirir.</p>
+                  <div class="product-placement-specs" id="selectedProductSpecs">142 × 42 × 47h cm · 90 kg · Seramik kaplama</div>
+                </div>
+              </div>
 
-            <div class="control-section control-grid-two">
-              <label class="field-control">
-                <span>Derz rengi</span>
-                <select id="groutColor">
-                  <option value="warm-white" data-label="Kırık Beyaz">Kırık Beyaz</option>
-                  <option value="light-gray" data-label="Açık Gri">Açık Gri</option>
-                  <option value="medium-gray" data-label="Orta Gri">Orta Gri</option>
-                  <option value="anthracite" data-label="Antrasit">Antrasit</option>
-                  <option value="beige" data-label="Bej">Bej</option>
-                  <option value="custom" data-label="Özel Renk">Özel Renk</option>
-                </select>
-              </label>
-              <label class="field-control">
-                <span>Derz kalınlığı</span>
-                <div class="unit-input"><input id="groutWidth" type="number" inputmode="decimal" min="1" max="12" step="0.5" value="3"><b>mm</b></div>
-              </label>
-            </div>
-
-            <label class="field-control custom-grout" id="customGroutField" hidden><span>Özel derz rengi</span><input id="customGroutColor" type="color" value="#d5d1c6"></label>
-
-            <div class="control-section finish-section">
-              <div class="control-title"><span>C</span><div><strong>Yüzey görünümü</strong><small>Işık yansıması ve doku</small></div></div>
-              <div class="segmented-control" role="group" aria-label="Yüzey görünümü">
-                <button type="button" class="active" data-finish="matte">Mat</button>
-                <button type="button" data-finish="glossy">Parlak</button>
+              <div class="product-placement-tips">
+                <article><span>01</span><p>Ürünün yerleşeceği alanı mümkün olduğunca boş ve net gösterin.</p></article>
+                <article><span>02</span><p>Yapay zekâ yalnızca seçilen ürünü ekler; odayı baştan tasarlamaz.</p></article>
+                <article><span>03</span><p>Sonuç, gerçek ürün fotoğraflarına göre hazırlanmış bir yerleşim önizlemesidir.</p></article>
               </div>
             </div>
 
@@ -279,6 +333,6 @@
   </footer>
 
   <div class="studio-toast" id="studioToast" role="status" aria-live="polite"></div>
-  <script src="js/tile-studio.js?v=20260724-ai1"></script>
+  <script src="js/tile-studio.js?v=20260725-studio2"></script>
 </body>
 </html>

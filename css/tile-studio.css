@@ -50,3 +50,31 @@
 @media(max-width:760px){.studio-header-badge{display:none}.studio-back{padding:10px 13px;font-size:.73rem}.studio-hero{padding:60px 0 46px}.studio-hero-copy h1{font-size:clamp(2.65rem,12vw,4.7rem)}.studio-workspace-section,.studio-result-section{padding:72px 0 84px}.studio-section-head{gap:18px;margin-bottom:28px}.studio-section-head h2{font-size:clamp(2.25rem,10vw,3.8rem)}.studio-photo-column,.studio-controls{padding:19px;border-radius:25px}.photo-uploader{min-height:62svh;border-radius:21px}.photo-tips{grid-template-columns:1fr}.photo-tips article{padding:11px 13px}.material-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.material-option i{height:36px}.material-option span{font-size:.59rem}.control-grid-two,.custom-size-grid{grid-template-columns:1fr 1fr}.upload-actions{width:100%;flex-direction:column}.upload-actions .button{width:100%}.compare-shell{min-height:62svh;border-radius:23px}.studio-benefits{grid-template-columns:1fr}.studio-footer-inner{align-items:flex-start;flex-direction:column}.studio-footer-inner>div{flex-wrap:wrap}}
 @media(max-width:460px){.container{width:min(100% - 22px,1220px)}.studio-header .brand-copy strong{font-size:1.02rem}.studio-header .brand-mark{width:42px;height:42px}.studio-back svg{display:none}.studio-hero-copy>p{font-size:.92rem}.studio-proof-row{display:grid;gap:10px}.studio-photo-column,.studio-controls{padding:14px}.photo-uploader{min-height:58svh}.upload-empty{padding:24px}.upload-empty strong{font-size:1.42rem}.control-grid-two,.custom-size-grid{grid-template-columns:1fr}.material-grid{gap:6px}.material-option{padding-inline:3px}.preview-overlay{left:9px;right:9px;bottom:9px}.preview-overlay span{max-width:55%;font-size:.64rem}.compare-shell{min-height:56svh}.render-status-card{padding:20px}.studio-result-section{padding-top:70px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* --- Product placement controls (20260725-studio2) --- */
+.design-mode-control button{flex:1}
+.design-mode-control button.active{background:linear-gradient(135deg,#103f45,#2f7c84);color:#fff;border-color:transparent;box-shadow:0 14px 30px rgba(34,107,116,.18)}
+.product-selector-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.product-option{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:center;padding:10px;border:1px solid rgba(74,124,130,.14);border-radius:18px;background:#fff;transition:.28s ease;cursor:pointer;text-align:left}
+.product-option img{width:72px;height:72px;border-radius:14px;object-fit:cover;background:#edf4f3}
+.product-option span{display:grid;gap:4px}
+.product-option b{font-size:.9rem;color:#123a40}
+.product-option small{font-size:.73rem;color:#688387}
+.product-option.active{border-color:#5da39a;box-shadow:0 16px 32px rgba(34,107,116,.12);background:linear-gradient(180deg,#fff,#f5fbfa)}
+.product-placement-card{display:grid;grid-template-columns:150px 1fr;gap:15px;align-items:center;padding:14px;border:1px solid rgba(84,131,136,.12);border-radius:22px;background:linear-gradient(180deg,#ffffff,#f7fbfa)}
+.product-placement-media img{width:100%;height:140px;object-fit:cover;border-radius:18px;background:#eef4f3}
+.product-placement-copy span{display:block;color:#5a8f95;font-size:.67rem;font-weight:900;letter-spacing:.14em}
+.product-placement-copy strong{display:block;margin-top:6px;color:#143840;font-size:1.1rem}
+.product-placement-copy p{margin:9px 0 0;color:#5a7478;line-height:1.62}
+.product-placement-specs{margin-top:10px;color:#2a565a;font-size:.82rem;font-weight:700}
+.product-placement-tips{display:grid;gap:10px;margin-top:14px}
+.product-placement-tips article{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(84,131,136,.09)}
+.product-placement-tips article:first-child{border-top:0;padding-top:0}
+.product-placement-tips span{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#eff7f5;color:#2e797f;font-size:.74rem;font-weight:900}
+.product-placement-tips p{margin:0;color:#59777c;line-height:1.55}
+
+@media (max-width:720px){
+  .product-selector-grid{grid-template-columns:1fr}
+  .product-placement-card{grid-template-columns:1fr}
+  .product-placement-media img{height:200px}
+}

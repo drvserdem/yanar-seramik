@@ -74,7 +74,7 @@
     viewer.setAttribute('src', model);
     if (poster) viewer.setAttribute('poster', poster);
     updateQuickLookLinks(usdz, poster);
-    viewer.alt = `${color === 'green' ? 'Yeşil' : 'Sarı'} seramik mozaik kaplamalı el yapımı orta sehpanın gerçek ölçülü üç boyutlu dijital ikizi`;
+    viewer.alt = `${color === 'green' ? 'Yeşil' : 'Sarı'} seramik mozaik kaplamalı el yapımı orta sehpanın gerçek ölçülü üç boyutlu modeli`;
 
     colorButtons.forEach((item) => {
       const selected = item === button;
@@ -83,7 +83,7 @@
     });
 
     updateActiveColorLabel(color);
-    setArState('3D DİJİTAL İKİZ YÜKLENİYOR');
+    setArState('3D ÜRÜN YÜKLENİYOR');
   }
 
   function setArState(message) {

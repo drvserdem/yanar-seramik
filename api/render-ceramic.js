@@ -51,7 +51,7 @@ function jsonResponse(payload, status = 200, headers = {}) {
   });
 }
 
-function cleanText(value, maxLength = 80) {
+function cleanText(value, maxLength = 120) {
   return String(value || '').trim().slice(0, maxLength);
 }
 
@@ -80,7 +80,7 @@ function tileSizeDescription(options) {
   return `${options.tileSize.replace('x', ' by ')} centimeters`;
 }
 
-function buildPrompt(options) {
+function buildSurfacePrompt(options) {
   const surfaceName = options.surface === 'floor' ? 'floor' : 'wall';
   const untouchedSurface = options.surface === 'floor' ? 'walls' : 'floor';
   const material = options.material === 'custom'
@@ -102,6 +102,20 @@ function buildPrompt(options) {
     'Do not add, remove, move, resize, restyle or replace any object. Do not redesign the room. Do not alter paint or materials outside the selected target surface.',
     'Preserve original lighting direction, exposure, shadows, reflections, occlusion and object edges. Tiles must stop precisely at architectural boundaries and behind existing objects, with correct perspective and realistic scale.',
     'No text, logos, labels, watermarks, borders, collage or before-and-after layout. Return one edited photograph only.'
+  ].join(' ');
+}
+
+function buildProductPrompt(options) {
+  return [
+    'Create a photorealistic interior design edit.',
+    'The first image is the room photo to edit. Any additional images are exact reference photos of the product that must be inserted into that room.',
+    `Add exactly one ${options.productName} into the room.`,
+    `Preserve the exact product identity from the references: color, materials, proportions, silhouette, texture, drawer count, surface pattern and handmade character. Product specs: ${options.productSpecs}.`,
+    options.placementHint || 'Place the product in a natural, believable position that suits the room.',
+    'Keep the original room architecture, camera perspective, lens, lighting direction, shadows, windows, doors, walls, floor, ceiling and existing objects unchanged unless minor occlusion is necessary behind the new product.',
+    'Do not redesign the room. Do not add extra furniture, decor, artwork or accessories that are not required. Do not duplicate the product. Keep exactly one product instance.',
+    'Match the product scale realistically to the room, with natural contact shadow, correct perspective and believable grounding on the floor.',
+    'No text, labels, logos, watermarks, borders, collage or before-and-after layout. Return one edited photograph only.'
   ].join(' ');
 }
 
@@ -167,17 +181,18 @@ function mapOpenAIError(status, data, attemptedModels = []) {
   return { status: 400, code: 'OPENAI_ERROR', message: data?.error?.message || 'OpenAI görüntü düzenleme isteği tamamlanamadı.' };
 }
 
-function buildOpenAIForm(image, prompt, model, options = {}) {
+function buildOpenAIForm(images, prompt, model, options = {}) {
   const upstreamForm = new FormData();
   upstreamForm.append('model', model);
-  upstreamForm.append('image[]', image, image.name || 'mekan.jpg');
+  images.forEach((image, index) => {
+    upstreamForm.append('image[]', image, image.name || `image-${index + 1}.jpg`);
+  });
   upstreamForm.append('prompt', prompt);
   upstreamForm.append('quality', 'medium');
   upstreamForm.append('size', 'auto');
   upstreamForm.append('output_format', 'jpeg');
   upstreamForm.append('background', 'opaque');
 
-  // gpt-image-2 always uses high input fidelity and rejects this parameter.
   if (model !== 'gpt-image-2' && !options.omitInputFidelity) {
     upstreamForm.append('input_fidelity', 'high');
   }
@@ -187,14 +202,14 @@ function buildOpenAIForm(image, prompt, model, options = {}) {
   return upstreamForm;
 }
 
-async function callOpenAI(image, prompt, apiKey, model, signal, options = {}) {
+async function callOpenAI(images, prompt, apiKey, model, signal, options = {}) {
   return fetch(OPENAI_IMAGES_ENDPOINT, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
       Accept: 'application/json'
     },
-    body: buildOpenAIForm(image, prompt, model, options),
+    body: buildOpenAIForm(images, prompt, model, options),
     signal
   });
 }
@@ -205,9 +220,9 @@ function unsupportedParameterName(data) {
   return match?.[1]?.toLowerCase() || '';
 }
 
-async function callModelWithCompatibilityRetry(image, prompt, apiKey, model, signal) {
+async function callModelWithCompatibilityRetry(images, prompt, apiKey, model, signal) {
   let options = {};
-  let upstream = await callOpenAI(image, prompt, apiKey, model, signal, options);
+  let upstream = await callOpenAI(images, prompt, apiKey, model, signal, options);
   let data = await upstream.json().catch(() => ({}));
 
   if (!upstream.ok && upstream.status === 400) {
@@ -216,12 +231,25 @@ async function callModelWithCompatibilityRetry(image, prompt, apiKey, model, sig
     if (unsupported === 'input_fidelity') options = { ...options, omitInputFidelity: true };
 
     if (unsupported === 'output_compression' || unsupported === 'input_fidelity') {
-      upstream = await callOpenAI(image, prompt, apiKey, model, signal, options);
+      upstream = await callOpenAI(images, prompt, apiKey, model, signal, options);
       data = await upstream.json().catch(() => ({}));
     }
   }
 
   return { upstream, data };
+}
+
+function validateImageFile(image, label = 'image') {
+  if (!(image instanceof File) || image.size === 0) {
+    return { ok: false, code: 'IMAGE_REQUIRED', message: `${label} yüklenmelidir.` };
+  }
+  if (!ALLOWED_IMAGE_TYPES.has(image.type)) {
+    return { ok: false, code: 'UNSUPPORTED_FILE', message: 'Yalnızca JPG, PNG ve WebP fotoğraflar desteklenir.' };
+  }
+  if (image.size > MAX_IMAGE_BYTES) {
+    return { ok: false, code: 'PAYLOAD_TOO_LARGE', message: 'Fotoğraf güvenli işleme boyutunu aşıyor.' };
+  }
+  return { ok: true };
 }
 
 async function handleRequest(request) {
@@ -236,7 +264,7 @@ async function handleRequest(request) {
   if (!apiKey) return jsonResponse({ code: 'MISSING_API_KEY', message: 'OPENAI_API_KEY ortam değişkeni bulunamadı.' }, 503);
 
   const contentLength = Number(request.headers.get('content-length') || 0);
-  if (contentLength > 4.35 * 1024 * 1024) {
+  if (contentLength > 8.5 * 1024 * 1024) {
     return jsonResponse({ code: 'PAYLOAD_TOO_LARGE', message: 'İstek Vercel yükleme sınırını aşıyor.' }, 413);
   }
 
@@ -248,31 +276,58 @@ async function handleRequest(request) {
   }
 
   const image = formData.get('image');
-  if (!(image instanceof File) || image.size === 0) {
-    return jsonResponse({ code: 'IMAGE_REQUIRED', message: 'Bir mekân fotoğrafı yüklenmelidir.' }, 400);
-  }
-  if (!ALLOWED_IMAGE_TYPES.has(image.type)) {
-    return jsonResponse({ code: 'UNSUPPORTED_FILE', message: 'Yalnızca JPG, PNG ve WebP fotoğraflar desteklenir.' }, 415);
-  }
-  if (image.size > MAX_IMAGE_BYTES) {
-    return jsonResponse({ code: 'PAYLOAD_TOO_LARGE', message: 'Fotoğraf güvenli işleme boyutunu aşıyor.' }, 413);
+  const sourceValidation = validateImageFile(image, 'Mekân fotoğrafı');
+  if (!sourceValidation.ok) return jsonResponse({ code: sourceValidation.code, message: sourceValidation.message }, sourceValidation.code === 'UNSUPPORTED_FILE' ? 415 : 400);
+
+  const mode = cleanText(formData.get('mode'), 20) === 'product' ? 'product' : 'surface';
+
+  let prompt = '';
+  let inputImages = [image];
+
+  if (mode === 'product') {
+    const referenceImages = [
+      formData.get('referenceImage1'),
+      formData.get('referenceImage2'),
+      formData.get('referenceImage3')
+    ].filter((file) => file instanceof File && file.size > 0);
+
+    if (!referenceImages.length) {
+      return jsonResponse({ code: 'REFERENCE_REQUIRED', message: 'Ürün yerleşimi için ürün referans görselleri gereklidir.' }, 400);
+    }
+
+    for (const reference of referenceImages) {
+      const validation = validateImageFile(reference, 'Ürün referans görseli');
+      if (!validation.ok) return jsonResponse({ code: validation.code, message: validation.message }, validation.code === 'UNSUPPORTED_FILE' ? 415 : 400);
+    }
+
+    const options = {
+      productSlug: cleanText(formData.get('productSlug'), 80),
+      productName: cleanText(formData.get('productName'), 120) || 'product',
+      productDescription: cleanText(formData.get('productDescription'), 220),
+      productSpecs: cleanText(formData.get('productSpecs'), 220),
+      placementHint: cleanText(formData.get('placementHint'), 320)
+    };
+
+    prompt = buildProductPrompt(options);
+    inputImages = [image, ...referenceImages];
+  } else {
+    const options = {
+      surface: cleanEnum(formData, 'surface', 'wall'),
+      material: cleanEnum(formData, 'material', 'calacatta'),
+      tileSize: cleanEnum(formData, 'tileSize', '60x60'),
+      pattern: cleanEnum(formData, 'pattern', 'straight'),
+      finish: cleanEnum(formData, 'finish', 'matte'),
+      groutColor: cleanEnum(formData, 'groutColor', 'warm-white'),
+      customTileColor: cleanHex(formData.get('customTileColor'), '#4D8D82'),
+      customGroutColor: cleanHex(formData.get('customGroutColor'), '#D5D1C6'),
+      customTileWidth: cleanNumber(formData.get('customTileWidth'), 2, 300, 40),
+      customTileHeight: cleanNumber(formData.get('customTileHeight'), 2, 300, 80),
+      groutWidth: cleanNumber(formData.get('groutWidth'), 1, 12, 3)
+    };
+
+    prompt = buildSurfacePrompt(options);
   }
 
-  const options = {
-    surface: cleanEnum(formData, 'surface', 'wall'),
-    material: cleanEnum(formData, 'material', 'calacatta'),
-    tileSize: cleanEnum(formData, 'tileSize', '60x60'),
-    pattern: cleanEnum(formData, 'pattern', 'straight'),
-    finish: cleanEnum(formData, 'finish', 'matte'),
-    groutColor: cleanEnum(formData, 'groutColor', 'warm-white'),
-    customTileColor: cleanHex(formData.get('customTileColor'), '#4D8D82'),
-    customGroutColor: cleanHex(formData.get('customGroutColor'), '#D5D1C6'),
-    customTileWidth: cleanNumber(formData.get('customTileWidth'), 2, 300, 40),
-    customTileHeight: cleanNumber(formData.get('customTileHeight'), 2, 300, 80),
-    groutWidth: cleanNumber(formData.get('groutWidth'), 1, 12, 3)
-  };
-
-  const prompt = buildPrompt(options);
   const modelCandidates = getModelCandidates();
   const attemptedModels = [];
   const controller = new AbortController();
@@ -283,7 +338,7 @@ async function handleRequest(request) {
 
     for (const model of modelCandidates) {
       attemptedModels.push(model);
-      const { upstream, data } = await callModelWithCompatibilityRetry(image, prompt, apiKey, model, controller.signal);
+      const { upstream, data } = await callModelWithCompatibilityRetry(inputImages, prompt, apiKey, model, controller.signal);
       const requestId = upstream.headers.get('x-request-id') || '';
 
       if (!upstream.ok) {
@@ -292,7 +347,7 @@ async function handleRequest(request) {
         if (isModelAccessError(upstream.status, data)) continue;
 
         const mapped = mapOpenAIError(upstream.status, data, attemptedModels);
-        console.error('OpenAI image edit failed:', { status: upstream.status, code: mapped.code, requestId, model });
+        console.error('OpenAI image edit failed:', { status: upstream.status, code: mapped.code, requestId, model, mode });
         return jsonResponse({ code: mapped.code, message: mapped.message }, mapped.status, {
           'X-OpenAI-Request-Id': requestId
         });
@@ -300,7 +355,7 @@ async function handleRequest(request) {
 
       const imageBase64 = data?.data?.[0]?.b64_json;
       if (!imageBase64) {
-        console.error('OpenAI image edit returned no image:', { requestId, model });
+        console.error('OpenAI image edit returned no image:', { requestId, model, mode });
         return jsonResponse({ code: 'EMPTY_IMAGE_RESPONSE', message: 'OpenAI geçerli bir görüntü döndürmedi.' }, 502);
       }
       if (imageBase64.length > 4.1 * 1024 * 1024) {
@@ -321,7 +376,8 @@ async function handleRequest(request) {
     console.error('No usable OpenAI image model:', {
       code: mapped.code,
       requestId: lastFailure?.requestId || '',
-      attemptedModels
+      attemptedModels,
+      mode
     });
     return jsonResponse({ code: mapped.code, message: mapped.message, attemptedModels }, mapped.status, {
       'X-OpenAI-Request-Id': lastFailure?.requestId || ''

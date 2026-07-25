@@ -18,6 +18,8 @@
   const imageProcessing = $('#imageProcessing');
   const sourcePreview = $('#sourcePreview');
   const photoMeta = $('#photoMeta');
+
+  const modeButtons = $$('[data-mode]');
   const surfaceButtons = $$('[data-surface]');
   const materialButtons = $$('.material-option[data-material]');
   const customColorOption = $('#customColorOption');
@@ -32,6 +34,14 @@
   const customGroutField = $('#customGroutField');
   const customGroutColor = $('#customGroutColor');
   const finishButtons = $$('[data-finish]');
+  const surfaceControlSections = $('#surfaceControlSections');
+  const productControlSections = $('#productControlSections');
+  const productButtons = $$('.product-option[data-product]');
+  const selectedProductPreview = $('#selectedProductPreview');
+  const selectedProductName = $('#selectedProductName');
+  const selectedProductDescription = $('#selectedProductDescription');
+  const selectedProductSpecs = $('#selectedProductSpecs');
+
   const designSummary = $('#designSummary');
   const designDetail = $('#designDetail');
   const privacyConsent = $('#privacyConsent');
@@ -80,10 +90,85 @@
 
   const finishLabels = { matte: 'Mat', glossy: 'Parlak' };
 
+  const products = {
+    'tv-unit': {
+      slug: 'tv-unit',
+      name: 'Seramik TV Ünitesi',
+      summary: 'TV Ünitesi',
+      description: 'Yapay zekâ, ürünü fotoğrafınızdaki uygun duvar veya yaşam alanına doğal ışık ve perspektifle yerleştirir.',
+      specs: '142 × 42 × 47h cm · 90 kg · Seramik kaplama · Ahşap iç iskelet',
+      whatsapp: 'Seramik TV Ünitesi',
+      referenceImages: [
+        'images/products/tv-unit-standalone.webp',
+        'images/products/tv-unit-detail.webp'
+      ],
+      previewImage: 'images/products/tv-unit-lifestyle.webp',
+      placementHint: 'Place the TV unit naturally against a suitable wall as a low console. Keep exactly one unit. Do not add a television or extra accessories unless already present in the original room.'
+    },
+    'console-green': {
+      slug: 'console-green',
+      name: 'Seramik Dresuar',
+      summary: 'Dresuar',
+      description: 'Yapay zekâ, ürünü giriş, koridor veya duvar önünde doğal bir konsol yerleşimiyle gösterir.',
+      specs: '81 × 28 × 91h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      whatsapp: 'Seramik Dresuar',
+      referenceImages: [
+        'images/products/console-green-standalone.webp',
+        'images/products/console-green-detail.webp'
+      ],
+      previewImage: 'images/products/console-green-lifestyle.webp',
+      placementHint: 'Place the console naturally against a free wall, hallway or behind a sofa as a slim decorative piece. Keep exactly one unit and preserve the room.'
+    },
+    'table-blue': {
+      slug: 'table-blue',
+      name: 'Seramik Masa',
+      summary: 'Masa',
+      description: 'Yapay zekâ, ürünü oda merkezine veya uygun yemek alanına gerçek ölçek hissiyle yerleştirir.',
+      specs: '91 × 91 × 76h cm · 70 kg · Seramik kaplama · Ahşap iç iskelet',
+      whatsapp: 'Seramik Masa',
+      referenceImages: [
+        'images/products/table-blue-standalone.webp',
+        'images/products/table-blue-detail.webp'
+      ],
+      previewImage: 'images/products/table-blue-lifestyle.webp',
+      placementHint: 'Place the square table naturally in the center of a suitable living or dining area. Keep exactly one table. Do not invent chairs unless similar chairs already exist in the room.'
+    },
+    'nightstand-green': {
+      slug: 'nightstand-green',
+      name: 'Seramik / Cam Mozaik Komidin',
+      summary: 'Komidin',
+      description: 'Yapay zekâ, ürünü yatak yanında veya uygun küçük bir yan mobilya alanında gösterir.',
+      specs: '38 × 38 × 54h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      whatsapp: 'Seramik / Cam Mozaik Komidin',
+      referenceImages: [
+        'images/products/nightstand-green-standalone.webp',
+        'images/products/nightstand-green-open.webp'
+      ],
+      previewImage: 'images/products/nightstand-green-lifestyle.webp',
+      placementHint: 'Place the nightstand naturally beside a bed when possible, otherwise as a small side unit near seating or a wall. Keep exactly one unit.'
+    },
+    'mosaic-coffee-table': {
+      slug: 'mosaic-coffee-table',
+      name: 'Mozaik Orta Sehpa',
+      summary: 'Mozaik Sehpa',
+      description: 'Yapay zekâ, 3D + AR’de yer alan ürünü fotoğrafınızdaki yaşam alanına sehpa olarak ekler.',
+      specs: '81 × 49 × 38h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      whatsapp: 'Mozaik Orta Sehpa',
+      referenceImages: [
+        'images/products/mosaic-table-green-spec.webp',
+        'images/products/mosaic-table-green-detail.webp'
+      ],
+      previewImage: 'images/products/mosaic-table-green-room.webp',
+      placementHint: 'Place the coffee table naturally in front of seating or in a living area. Keep exactly one unit.'
+    }
+  };
+
   const state = {
     file: null,
     sourceUrl: '',
     resultDataUrl: '',
+    mode: 'surface',
+    selectedProduct: 'tv-unit',
     surface: 'wall',
     material: 'calacatta',
     customTileColor: '#4d8d82',
@@ -124,8 +209,27 @@
     return materialLabels[state.material] || 'Calacatta';
   }
 
+  function getCurrentProduct() {
+    return products[state.selectedProduct] || products['tv-unit'];
+  }
+
   function getSelection() {
+    if (state.mode === 'product') {
+      const product = getCurrentProduct();
+      return {
+        mode: 'product',
+        productSlug: product.slug,
+        productName: product.name,
+        productSummary: product.summary,
+        productDescription: product.description,
+        productSpecs: product.specs,
+        placementHint: product.placementHint,
+        referenceImages: product.referenceImages
+      };
+    }
+
     return {
+      mode: 'surface',
       surface: state.surface,
       surfaceLabel: state.surface === 'floor' ? 'Zemin' : 'Duvar',
       material: state.material,
@@ -146,10 +250,44 @@
     };
   }
 
+  function updateActionLabel() {
+    if (state.rendering) return;
+    renderButton.innerHTML = state.mode === 'product'
+      ? '<svg><use href="#i-spark"></use></svg> Ürünü Mekânıma Yerleştir'
+      : '<svg><use href="#i-spark"></use></svg> Mekânımı Tasarla';
+  }
+
+  function updateProductUI() {
+    const product = getCurrentProduct();
+    productButtons.forEach((button) => button.classList.toggle('active', button.dataset.product === product.slug));
+    if (selectedProductPreview) selectedProductPreview.src = product.previewImage;
+    if (selectedProductName) selectedProductName.textContent = product.name;
+    if (selectedProductDescription) selectedProductDescription.textContent = product.description;
+    if (selectedProductSpecs) selectedProductSpecs.textContent = product.specs;
+  }
+
+  function updateModeUI() {
+    const isProduct = state.mode === 'product';
+    surfaceControlSections.hidden = isProduct;
+    productControlSections.hidden = !isProduct;
+    modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mode === state.mode));
+    updateProductUI();
+    updateActionLabel();
+  }
+
   function updateSummary() {
+    if (state.mode === 'product') {
+      const product = getCurrentProduct();
+      designSummary.textContent = `${product.name} · Yapay zekâ yerleşimi`;
+      designDetail.textContent = product.specs;
+      updateModeUI();
+      return;
+    }
+
     const selection = getSelection();
     designSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel} · ${selection.patternLabel}`;
     designDetail.textContent = `${selection.surfaceLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
+    updateModeUI();
   }
 
   function updateRenderAvailability() {
@@ -180,7 +318,7 @@
           close() { bitmap.close?.(); }
         };
       } catch (_) {
-        // Safari versions that do not accept imageOrientation use the fallback below.
+        // Fallback below.
       }
     }
 
@@ -314,6 +452,17 @@
   }));
   photoUploader.addEventListener('drop', (event) => handleSelectedFile(event.dataTransfer?.files?.[0]));
 
+  modeButtons.forEach((button) => button.addEventListener('click', () => {
+    state.mode = button.dataset.mode === 'product' ? 'product' : 'surface';
+    updateSummary();
+    updateRenderAvailability();
+  }));
+
+  productButtons.forEach((button) => button.addEventListener('click', () => {
+    state.selectedProduct = button.dataset.product || 'tv-unit';
+    updateSummary();
+  }));
+
   surfaceButtons.forEach((button) => button.addEventListener('click', () => {
     state.surface = button.dataset.surface === 'floor' ? 'floor' : 'wall';
     surfaceButtons.forEach((item) => item.classList.toggle('active', item === button));
@@ -379,12 +528,20 @@
   }
 
   function startStatusMessages() {
-    const messages = [
-      ['Mekânınız tasarlanıyor', 'Yapay zekâ mimari detayları koruyarak fotoğrafı analiz ediyor.'],
-      ['Yüzey sınırları belirleniyor', `Seçilen ${state.surface === 'floor' ? 'zemin' : 'duvar'} alanı perspektife göre hazırlanıyor.`],
-      ['Seramik uygulanıyor', 'Ölçü, döşeme, yüzey ve derz seçimleri fotogerçekçi olarak işleniyor.'],
-      ['Son dokunuşlar yapılıyor', 'Işık, gölge, yansıma ve mevcut eşyalar korunarak sonuç hazırlanıyor.']
-    ];
+    const messages = state.mode === 'product'
+      ? [
+          ['Ürün yerleşimi hazırlanıyor', 'Yapay zekâ mekân fotoğrafını analiz ediyor ve uygun perspektifi belirliyor.'],
+          ['Ürün kimliği işleniyor', 'Gönderdiğiniz gerçek ürün referansları korunarak doğru siluet ve yüzey hazırlanıyor.'],
+          ['Mekâna yerleştiriliyor', 'Seçili ürün doğal gölge, ölçek ve konumla iç mekâna ekleniyor.'],
+          ['Son dokunuşlar yapılıyor', 'Perspektif, ışık ve kenar uyumu düzeltilerek sonuç hazırlanıyor.']
+        ]
+      : [
+          ['Mekânınız tasarlanıyor', 'Yapay zekâ mimari detayları koruyarak fotoğrafı analiz ediyor.'],
+          ['Yüzey sınırları belirleniyor', `Seçilen ${state.surface === 'floor' ? 'zemin' : 'duvar'} alanı perspektife göre hazırlanıyor.`],
+          ['Seramik uygulanıyor', 'Ölçü, döşeme, yüzey ve derz seçimleri fotogerçekçi olarak işleniyor.'],
+          ['Son dokunuşlar yapılıyor', 'Işık, gölge, yansıma ve mevcut eşyalar korunarak sonuç hazırlanıyor.']
+        ];
+
     let index = 0;
     renderStatusTitle.textContent = messages[0][0];
     renderStatusText.textContent = messages[0][1];
@@ -406,7 +563,9 @@
     renderStatusSection.hidden = !active;
     renderButton.innerHTML = active
       ? '<span class="studio-spinner" aria-hidden="true"></span> Tasarlanıyor…'
-      : '<svg><use href="#i-spark"></use></svg> Mekânımı Tasarla';
+      : (state.mode === 'product'
+          ? '<svg><use href="#i-spark"></use></svg> Ürünü Mekânıma Yerleştir'
+          : '<svg><use href="#i-spark"></use></svg> Mekânımı Tasarla');
     updateRenderAvailability();
     if (active) {
       startStatusMessages();
@@ -420,26 +579,48 @@
     state.resultDataUrl = `data:${mimeType};base64,${imageBase64}`;
     beforeImage.src = state.sourceUrl;
     afterImage.src = state.resultDataUrl;
-    resultSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel}`;
-    resultDetail.textContent = `${selection.surfaceLabel} · ${selection.patternLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
 
-    const whatsappText = [
-      'Merhaba Yanar Seramik, Yapay Zekâ Seramik Stüdyosu’nda hazırladığım tasarım için teklif almak istiyorum.',
-      '',
-      `Uygulama yüzeyi: ${selection.surfaceLabel}`,
-      `Seramik: ${selection.materialLabel}`,
-      `Ölçü: ${selection.tileSizeLabel}`,
-      `Döşeme: ${selection.patternLabel}`,
-      `Yüzey: ${selection.finishLabel}`,
-      `Derz: ${selection.groutColorLabel} / ${selection.groutWidth.replace('.', ',')} mm`,
-      '',
-      'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
-    ].join('\n');
-    whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
+    if (selection.mode === 'product') {
+      resultSummary.textContent = `${selection.productName} · Yerleşim önizlemesi`;
+      resultDetail.textContent = selection.productSpecs;
+      const whatsappText = [
+        'Merhaba Yanar Seramik, Yapay Zekâ Stüdyosu’nda hazırladığım ürün yerleşimi için bilgi almak istiyorum.',
+        '',
+        `Ürün: ${selection.productName}`,
+        `Ölçü / özellik: ${selection.productSpecs}`,
+        '',
+        'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
+      ].join('\n');
+      whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
+    } else {
+      resultSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel}`;
+      resultDetail.textContent = `${selection.surfaceLabel} · ${selection.patternLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
+      const whatsappText = [
+        'Merhaba Yanar Seramik, Yapay Zekâ Seramik Stüdyosu’nda hazırladığım tasarım için teklif almak istiyorum.',
+        '',
+        `Uygulama yüzeyi: ${selection.surfaceLabel}`,
+        `Seramik: ${selection.materialLabel}`,
+        `Ölçü: ${selection.tileSizeLabel}`,
+        `Döşeme: ${selection.patternLabel}`,
+        `Yüzey: ${selection.finishLabel}`,
+        `Derz: ${selection.groutColorLabel} / ${selection.groutWidth.replace('.', ',')} mm`,
+        '',
+        'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
+      ].join('\n');
+      whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
+    }
+
     resultSection.hidden = false;
     compareRange.value = '50';
     updateComparison(50);
     resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function fetchReferenceFile(url, filename) {
+    const response = await fetch(url, { cache: 'force-cache' });
+    if (!response.ok) throw new Error('REFERENCE_FETCH_FAILED');
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type || 'image/webp' });
   }
 
   async function renderDesign() {
@@ -455,7 +636,30 @@
     const selection = getSelection();
     const formData = new FormData();
     formData.append('image', state.file, state.file.name);
-    Object.entries(selection).forEach(([key, value]) => formData.append(key, String(value)));
+    formData.append('mode', selection.mode);
+
+    if (selection.mode === 'product') {
+      formData.append('productSlug', selection.productSlug);
+      formData.append('productName', selection.productName);
+      formData.append('productDescription', selection.productDescription);
+      formData.append('productSpecs', selection.productSpecs);
+      formData.append('placementHint', selection.placementHint);
+
+      try {
+        const referenceFiles = await Promise.all(selection.referenceImages.map((url, index) => (
+          fetchReferenceFile(url, `${selection.productSlug}-${index + 1}.webp`)
+        )));
+        referenceFiles.forEach((file, index) => formData.append(`referenceImage${index + 1}`, file, file.name));
+      } catch (error) {
+        console.error('Ürün referans görselleri alınamadı:', error);
+        showToast('Seçilen ürün referansları yüklenemedi. Sayfayı yenileyip tekrar deneyin.', 7200);
+        return;
+      }
+    } else {
+      Object.entries(selection).forEach(([key, value]) => {
+        if (key !== 'mode') formData.append(key, String(value));
+      });
+    }
 
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -473,9 +677,11 @@
       if (!response.ok) throw Object.assign(new Error(apiErrorMessage(response.status, payload)), { status: response.status, payload });
       if (!payload.imageBase64) throw new Error('API geçerli bir tasarım görseli döndürmedi.');
       configureResult(selection, payload.imageBase64, payload.mimeType || 'image/jpeg');
-      showToast('Tasarımınız hazır. Önce-sonra sürgüsüyle karşılaştırabilirsiniz.');
+      showToast(selection.mode === 'product'
+        ? 'Ürün yerleşimi hazır. Önce-sonra sürgüsüyle karşılaştırabilirsiniz.'
+        : 'Tasarımınız hazır. Önce-sonra sürgüsüyle karşılaştırabilirsiniz.');
     } catch (error) {
-      console.error('Seramik tasarım hatası:', error);
+      console.error('Yapay zekâ tasarım hatası:', error);
       const message = error.name === 'AbortError'
         ? 'Tasarım işlemi zaman aşımına uğradı. Aynı fotoğrafla yeniden deneyin.'
         : error.message || 'Tasarım oluşturulamadı. Lütfen tekrar deneyin.';
@@ -511,7 +717,14 @@
     showToast('Seçimlerinizi değiştirip yeniden tasarlayabilirsiniz.');
   });
 
+  const params = new URLSearchParams(window.location.search);
+  const requestedMode = params.get('mode');
+  const requestedProduct = params.get('product');
+  if (requestedMode === 'product') state.mode = 'product';
+  if (requestedProduct && products[requestedProduct]) state.selectedProduct = requestedProduct;
+
   window.addEventListener('beforeunload', revokeSourceUrl);
+  updateProductUI();
   updateSummary();
   updateRenderAvailability();
 })();
