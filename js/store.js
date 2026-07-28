@@ -1,5 +1,5 @@
-import { STORE_PRODUCTS, PRODUCT_CATEGORIES, getProduct } from './store-data.js';
-import { readQuoteCart, addToQuoteCart, removeFromQuoteCart, updateQuoteQuantity, clearQuoteCart } from './store-cart.js';
+const { STORE_PRODUCTS, PRODUCT_CATEGORIES, getProduct } = window.YANAR_STORE;
+const { readQuoteCart, addToQuoteCart, removeFromQuoteCart, updateQuoteQuantity, clearQuoteCart } = window.YANAR_CART;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -32,6 +32,10 @@ let activeCategory = 'all';
 let activeArProduct = STORE_PRODUCTS[0];
 let activeArVariant = null;
 let toastTimer = 0;
+
+function formatPrice(value) {
+  return `${new Intl.NumberFormat('tr-TR').format(Number(value) || 0)} TL`;
+}
 
 function showToast(message) {
   toast.textContent = message;
@@ -71,13 +75,15 @@ function productCard(product) {
           <div><small>${product.categoryLabel}</small><h3>${product.name}</h3></div>${variantDots}
         </div>
         <p>${product.tagline}</p>
+        <div class="store-product-price"><small>Başlangıç fiyatı</small><strong>${formatPrice(product.price)}</strong><span>Kişiselleştirme ve teslimat ayrıca hesaplanır.</span></div>
         <div class="store-product-specs"><span>${product.dimensions}</span><span>${product.coating}</span><span>${product.weight}</span></div>
+        <div class="store-card-path"><span>1 · Ölçüyü kontrol et</span><i></i><span>2 · Mekânında gör</span><i></i><span>3 · Teklif iste</span></div>
         <div class="store-card-actions">
-          <button type="button" class="store-action-primary" data-open-ar="${product.id}">AR'da Gör</button>
-          <a href="canli-seramik.html?mode=product&amp;product=${encodeURIComponent(product.aiProduct)}">Mekânımda Dene</a>
-          <a href="urun.html?product=${encodeURIComponent(product.id)}">Detaylar</a>
+          <button type="button" class="store-action-primary" data-open-ar="${product.id}">1 · AR’da Gör</button>
+          <a href="canli-seramik.html?mode=product&amp;product=${encodeURIComponent(product.aiProduct)}">2 · Mekânımda Dene</a>
+          <a href="urun.html?product=${encodeURIComponent(product.id)}">Detayları İncele</a>
         </div>
-        <button type="button" class="store-quote-add" data-add-quote="${product.id}">+ Teklif Listeme Ekle</button>
+        <button type="button" class="store-quote-add" data-add-quote="${product.id}">3 · Teklif Listeme Ekle</button>
       </div>
     </article>`;
 }
@@ -111,7 +117,7 @@ function applyArProduct(product, variantId = '') {
   arScale.value = String(Math.round(scale * 100));
 
   arTitle.textContent = activeArVariant ? `${product.name} · ${activeArVariant.label}` : product.name;
-  arSpecs.textContent = `${product.dimensions} · ${product.coating} · ${product.weight}`;
+  arSpecs.textContent = `${formatPrice(product.price)} · ${product.dimensions} · ${product.coating} · ${product.weight}`;
   arAiLink.href = `canli-seramik.html?mode=product&product=${encodeURIComponent(activeArVariant?.aiProduct || product.aiProduct)}`;
   arDetailLink.href = `urun.html?product=${encodeURIComponent(product.id)}${activeArVariant ? `&variant=${encodeURIComponent(activeArVariant.id)}` : ''}`;
 
@@ -142,7 +148,7 @@ function cartEntry(item) {
   return `
     <article class="quote-item">
       <img src="${source.poster || product.poster}" alt="${product.name}">
-      <div><strong>${product.name}${variant ? ` · ${variant.label}` : ''}</strong><small>${product.dimensions}</small>
+      <div><strong>${product.name}${variant ? ` · ${variant.label}` : ''}</strong><small>${product.dimensions} · ${formatPrice(product.price)}</small>
         <div class="quote-quantity"><button data-qty-minus="${item.key}" type="button">−</button><span>${item.quantity}</span><button data-qty-plus="${item.key}" type="button">+</button></div>
       </div>
       <button class="quote-remove" data-remove-quote="${item.key}" type="button" aria-label="Ürünü listeden kaldır">×</button>
@@ -158,9 +164,13 @@ function renderCart() {
   const lines = items.map((item) => {
     const product = getProduct(item.id);
     const variant = currentVariant(product, item.variantId);
-    return `• ${product.name}${variant ? ` (${variant.label})` : ''} — ${product.dimensions} — Adet: ${item.quantity || 1}`;
+    return `• ${product.name}${variant ? ` (${variant.label})` : ''} — ${product.dimensions} — ${formatPrice(product.price)} — Adet: ${item.quantity || 1}`;
   });
-  const message = ['Merhaba Yanar Seramik, aşağıdaki ürünler için teklif almak istiyorum:', '', ...lines, '', 'Mekân fotoğraflarımı ve teslimat detaylarını ayrıca paylaşacağım.'].join('\n');
+  const estimatedTotal = items.reduce((sum, item) => {
+    const product = getProduct(item.id);
+    return sum + (Number(product.price) || 0) * (item.quantity || 1);
+  }, 0);
+  const message = ['Merhaba Yanar Seramik, aşağıdaki ürünler için teklif almak istiyorum:', '', ...lines, '', `Ürün başlangıç fiyatları toplamı: ${formatPrice(estimatedTotal)}`, 'Nihai fiyatın renk, kişiselleştirme ve teslimat bilgileriyle netleştirileceğini biliyorum.', '', 'AR ve yapay zekâ denememi tamamladım. Varsa önce-sonra görsellerimi bu görüşmeye ekleyeceğim.'].join('\n');
   cartWhatsApp.href = items.length ? `https://wa.me/905438964440?text=${encodeURIComponent(message)}` : '#';
   cartWhatsApp.classList.toggle('disabled', !items.length);
 }
@@ -192,8 +202,8 @@ function recommendProduct() {
   const product = getProduct(id);
   guideResult.innerHTML = `
     <img src="${product.hero}" alt="${product.name}">
-    <div><span>YAPAY ZEKÂ REHBERİ ÖNERİSİ</span><h3>${product.name}</h3><p>${product.tagline}</p>
-      <div class="guide-result-actions"><button type="button" data-open-ar="${product.id}">AR'da Gör</button><a href="canli-seramik.html?mode=product&amp;product=${encodeURIComponent(product.aiProduct)}">Mekânımda Dene</a><a href="urun.html?product=${product.id}">Ürünü İncele</a></div>
+    <div><span>YAPAY ZEKÂ REHBERİ ÖNERİSİ</span><h3>${product.name}</h3><p>${product.tagline}</p><strong class="guide-result-price">${formatPrice(product.price)}</strong>
+      <div class="guide-result-actions"><button type="button" data-open-ar="${product.id}">1 · AR’da Gör</button><a href="canli-seramik.html?mode=product&amp;product=${encodeURIComponent(product.aiProduct)}">2 · Mekânımda Dene</a><a href="urun.html?product=${product.id}">Detayları İncele</a></div>
     </div>`;
   guideResult.hidden = false;
   guideResult.scrollIntoView({ behavior: 'smooth', block: 'center' });

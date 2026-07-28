@@ -894,3 +894,7 @@ body.home-premium{
 @media(prefers-reduced-motion:reduce){
   .premium-path::before,.premium-action,.nav-store-bag{transition:none!important}
 }
+
+/* Portrait project story: preserves the full before/after bathroom composition. */
+.transformation-section .comparison{width:min(100%,820px);height:auto;min-height:0;aspect-ratio:4/5;margin-inline:auto}
+.transformation-section .comparison-layer img{object-position:center center}

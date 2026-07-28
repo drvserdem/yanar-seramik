@@ -1,5 +1,5 @@
-import { STORE_PRODUCTS, getProduct } from './store-data.js';
-import { addToQuoteCart, readQuoteCart } from './store-cart.js';
+const { STORE_PRODUCTS, getProduct } = window.YANAR_STORE;
+const { addToQuoteCart, readQuoteCart } = window.YANAR_CART;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -11,6 +11,7 @@ const title = $('#productDetailTitle');
 const category = $('#productDetailCategory');
 const breadcrumbCategory = $('#productDetailBreadcrumbCategory');
 const tagline = $('#productDetailTagline');
+const price = $('#productDetailPrice');
 const description = $('#productDetailDescription');
 const specs = $('#productDetailSpecs');
 const viewer = $('#productDetailViewer');
@@ -29,6 +30,8 @@ const toast = $('#productDetailToast');
 const menuToggle = $('.menu-toggle');
 const mainNav = $('#mainNav');
 let toastTimer = 0;
+
+function formatPrice(value) { return `${new Intl.NumberFormat('tr-TR').format(Number(value) || 0)} TL`; }
 
 function sourceData() { return activeVariant || product; }
 function showToast(message) { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 3200); }
@@ -59,7 +62,7 @@ function applyVariant(variantId = '') {
   heroImage.src = source.hero || product.hero;
   aiLink.href = `canli-seramik.html?mode=product&product=${encodeURIComponent(source.aiProduct || product.aiProduct)}`;
   if (aiLinkSecondary) aiLinkSecondary.href = aiLink.href;
-  whatsapp.href = `https://wa.me/905438964440?text=${encodeURIComponent(`Merhaba Yanar Seramik, ${product.name}${activeVariant ? ` (${activeVariant.label})` : ''} hakkında fiyat, üretim ve teslimat bilgisi almak istiyorum. Ölçü: ${product.dimensions}.`)}`;
+  whatsapp.href = `https://wa.me/905438964440?text=${encodeURIComponent(`Merhaba Yanar Seramik, ${product.name}${activeVariant ? ` (${activeVariant.label})` : ''} hakkında fiyat, üretim ve teslimat bilgisi almak istiyorum. Başlangıç fiyatı: ${formatPrice(product.price)}. Ölçü: ${product.dimensions}.`)}`;
   variants.innerHTML = product.variants.length ? product.variants.map((variant) => `<button type="button" class="${activeVariant?.id === variant.id ? 'active' : ''}" data-product-variant="${variant.id}"><i style="--swatch:${variant.swatch}"></i>${variant.label}</button>`).join('') : '';
   variants.hidden = !product.variants.length;
 }
@@ -69,7 +72,7 @@ function renderGallery() {
 }
 
 function renderRelated() {
-  related.innerHTML = STORE_PRODUCTS.filter((item) => item.id !== product.id).slice(0, 3).map((item) => `<article><a href="urun.html?product=${item.id}"><img src="${item.hero}" alt="${item.name}" loading="lazy"><span>${item.categoryLabel}</span><h3>${item.name}</h3><p>${item.dimensions}</p></a></article>`).join('');
+  related.innerHTML = STORE_PRODUCTS.filter((item) => item.id !== product.id).slice(0, 3).map((item) => `<article><a href="urun.html?product=${item.id}"><img src="${item.hero}" alt="${item.name}" loading="lazy"><span>${item.categoryLabel}</span><h3>${item.name}</h3><p>${item.dimensions} · ${formatPrice(item.price)}</p></a></article>`).join('');
 }
 
 function init() {
@@ -78,6 +81,7 @@ function init() {
   if (breadcrumbCategory) breadcrumbCategory.textContent = product.categoryLabel;
   title.textContent = product.name;
   tagline.textContent = product.tagline;
+  price.textContent = formatPrice(product.price);
   description.textContent = product.description;
   renderSpecs(); renderGallery(); renderRelated(); applyVariant(activeVariant?.id || ''); updateCartCount();
 }

@@ -116,3 +116,4 @@
 .studio-marketing{background:linear-gradient(145deg,#173f34,#102e27)}
 .studio-footer{background:#102f28}
 .studio-render-button,.tile-studio-page .button-primary{background:linear-gradient(135deg,#3c7a5d,#205c49)}
+.studio-whatsapp-button{border:0;cursor:pointer}.studio-whatsapp-button:disabled,.studio-whatsapp-button.is-sharing{opacity:.66;cursor:wait}

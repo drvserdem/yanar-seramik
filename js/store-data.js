@@ -1,11 +1,15 @@
-export const STORE_PRODUCTS = [
+(() => {
+'use strict';
+
+const STORE_PRODUCTS = [
   {
     id: 'tv-unit',
     name: 'Seramik TV Ünitesi',
     shortName: 'TV Ünitesi',
     category: 'tv-unit',
     categoryLabel: 'TV Ünitesi',
-    badge: 'Yeni Koleksiyon',
+    badge: 'Yeni Ürün',
+    price: 58500,
     tagline: 'Salonun merkezine el işçiliği karakteri.',
     description: 'Ahşap iç iskelet üzerine tek tek uygulanan parlak seramik yüzey, alçak ve uzun formu modern yaşam alanları için güçlü bir odak noktasına dönüştürür.',
     dimensions: '142 × 42 × 47h cm',
@@ -38,6 +42,7 @@ export const STORE_PRODUCTS = [
     category: 'console',
     categoryLabel: 'Dresuar',
     badge: 'Renk Seçenekli',
+    price: 42500,
     tagline: 'Dar alanda güçlü, mimari bir imza.',
     description: 'İki raflı açık form, seramik veya cam mozaik kaplamanın el işçiliği karakteriyle birleşir. Giriş, koridor ve salonlarda dekoratif kullanım için tasarlanmıştır.',
     dimensions: '81 × 28 × 91h cm',
@@ -91,6 +96,7 @@ export const STORE_PRODUCTS = [
     category: 'table',
     categoryLabel: 'Masa',
     badge: 'İki Parça Montaj',
+    price: 54900,
     tagline: 'Heykelsi form, güçlü kobalt yüzey.',
     description: 'Kare tabla ve merkez ayak formu, el işçiliği seramik kaplamayla güçlü bir yemek ve yaşam alanı objesine dönüşür. Tabla ve ayak iki parça teslim edilir.',
     dimensions: '91 × 91 × 76h cm',
@@ -122,6 +128,7 @@ export const STORE_PRODUCTS = [
     category: 'nightstand',
     categoryLabel: 'Komidin',
     badge: 'İki Çekmeceli',
+    price: 35900,
     tagline: 'Yatak yanında renkli ve işlevsel bir obje.',
     description: 'Kompakt küp gövde, iki çekmeceli depolama ve küçük kare mozaiklerin güçlü renk etkisini bir araya getirir.',
     dimensions: '38 × 38 × 54h cm',
@@ -154,6 +161,7 @@ export const STORE_PRODUCTS = [
     category: 'coffee-table',
     categoryLabel: 'Orta Sehpa',
     badge: 'Gerçek 3D Model',
+    price: 46500,
     tagline: 'Yaşam alanının ortasında canlı bir seramik obje.',
     description: 'Ahşap iç iskelet üzerine seramik veya cam mozaik kaplamalı orta sehpa; sarı ve yeşil renk seçenekleri, canlı 3D ve AR deneyimiyle sunulur.',
     dimensions: '81 × 49 × 38h cm',
@@ -200,7 +208,7 @@ export const STORE_PRODUCTS = [
   }
 ];
 
-export const PRODUCT_CATEGORIES = [
+const PRODUCT_CATEGORIES = [
   { id: 'all', label: 'Tüm Ürünler' },
   { id: 'tv-unit', label: 'TV Ünitesi' },
   { id: 'console', label: 'Dresuar' },
@@ -209,6 +217,9 @@ export const PRODUCT_CATEGORIES = [
   { id: 'coffee-table', label: 'Orta Sehpa' }
 ];
 
-export function getProduct(productId) {
+function getProduct(productId) {
   return STORE_PRODUCTS.find((product) => product.id === productId) || STORE_PRODUCTS[0];
 }
+
+window.YANAR_STORE = { STORE_PRODUCTS, PRODUCT_CATEGORIES, getProduct };
+})();

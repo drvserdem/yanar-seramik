@@ -97,6 +97,7 @@
       summary: 'TV Ünitesi',
       description: 'Yapay zekâ, ürünü fotoğrafınızdaki uygun duvar veya yaşam alanına doğal ışık ve perspektifle yerleştirir.',
       specs: '142 × 42 × 47h cm · 90 kg · Seramik kaplama · Ahşap iç iskelet',
+      price: '58.500 TL',
       whatsapp: 'Seramik TV Ünitesi',
       referenceImages: [
         'images/products/tv-unit-standalone.webp',
@@ -112,6 +113,7 @@
       summary: 'Dresuar',
       description: 'Yapay zekâ, ürünü giriş, koridor veya duvar önünde doğal bir konsol yerleşimiyle gösterir.',
       specs: '81 × 28 × 91h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      price: '42.500 TL',
       whatsapp: 'Seramik Dresuar',
       referenceImages: [
         'images/products/console-green-standalone.webp',
@@ -127,6 +129,7 @@
       summary: 'Krem Dresuar',
       description: 'Yapay zekâ, açık krem seramik yüzeyli dresuarı giriş, koridor veya duvar önünde doğal bir konsol yerleşimiyle gösterir.',
       specs: '81 × 28 × 91h cm · 45 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      price: '42.500 TL',
       whatsapp: 'Krem Seramik Dresuar',
       referenceImages: [
         'images/products/console-cream-lifestyle.webp',
@@ -142,6 +145,7 @@
       summary: 'Masa',
       description: 'Yapay zekâ, ürünü oda merkezine veya uygun yemek alanına gerçek ölçek hissiyle yerleştirir.',
       specs: '91 × 91 × 76h cm · 70 kg · Seramik kaplama · Ahşap iç iskelet',
+      price: '54.900 TL',
       whatsapp: 'Seramik Masa',
       referenceImages: [
         'images/products/table-blue-standalone.webp',
@@ -157,6 +161,7 @@
       summary: 'Komidin',
       description: 'Yapay zekâ, ürünü yatak yanında veya uygun küçük bir yan mobilya alanında gösterir.',
       specs: '38 × 38 × 54h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      price: '35.900 TL',
       whatsapp: 'Seramik / Cam Mozaik Komidin',
       referenceImages: [
         'images/products/nightstand-green-standalone.webp',
@@ -172,6 +177,7 @@
       summary: 'Mozaik Sehpa',
       description: 'Yapay zekâ, 3D + AR’de yer alan ürünü fotoğrafınızdaki yaşam alanına sehpa olarak ekler.',
       specs: '81 × 49 × 38h cm · 40 kg · Seramik / Cam Mozaik · Ahşap iç iskelet',
+      price: '46.500 TL',
       whatsapp: 'Mozaik Orta Sehpa',
       referenceImages: [
         'images/products/mosaic-table-green-spec.webp',
@@ -187,6 +193,7 @@
     file: null,
     sourceUrl: '',
     resultDataUrl: '',
+    shareMessage: '',
     mode: 'surface',
     selectedProduct: 'tv-unit',
     surface: 'wall',
@@ -243,6 +250,7 @@
         productSummary: product.summary,
         productDescription: product.description,
         productSpecs: product.specs,
+        productPrice: product.price,
         placementHint: product.placementHint,
         replacementPolicy: product.replacementPolicy,
         referenceImages: product.referenceImages
@@ -608,11 +616,12 @@
         'Merhaba Yanar Seramik, Yapay Zekâ Stüdyosu’nda hazırladığım ürün yerleşimi için bilgi almak istiyorum.',
         '',
         `Ürün: ${selection.productName}`,
+        `Başlangıç fiyatı: ${selection.productPrice}`,
         `Ölçü / özellik: ${selection.productSpecs}`,
         '',
-        'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
+        'AR ölçü kontrolümü ve yapay zekâ yerleşimimi tamamladım. Önce ve sonra görselleri bu paylaşıma eklenmiştir.'
       ].join('\n');
-      whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
+      state.shareMessage = whatsappText;
     } else {
       resultSummary.textContent = `${selection.materialLabel} · ${selection.tileSizeLabel}`;
       resultDetail.textContent = `${selection.surfaceLabel} · ${selection.patternLabel} · ${selection.finishLabel} yüzey · ${selection.groutColorLabel}, ${selection.groutWidth.replace('.', ',')} mm derz`;
@@ -626,15 +635,117 @@
         `Yüzey: ${selection.finishLabel}`,
         `Derz: ${selection.groutColorLabel} / ${selection.groutWidth.replace('.', ',')} mm`,
         '',
-        'Oluşan tasarım görselini bu görüşmeye ayrıca ekleyeceğim.'
+        'Önce ve sonra tasarım görselleri bu paylaşıma eklenmiştir.'
       ].join('\n');
-      whatsappResult.href = `https://wa.me/905438964440?text=${encodeURIComponent(whatsappText)}`;
+      state.shareMessage = whatsappText;
     }
 
     resultSection.hidden = false;
     compareRange.value = '50';
     updateComparison(50);
     resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function resultShareFiles() {
+    if (!state.file || !state.resultDataUrl) throw new Error('SHARE_IMAGES_MISSING');
+    const resultResponse = await fetch(state.resultDataUrl);
+    if (!resultResponse.ok) throw new Error('RESULT_FILE_FAILED');
+    const resultBlob = await resultResponse.blob();
+    const beforeFile = new File([state.file], 'yanar-seramik-once.jpg', {
+      type: state.file.type || 'image/jpeg',
+      lastModified: Date.now()
+    });
+    const afterFile = new File([resultBlob], 'yanar-seramik-sonra.jpg', {
+      type: resultBlob.type || 'image/jpeg',
+      lastModified: Date.now()
+    });
+    return [beforeFile, afterFile];
+  }
+
+  function downloadShareFile(file) {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  function openWhatsAppQuote() {
+    const href = `https://wa.me/905438964440?text=${encodeURIComponent(state.shareMessage || 'Merhaba Yanar Seramik, hazırladığım tasarım için teklif almak istiyorum.')}`;
+    const popup = window.open(href, '_blank', 'noopener,noreferrer');
+    if (!popup) window.location.href = href;
+  }
+
+  function addSelectedProductToQuoteList() {
+    if (state.mode !== 'product') return;
+    const cartProductMap = {
+      'tv-unit': { id: 'tv-unit', variantId: '' },
+      'console-green': { id: 'console', variantId: 'green' },
+      'console-cream': { id: 'console', variantId: 'cream' },
+      'table-blue': { id: 'table-blue', variantId: '' },
+      'nightstand-green': { id: 'nightstand-green', variantId: '' },
+      'mosaic-coffee-table': { id: 'mosaic-coffee-table', variantId: 'green' }
+    };
+    const selected = cartProductMap[state.selectedProduct];
+    if (!selected) return;
+    try {
+      const storageKey = 'yanar_quote_cart_v1';
+      const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const items = Array.isArray(current) ? current : [];
+      const key = `${selected.id}:${selected.variantId}`;
+      if (!items.some((item) => item?.key === key)) {
+        items.push({ key, id: selected.id, variantId: selected.variantId, quantity: 1 });
+        localStorage.setItem(storageKey, JSON.stringify(items));
+      }
+    } catch (_) {
+      // Sharing still works when local storage is unavailable.
+    }
+  }
+
+  async function shareResultForQuote() {
+    if (!state.resultDataUrl || !state.file) {
+      showToast('Önce yapay zekâ tasarımınızı oluşturun.');
+      return;
+    }
+
+    addSelectedProductToQuoteList();
+    whatsappResult.disabled = true;
+    whatsappResult.classList.add('is-sharing');
+    try {
+      const files = await resultShareFiles();
+      const sharePayload = {
+        title: 'Yanar Seramik Teklif Görselleri',
+        text: state.shareMessage,
+        files
+      };
+
+      if (navigator.share && (!navigator.canShare || navigator.canShare({ files }))) {
+        await navigator.share(sharePayload);
+        showToast('Önce ve sonra görselleriniz paylaşım ekranına hazırlandı.');
+        return;
+      }
+
+      files.forEach(downloadShareFile);
+      showToast('Önce ve sonra görselleri indirildi. WhatsApp açıldığında iki görseli görüşmeye ekleyin.', 8200);
+      window.setTimeout(openWhatsAppQuote, 650);
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      console.error('Teklif paylaşımı hazırlanamadı:', error);
+      try {
+        const files = await resultShareFiles();
+        files.forEach(downloadShareFile);
+      } catch (_) {
+        // The text-only WhatsApp fallback below still remains available.
+      }
+      showToast('Görseller otomatik paylaşılamadı. Dosyalar indirildi; WhatsApp görüşmesine ekleyebilirsiniz.', 8200);
+      openWhatsAppQuote();
+    } finally {
+      whatsappResult.disabled = false;
+      whatsappResult.classList.remove('is-sharing');
+    }
   }
 
   async function fetchReferenceFile(url, filename) {
@@ -722,6 +833,7 @@
 
   compareRange.addEventListener('input', () => updateComparison(compareRange.value));
   renderButton.addEventListener('click', renderDesign);
+  whatsappResult.addEventListener('click', shareResultForQuote);
 
   downloadResult.addEventListener('click', () => {
     if (!state.resultDataUrl) return;
